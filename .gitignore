@@ -7,6 +7,7 @@ powa/static/build/
 powa-web.conf
 build
 powa.egg.info
+powa_web.egg-info
 dist
 .*.sw?
 .pypirc
