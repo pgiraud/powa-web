@@ -65,6 +65,7 @@ class ConfigOverview(DashboardPage):
     base_url = r"/config/"
 
     datasources = [PgSettingsMetricGroup, PgExtensionsMetricGroup]
+    title = 'Configuration'
 
     dashboard = Dashboard(
         "Configuration overview",
