@@ -8713,3 +8713,7 @@ footer {
 .breadcrumbs button {
   margin-top: -1em;
   margin-bottom: -1em; }
+
+.backgrid-filter.form-search {
+  margin-left: 0;
+  margin-top: 0; }
