@@ -73,7 +73,6 @@ class ConfigOverview(DashboardPage):
                columns=[{
                    "name": "extname",
                    "label": "Extensions",
-                   "url_attr": "url"
                }],
                metrics=PgExtensionsMetricGroup.all()
               ),
@@ -81,7 +80,6 @@ class ConfigOverview(DashboardPage):
                columns=[{
                    "name": "setting_name",
                    "label": "Setting",
-                   "url_attr": "url"
                }],
                metrics=PgSettingsMetricGroup.all()
               )
