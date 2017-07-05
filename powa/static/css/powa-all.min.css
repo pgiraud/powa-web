@@ -2133,7 +2133,7 @@ button::-moz-focus-inner {
   list-style: none;
   margin-left: 0;
   position: absolute;
-  background: #333333;
+  background: #FFFFFF;
   border: solid 1px #cccccc;
   font-size: 0.875rem;
   height: auto;
@@ -2184,7 +2184,7 @@ button::-moz-focus-inner {
     list-style: none;
     margin-left: 0;
     position: absolute;
-    background: #333333;
+    background: #FFFFFF;
     border: solid 1px #cccccc;
     font-size: 0.875rem;
     height: auto;
@@ -2230,7 +2230,7 @@ button::-moz-focus-inner {
     list-style: none;
     margin-left: 0;
     position: absolute;
-    background: #333333;
+    background: #FFFFFF;
     border: solid 1px #cccccc;
     font-size: 0.875rem;
     height: auto;
@@ -2278,7 +2278,7 @@ button::-moz-focus-inner {
     list-style: none;
     margin-left: 0;
     position: absolute;
-    background: #333333;
+    background: #FFFFFF;
     border: solid 1px #cccccc;
     font-size: 0.875rem;
     height: auto;
@@ -2339,7 +2339,7 @@ button::-moz-focus-inner {
     list-style: none;
     margin-left: 0;
     position: absolute;
-    background: #333333;
+    background: #FFFFFF;
     border: solid 1px #cccccc;
     font-size: 0.875rem;
     height: auto;
@@ -8709,3 +8709,7 @@ footer {
 
 .breadcrumbs > *.current a:hover {
   text-decoration: underline; }
+
+.breadcrumbs button {
+  margin-top: -1em;
+  margin-bottom: -1em; }
