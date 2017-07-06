@@ -8724,3 +8724,6 @@ footer {
 .backgrid-filter.form-search {
   margin-left: 0;
   margin-top: 0; }
+
+.has-tip, .has-tip:hover {
+  border-bottom: 0; }
