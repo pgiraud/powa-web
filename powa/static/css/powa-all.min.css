@@ -8673,7 +8673,8 @@ footer {
   color: #FFFFFF; }
 
 .panel.widget {
-  padding: 1em; }
+  padding: 1em;
+  min-height: 200px; }
   .panel.widget .content-widget title {
     color: #859145; }
 

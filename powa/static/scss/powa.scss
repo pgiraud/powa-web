@@ -55,6 +55,7 @@ footer {
 .panel {
   &.widget {
     padding: 1em;
+    min-height: 200px;
     .content-widget {
         title {
         color: $powa-color;
