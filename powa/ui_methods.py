@@ -2,6 +2,7 @@
 Set of helper functions available from the templates.
 """
 
+import uuid
 from powa import __VERSION__
 from powa.json import JSONEncoder
 from tornado.options import options
@@ -38,19 +39,20 @@ def field(_, **kwargs):
     attrs = " ".join('%s="%s"' % (key, value) for key, value in kwargs.items()
                      if key not in ('tag', 'label'))
     kwargs['attrs'] = attrs
+    id_ = uuid.uuid4()
 
     def render(content):
         """
         Render the field itself.
         """
         kwargs['content'] = content.decode('utf8')
+        kwargs['id'] = id_
         return """
-<div class="large-12 columns">
-    <label>%(label)s:
-    <%(tag)s %(attrs)s>
+<div class="col-lg-12 form-group">
+    <label for="%(id)s">%(label)s:</label>
+    <%(tag)s %(attrs)s id="%(id)s">
         %(content)s
     </%(tag)s>
-    </label>
 </div>
 """ % kwargs
 

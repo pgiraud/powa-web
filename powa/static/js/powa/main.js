@@ -1,6 +1,5 @@
 
 require(['jquery',
-        'foundation/foundation',
         'underscore',
         'backbone',
         'powa/views/DashboardView',
@@ -22,13 +21,8 @@ require(['jquery',
         'powa/models/Content',
         'powa/models/Wizard',
         'powa/models/TabContainer',
-        'modernizr',
-        'foundation/foundation.tab',
-        'foundation/foundation.tooltip',
-        'foundation/foundation.dropdown',
-        'foundation/foundation.topbar',
-        'foundation/foundation.alert'],
-        function($, Foundation, _, BackBone, DashboardView,
+        'bootstrap-sass/dropdown'],
+        function($, _, BackBone, DashboardView,
             Widget,
             Dashboard,
             DataSourceCollection,
@@ -75,7 +69,7 @@ require(['jquery',
         });
 
         // ensure that dropdown are taken into account
-        $(document).foundation();
+        $('.dropdown-toggle').dropdown();
     });
     return {};
 });

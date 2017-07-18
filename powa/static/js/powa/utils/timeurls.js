@@ -1,4 +1,7 @@
-define(["jquery", "foundation-daterangepicker"], function($){
+define(["jquery", "bootstrap-daterangepicker", "moment"], function(
+    $,
+    picker,
+    moment){
     var DateRangePicker = Backbone.View.extend({
 
         events: {
@@ -35,8 +38,7 @@ define(["jquery", "foundation-daterangepicker"], function($){
             this.end_date = this.daterangepicker.endDate;
             this.startInput = this.$el.find('[data-role="start_date"]');
             this.endInput = this.$el.find('[data-role="end_date"]');
-            this.daterangepicker.notify();
-            this.daterangepicker.updateCalendars();
+            this.pickerChanged(this.start_date, this.end_date);
         },
         updateUrls : function(start_date, end_date){
                 var params = DateRangePicker.parseUrl(window.location.search),
@@ -44,6 +46,9 @@ define(["jquery", "foundation-daterangepicker"], function($){
                     defaultrange = this.daterangepicker.ranges['hour'];
                 this.startInput.val(start_date.format(this.format));
                 this.endInput.val(end_date.format(this.format));
+                $(this.$el).find('span').html(
+                    start_date.format(this.format) + ' - ' +
+                    end_date.format(this.format));
                 // If the range is the default range, ignore
                 if(start_date.isSame(defaultrange[0]) && end_date.isSame(defaultrange[1])){
                     return;

@@ -1,12 +1,10 @@
 define([
     'jquery',
-    'foundation/foundation.equalizer',
     'backbone',
     'powa/views/WidgetView',
-    'foundation-daterangepicker',
     'moment',
     'powa/utils/timeurls'
-], function(jquery, foundation, Backbone, WidgetView, daterangepicker,
+], function(jquery, Backbone, WidgetView,
     moment, timeurls){
     return WidgetView.extend({
         tagName: "div",
@@ -37,7 +35,7 @@ define([
                 wc.append(newrow);
                 var    len = 12 / rowwidgets.length;
                 _.each(rowwidgets, function(widget) {
-                    var panel = $('<div>').addClass('widget columns large-' + len),
+                    var panel = $('<div>').addClass('widget col-lg-' + len),
                         widgetcontainer = $('<div>').addClass('widget panel').attr("data-equalizer-watch", ""),
                         view;
                     newrow.append(panel);
@@ -71,7 +69,7 @@ define([
         },
 
         postRender: function(){
-            this.$el.foundation();
+            //this.$el.foundation();
         },
 
         makeView: function(widget){

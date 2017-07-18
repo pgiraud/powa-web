@@ -1,4 +1,4 @@
-define(["powa/views/GraphView","powa/views/GraphPreview"], function(GraphView, GraphPreview){
+define(["powa/views/GraphView","powa/views/GraphPreview", "moment"], function(GraphView, GraphPreview, moment){
     return GraphView.extend({
         rendername: "time",
         update: function(newseries){

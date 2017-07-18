@@ -7,9 +7,10 @@ define([
         'tpl!powa/templates/graph.html',
         'powa/utils/duration',
         'powa/utils/size',
-        'powa/rickshaw/Rickshaw.Graph.DragZoom'
+        'powa/rickshaw/Rickshaw.Graph.DragZoom',
+        'moment'
 ],
-        function(Backbone, d3, Rickshaw, WidgetView, Graph, template, duration, size, DragZoom){
+        function(Backbone, d3, Rickshaw, WidgetView, Graph, template, duration, size, DragZoom, moment){
     var registry = {};
     var makeInstance = function(options){
         return new registry[options.model.get("renderer") || "line"](options);

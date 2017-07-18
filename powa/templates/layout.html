@@ -12,107 +12,112 @@
     {% block header %} {% end %}
   </head>
   <body>
-    <nav class="top-bar" data-topbar role="navigation">
-      <ul class="title-area">
-        <li class="name">
-          <h1><a href="{{ reverse_url('Overview')}}"><img src="{{ static_url('img/favicon/favicon-32x32.png')}}"/>&nbsp;PoWA</a></h1>
-        </li>
-      </ul>
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <div class="navbar-brand">
+            <a href="{{ reverse_url('Overview')}}"><img src="{{ static_url('img/favicon/favicon-32x32.png')}}"/>&nbsp;PoWA</a>
+          </div>
+        </div>
 
-      {% if current_user %}
-      <section class="top-bar-section">
-        <ul class="left">
-          <li class="title powa-text">
-            Server <b>{{ handler.current_server }}</b>
-            ({{ handler.current_connection }})
-          </li>
+        {% if current_user %}
+        <p class="navbar-text navbar-left">
+          Server <b>{{ handler.current_server }}</b>
+          ({{ handler.current_connection }})
+        </p>
+        <ul class="nav navbar-nav navbar-left">
           <li>
             <a href="{{ reverse_url('ConfigOverview')}}" title="Configuration">
-              <i class="fi-widget"></i>
+              <i class="glyphicon glyphicon-cog"></i>
             </a>
           </li>
         </ul>
-      </section>
-
-      <section class="top-bar-section">
-        <ul class="right">
+        <ul class="nav navbar-nav navbar-right">
           <li>
             <a href="{{ reverse_url('logout')}}">
-              <i class="fi-power"></i>
+              <i class="glyphicon glyphicon-off"></i>
               Logout
             </a>
           </li>
         </ul>
-      </section>
-      {% end %}
-    </nav>
-    {% if current_user %}
-    <div class="row">
-      <div class="large-7 columns">
-      {% if hasattr(handler, 'breadcrumb') %}
-        <ul class="breadcrumbs">
-          <li>
-            <strong>
-              <a href="{{ reverse_url('Overview') }}"><i class="fi-home"></i></a>
-            </strong>
-          </li>
-          {% set last = len(handler.breadcrumb) - 1 %}
-          {% for i, crumb_item in enumerate(reversed(handler.breadcrumb)) %}
-          <li class="{{'current' if last == i else ''}}">
-            {% if i != last %}
-            <a data-url-has-params href="{{ reverse_url_with_params(crumb_item.url_name, url_args=crumb_item.url_params.values())}}">{{crumb_item.title}}</a>
-            {% else %}
-            {{ crumb_item.title}}
-            {% end %}
-          </li>
-          {% if crumb_item.children and i == last %}
-          <li class="current">
-            &nbsp;
-            <button href="#" data-dropdown="drop-{{crumb_item.url_name}}" aria-controls="drop-{{crumb_item.url_name}}" aria-expanded="false" class="dropdown button button-link">Choose one ...</button>
-            <ul id="drop-{{crumb_item.url_name}}" data-dropdown-content class="f-dropdown" aria-hidden="true">
-              {% for child in crumb_item.children %}
-              <li>
-                <a data-url-has-params href="{{ reverse_url_with_params(child.url_name, url_args=child.url_params.values())}}">{{child.title}}</a>
-              </li>
-              {% end %}
-            </ul>
-          </li>
-          {% end %}
-          {% end %}
-        </ul>
-      {% end %}
+        {% end %}
       </div>
-      <div class="large-5 columns">
-        <div class="right" type="text" id="daterangepicker">
-          <strong>
-            <i class="fi-calendar"></i>&nbsp;
-          </strong>
-          <input data-role="start_date"></input>
-          <input data-role="end_date"></input>
+    </nav>
+
+    {% if current_user %}
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-7">
+        {% if hasattr(handler, 'breadcrumb') %}
+          <ol class="breadcrumb">
+            <li>
+              <strong>
+                <a href="{{ reverse_url('Overview') }}"><i class="glyphicon glyphicon-home"></i></a>
+              </strong>
+            </li>
+            {% set last = len(handler.breadcrumb) - 1 %}
+            {% for i, crumb_item in enumerate(reversed(handler.breadcrumb)) %}
+            <li class="{{'current' if last == i else ''}}">
+              {% if i != last %}
+              <a data-url-has-params href="{{ reverse_url_with_params(crumb_item.url_name, url_args=crumb_item.url_params.values())}}">{{crumb_item.title}}</a>
+              {% else %}
+              {{ crumb_item.title}}
+              {% end %}
+            </li>
+            {% if crumb_item.children and i == last %}
+            <li class="current">
+              &nbsp;
+              <div class="btn-group">
+                <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle btn btn-link">Choose one ... <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  {% for child in crumb_item.children %}
+                  <li>
+                    <a data-url-has-params href="{{ reverse_url_with_params(child.url_name, url_args=child.url_params.values())}}">{{child.title}}</a>
+                  </li>
+                  {% end %}
+                </ul>
+              </div>
+            </li>
+            {% end %}
+            {% end %}
+          </ol>
+        {% end %}
+        </div>
+        <div class="col-lg-4 col-lg-offset-1">
+          <div class="text-right" id="daterangepicker">
+            <strong>
+              <i class="glyphicon glyphicon-calendar"></i>&nbsp;
+            </strong>
+            <span></span>
+            <!--<input data-role="start_date" class="form-control"></input>-->
+            <!--<input data-role="end_date" class="form-control"></input>-->
+          </div>
         </div>
       </div>
     </div>
     {% end %}
-    <div>
+    <div class="container-fluid">
       {% module Messages() %}
     </div>
     {% block content %} {% end %}
-    <footer class="row full-width" >
-      <div class="large-12 columns" >
-        <div class="row hide-for-small">
-          <div class="large-6 columns">
-            <ul class="inline-list ">
-              <li>Version {{version()}}</li>
-              <li>&copy; 2014-2017 Dalibo</li>
-              <li><a href="http://dalibo.github.io/powa">http://dalibo.github.io/powa</a></li>
-            </ul>
-          </div>
-          <div class="large-6 columns">
-            <ul class="inline-list right">
-              <li><a href="http://www.dalibo.com"><i class="fa fa-stethoscope"></i>Get support</a></li>
-              <li><a href="https://twitter.com/dalibo"><i class="fa fa-twitter"></i>Follow us</a></li>
-              <li><a href="https://github.com/dalibo/powa/issues"><i class="fa fa-bug"></i>Report a bug</a></li>
-            </ul>
+    <footer class="container-fluid">
+      <div class="row" >
+        <div class="col-lg-12" >
+          <div class="row hide-for-small">
+            <div class="col-lg-6">
+              <ul class="list-inline">
+                <li>Version {{version()}}</li>
+                <li>&copy; 2014-2017 Dalibo</li>
+                <li><a href="http://dalibo.github.io/powa">http://dalibo.github.io/powa</a></li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <ul class="list-inline text-right">
+                <li><a href="http://www.dalibo.com"><i class="fa fa-stethoscope"></i>Get support</a></li>
+                <li><a href="https://twitter.com/dalibo"><i class="fa fa-twitter"></i>Follow us</a></li>
+                <li><a href="https://github.com/dalibo/powa/issues"><i class="fa fa-bug"></i>Report a bug</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

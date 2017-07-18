@@ -3,9 +3,6 @@ require.config({
   paths: {
     backbone: "../bower_components/backbone/backbone",
     d3: "../bower_components/d3/d3",
-    foundation: "../bower_components/foundation/js/foundation",
-    modernizr: "../bower_components/modernizr/modernizr",
-    "foundation-daterangepicker": "../bower_components/foundation-daterangepicker/daterangepicker",
     jquery: "../bower_components/jquery/dist/jquery",
     moment: "../bower_components/moment/moment",
     requirejs: "../bower_components/requirejs/require",
@@ -21,7 +18,9 @@ require.config({
     "backgrid-filter": "../bower_components/backgrid-filter/backgrid-filter",
     "backgrid-paginator": "../bower_components/backgrid-paginator/backgrid-paginator",
     "backbone-pageable": "../bower_components/backbone-pageable/lib/backbone-pageable",
-    "file-saver": "../bower_components/file-saver/FileSaver"
+    "file-saver": "../bower_components/file-saver/FileSaver",
+    "bootstrap-daterangepicker": "../bower_components/bootstrap-daterangepicker/daterangepicker",
+    "bootstrap-sass": "../bower_components/bootstrap-sass/assets/javascripts/bootstrap"
   },
   urlArgs: {
     date: {
@@ -33,35 +32,6 @@ require.config({
     highlight: {
       exports: "hljs"
     },
-    "foundation/foundation": {
-      deps: [
-        "jquery"
-      ]
-    },
-    "foundation/foundation.tab": [
-      "foundation/foundation"
-    ],
-    "foundation/foundation.topbar": [
-      "foundation/foundation"
-    ],
-    "foundation/foundation.equalizer": [
-      "foundation/foundation"
-    ],
-    "foundation/foundation.dropdown": [
-      "foundation/foundation"
-    ],
-    "foundation/foundation.tooltip": [
-      "foundation/foundation"
-    ],
-    "foundation/foundation.offcanvas": [
-      "foundation/foundation"
-    ],
-    "foundation/foundation.alert": [
-      "foundation/foundation"
-    ],
-    "foundation-daterangepicker": [
-      "foundation/foundation"
-    ],
     backgrid: {
       deps: [
         "jquery",

@@ -1,6 +1,5 @@
 define([
         'jquery',
-        'foundation/foundation.tooltip',
         'backbone',
         'powa/views/WidgetView',
         'powa/models/Grid',
@@ -13,8 +12,10 @@ define([
         'file-saver',
         'powa/utils/duration',
         'backgrid-filter',
-        'backgrid-paginator'],
-        function(jquery, foundation, Backbone, WidgetView, Grid, Backgrid, moment, template,
+        'backgrid-paginator',
+        'bootstrap-sass/tooltip',
+        'bootstrap-sass/popover'],
+        function(jquery, Backbone, WidgetView, Grid, Backgrid, moment, template,
             size, highlight, timeurls, FileSaver){
 
 
@@ -131,7 +132,9 @@ define([
                 max_length = this.column.get("max_length"),
                 too_long = value.length > max_length,
                 truncated_value = too_long ? value.substring(0, max_length) + '…' : value;
-                code_elem = $("<pre>").addClass("has-tip").addClass("tip-top").attr("data-tooltip", "")
+                code_elem = $("<pre>").attr("data-placement", "top")
+                                      .attr("data-toggle", "popover")
+                                      .attr("data-trigger", "hover")
                             .html(highlight.highlight("sql", truncated_value, true).value),
                 base = this.$el;
             if(value === undefined){
@@ -139,7 +142,9 @@ define([
             }
             base.append(code_elem);
             code_elem.attr("title", "<pre>" + highlight.highlight("sql", raw_value, true).value + "</pre>");
-            this.$el.foundation('tooltip', 'reflow');
+            code_elem.popover({
+                html: true
+            });
             this.delegateEvents();
             return this;
         }

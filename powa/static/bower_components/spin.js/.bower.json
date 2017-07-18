@@ -22,7 +22,7 @@
     "tag": "2.3.2",
     "commit": "5a9ea41651105302fe76d15cb294070c5863e759"
   },
-  "_source": "git://github.com/fgnass/spin.js.git",
-  "_target": "*",
+  "_source": "https://github.com/fgnass/spin.js.git",
+  "_target": "2.3.2",
   "_originalSource": "spin.js"
 }

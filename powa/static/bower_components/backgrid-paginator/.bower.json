@@ -34,7 +34,7 @@
     "tag": "0.3.5",
     "commit": "bff11f87c77ed464872ddd347ab7d40630ad02f3"
   },
-  "_source": "git://github.com/wyuenho/backgrid-paginator.git",
-  "_target": "*",
+  "_source": "https://github.com/wyuenho/backgrid-paginator.git",
+  "_target": "0.3.5",
   "_originalSource": "backgrid-paginator"
 }

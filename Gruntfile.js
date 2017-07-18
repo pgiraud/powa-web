@@ -33,6 +33,16 @@ module.exports = function(grunt) {
                 filter: 'isFile'
             }
             ]
+        },
+        bootstrapFont: {
+            files: [
+            {
+                expand: true,
+                cwd: 'powa/static/bower_components/bootstrap-sass/assets/',
+                src: 'fonts/**',
+                dest: 'powa/static/'
+            }
+            ]
         }
     },
     requirejs: {

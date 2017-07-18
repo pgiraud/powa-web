@@ -21,13 +21,11 @@
   "dependencies": {
     "backbone": "1.1.2",
     "d3": "3.5.11",
-    "foundation-daterangepicker": "1.0.1",
-    "foundation": "5.5.3",
     "jquery": "2.1.4",
     "rickshaw": "1.5.1",
     "requirejs": "2.1.22",
     "underscore": "1.8.3",
-    "moment": "2.5.1",
+    "moment": "2.18.1",
     "requirejs-text": "2.0.14",
     "requirejs-tpl": "7438735aa8",
     "backgrid": "0.3.5",
@@ -35,6 +33,8 @@
     "backbone-pageable": "1.4.8",
     "backgrid-paginator": "0.3.5",
     "backgrid-filter": "0.3.5",
-    "file-saver": "1.3.3"
+    "file-saver": "1.3.3",
+    "bootstrap-sass": "3.3.7",
+    "bootstrap-daterangepicker": "2.1.25"
   }
 }
