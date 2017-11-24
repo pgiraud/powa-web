@@ -1,14 +1,14 @@
-@import '_settings.scss';
-@import '../bower_components/foundation/scss/foundation.scss';
-@import '../bower_components/rickshaw/src/css/graph.scss';
-@import '../bower_components/rickshaw/src/css/detail.scss';
-@import 'powa_rickshaw.scss';
-@import '../bower_components/foundation-daterangepicker/daterangepicker.scss';
-@import 'powa_backgrid.scss';
-@import '../bower_components/backgrid-filter/backgrid-filter.scss';
-@import '../bower_components/backgrid-paginator/backgrid-paginator.scss';
+@import '_settings';
+@import '../../../node_modules/@bower_components/foundation/scss/foundation';
+@import '../../../node_modules/@bower_components/rickshaw/src/css/graph';
+@import '../../../node_modules/@bower_components/rickshaw/src/css/detail';
+@import 'powa_rickshaw';
+@import '../../../node_modules/@bower_components/foundation-daterangepicker/daterangepicker';
+@import 'powa_backgrid';
+@import '../../../node_modules/@bower_components/backgrid-filter/backgrid-filter';
+@import '../../../node_modules/@bower_components/backgrid-paginator/backgrid-paginator';
 @import '../libs/highlight/styles/solarized_dark.scss';
-@import 'foundation-icons.scss';
+@import 'foundation-icons';
 
 .widget-icon-bar {
 @include icon-bar(
