@@ -7,10 +7,10 @@
 
 <script>
 
-import Widget from './Widget.vue';
+import MetricWidget from './MetricWidget.vue';
 
 export default {
-  extends: Widget,
+  extends: MetricWidget,
   props: {
     config: {
       type: Object,

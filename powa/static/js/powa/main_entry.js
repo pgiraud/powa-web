@@ -2,6 +2,7 @@ import _ from 'lodash';
 import Vue from 'vue';
 import Dashboard from './components/Dashboard.vue';
 import './components';
+import store from './store';
 
 var app = new Vue ({
   el: '#dashboard',
@@ -21,12 +22,13 @@ const colors = ["#c05020", "#30c020", "#6060c0"];
 const dashboards = [];
 
 $('script[type="text/datasources"]').each(function() {
-  const metricGroups = JSON.parse(this.text);
-  $.each(metricGroups, function(){
+  const dataSources = JSON.parse(this.text);
+  _.each(dataSources, function(dataSource) {
+    store.dataSources[dataSource.name] = dataSource;
     try {
-      if (this.type == "metric_group") {
+      if (dataSource.type == "metric_group") {
         //ds.add(MetricGroup.fromJSON(this));
-      } else if (this.type == "content") {
+      } else if (dataSource.type == "content") {
         //ds.add(ContentSource.fromJSON(this));
       }
     }
@@ -38,7 +40,6 @@ $('script[type="text/datasources"]').each(function() {
 
 $('script[type="text/dashboard"]').each(function(){
   app.config = JSON.parse(this.text);
-  console.log (app.config);
   //const widgetsEl = $('.widgets');
 
   //_.each(config.widgets, (w) => {
