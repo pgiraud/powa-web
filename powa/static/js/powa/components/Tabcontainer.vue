@@ -31,16 +31,16 @@
 
 <script>
 import * as _ from 'lodash';
+import Component from 'vue-class-component'
 import Widget from './Widget.vue';
 
-export default {
-  extends: Widget,
-  computed: {
-    tabs () {
-      // Provide a unique Id to tabs
-      return _.map(this.config.tabs,
-                   (tab) => Object.assign({uuid: _.uniqueId('tab-')}, tab));
-    }
+@Component()
+class Tabcontainer extends Widget {
+  get tabs () {
+    // Provide a unique Id to tabs
+    return _.map(this.config.tabs,
+                 (tab) => Object.assign({uuid: _.uniqueId('tab-')}, tab));
   }
 }
+export default Tabcontainer
 </script>
