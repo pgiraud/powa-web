@@ -4,14 +4,17 @@ import store from '../store';
 import * as moment from 'moment';
 
 class MetricWidget extends Widget {
-  created () {
+  mounted() {
     this.loadData();
   };
 
-  loadData () {
+  loadData() {
     const metricGroup = _.uniq(_.map(this.config.metrics, (metric) => {
       return metric.split('.')[0];
     }));
+    const metrics = _.map(this.config.metrics, (metric) => {
+      return metric.split('.')[1];
+    });
     const toDate = moment();
     const fromDate = toDate.clone().subtract(1, 'hour');
     const params = {
@@ -19,13 +22,63 @@ class MetricWidget extends Widget {
       to: toDate.format("YYYY-MM-DD HH:mm:ssZZ")
     };
     const url = store.dataSources[metricGroup].data_url;
+    const grouper = this.config.grouper || null;
+    const xaxis = this.config.xaxis;
+    const yaxis = this.config.yaxis;
     $.ajax({
       url: url + '?' + $.param(params)
     }).done((response) => {
-      console.log ('done', response);
+      const seriesByMetric = {}
+
+      _.each(metrics, (metric) => {
+        seriesByMetric[metric] = {};
+      });
+
+      if (response.messages !== undefined) {
+        $.each(response.messages, function(level, arr) {
+          $.each(arr, function(i) {
+            msg = Message.add_message(level, arr[i]);
+            $("#messages").append(msg);
+          });
+        });
+      }
+
+      _.each(response.data, () => {
+        const row = this;
+        const group = grouper || "";
+        _.each(metrics, (metric) => {
+          const series = seriesByMetric[metric];
+          let current_group = series[group];
+          if (current_group === undefined) {
+            current_group = series[group] = {
+              // metric: metric,
+              id: metric + group,
+              // name: metric.label_template({group: group}),
+              data: []
+            }
+          }
+          if (row[xaxis] === undefined) {
+            throw "Data is lacking for xaxis. Did you include " + xaxis + " column in your query ?";
+          }
+          current_group.data.push($.extend({}, {x: row[xaxis], y: row[yaxis]}, row));
+        });
+      });
+
+      _.each(metrics, (metric) => {
+        const series = seriesByMetric[metric];
+        if (!$.isEmptyObject(series)) {
+          // metric.set("series", series);
+        }
+      });
+
+      this.dataLoaded();
     }).fail((response) => {
       console.log ('fail');
     });
+  };
+
+  dataLoaded() {
+    console.log ('Should be implemented in child classes');
   }
 }
 export default MetricWidget
