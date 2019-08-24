@@ -9,7 +9,7 @@
 
 import MetricWidget from './MetricWidget.vue';
 
-export default {
-  extends: MetricWidget
+class Graph extends MetricWidget {
 }
+export default Graph
 </script>

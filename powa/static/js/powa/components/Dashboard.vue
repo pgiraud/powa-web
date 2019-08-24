@@ -19,24 +19,17 @@
 
 <script>
 
+import Component from 'vue-class-component'
 import * as _ from 'lodash';
-import Tabcontainer from './Tabcontainer.vue';
-import Grid from './Grid.vue';
 import Widget from './Widget.vue';
 
-export default {
-  name: 'Dashboard',
-  components: {
-    Grid,
-    Tabcontainer
-  },
-  extends: Widget,
-  computed: {
-    widgets () {
-      // Provide a unique Id to widgets
-      return _.map(this.config.widgets,
-                   (widget) => Object.assign({uuid: _.uniqueId('widget-')}, widget));
-    }
+@Component()
+class Dashboard extends Widget {
+  get widgets () {
+    // Provide a unique Id to widgets
+    return _.map(this.config.widgets,
+                 (widget) => Object.assign({uuid: _.uniqueId('widget-')}, widget));
   }
 }
+export default Dashboard
 </script>
