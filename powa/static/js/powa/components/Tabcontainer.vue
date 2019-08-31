@@ -5,26 +5,27 @@
       class="tabs"
     >
       <li
-        v-for="tab in tabs"
+        v-for="(tab, index) in tabs"
         :key="tab.uuid"
-        :data-tabid="tab.uuid"
-        class="tab-title"
+        :class="['tab-title', {'active': index === 0}]"
       >
-        <a href>
+        <a :href="'#' + tab.uuid">
           {{ tab.title }}
         </a>
       </li>
     </ul>
-    <div
-      v-for="tab in tabs"
-      :key="tab.uuid"
-      class="content"
-    >
-      {{ tab.type }}
-      <component
-        :is="widgetComponent(tab.type)"
-        :config="tab"
-      />
+    <div class="tabs-content">
+      <div
+        v-for="(tab, index) in tabs"
+        :id="tab.uuid"
+        :key="tab.uuid"
+        :class="['content', {'active': index === 0}]"
+      >
+        <component
+          :is="widgetComponent(tab.type)"
+          :config="tab"
+        />
+      </div>
     </div>
   </div>
 </template>
