@@ -3,6 +3,9 @@ import Vue from 'vue';
 import Dashboard from './components/Dashboard.vue';
 import './components';
 import store from './store';
+import BootstrapVue from 'bootstrap-vue';
+
+Vue.use(BootstrapVue);
 
 var app = new Vue ({
   el: '#dashboard',
