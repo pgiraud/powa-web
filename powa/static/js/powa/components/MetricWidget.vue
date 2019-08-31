@@ -1,8 +1,11 @@
 <script>
+import Component from 'vue-class-component'
 import Widget from './Widget.vue';
 import store from '../store';
 import * as moment from 'moment';
+import Rickshaw from 'rickshaw';
 
+@Component()
 class MetricWidget extends Widget {
   mounted() {
     this.loadData();
@@ -21,12 +24,12 @@ class MetricWidget extends Widget {
       from: fromDate.format("YYYY-MM-DD HH:mm:ssZZ"),
       to: toDate.format("YYYY-MM-DD HH:mm:ssZZ")
     };
-    const url = store.dataSources[metricGroup].data_url;
+    const sourceConfig = store.dataSources[metricGroup];
     const grouper = this.config.grouper || null;
-    const xaxis = this.config.xaxis;
-    const yaxis = this.config.yaxis;
+    const xaxis = sourceConfig.xaxis;
+    const yaxis = sourceConfig.yaxis;
     $.ajax({
-      url: url + '?' + $.param(params)
+      url: sourceConfig.data_url + '?' + $.param(params)
     }).done((response) => {
       const seriesByMetric = {}
 
@@ -43,15 +46,14 @@ class MetricWidget extends Widget {
         });
       }
 
-      _.each(response.data, () => {
-        const row = this;
+      _.each(response.data, (row) => {
         const group = grouper || "";
         _.each(metrics, (metric) => {
           const series = seriesByMetric[metric];
           let current_group = series[group];
           if (current_group === undefined) {
             current_group = series[group] = {
-              // metric: metric,
+              metric: metric,
               id: metric + group,
               // name: metric.label_template({group: group}),
               data: []
@@ -60,18 +62,28 @@ class MetricWidget extends Widget {
           if (row[xaxis] === undefined) {
             throw "Data is lacking for xaxis. Did you include " + xaxis + " column in your query ?";
           }
-          current_group.data.push($.extend({}, {x: row[xaxis], y: row[yaxis]}, row));
+          current_group.data.push($.extend({}, {x: row[xaxis], y: row[sourceConfig.metrics[metric].yaxis]}, row));
         });
       });
 
+      let newSeries = [];
+      const palette = new Rickshaw.Color.Palette(
+        {
+          scheme: this.config.color_scheme,
+          interpolatedStopCount: 1
+        }
+      );
       _.each(metrics, (metric) => {
         const series = seriesByMetric[metric];
         if (!$.isEmptyObject(series)) {
-          // metric.set("series", series);
+          $.each(series, function(key, serie){
+            const newSerie = $.extend({}, sourceConfig.metrics[metric], serie);
+            newSerie.color = palette.color();
+            newSeries.push(newSerie);
+          });
         }
       });
-
-      this.dataLoaded();
+      this.dataLoaded(newSeries);
     }).fail((response) => {
       console.log ('fail');
     });
