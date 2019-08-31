@@ -13,7 +13,7 @@
         <div class="row">
           <div ref="graphContainer" />
         </div>
-        <div class="graph_timeline" />
+        <div ref="graphTimeline" />
         <div class="row">
           <div class="graph_preview" />
         </div>
@@ -24,7 +24,7 @@
       />
     </div>
     <div class="row">
-      <div class="graph_legend" />
+      <div ref="graphLegend" />
     </div>
   </div>
 </template>
@@ -66,29 +66,64 @@ class Graph extends MetricWidget {
       }
     );
     this.graph = new Rickshaw.Graph(options);
-    this.xAxis = new Rickshaw.Graph.Axis.Time({
-        graph: this.graph,
-        timeFixture: new Rickshaw.Fixtures.Time.Local()
-    });
     this.graph.render();
+
+    // Axis
+    this.xAxis = new Rickshaw.Graph.Axis.Time({
+      graph: this.graph,
+      timeFixture: new Rickshaw.Fixtures.Time.Local()
+    });
     this.yAxes = {};
     this.initAxes(series);
+
+    // Hover
+    new Rickshaw.Graph.HoverDetail({
+      graph: this.graph,
+      xFormatter: function(x) {
+        return new moment.unix(x).format("LLLL");
+      },
+      formatter: function(series, x, y) {
+        const type = this.getType(series.metric);
+        const formatter = this.axisFormats[type];
+        const date = '<span class="date">' + new moment.unix(x).format("lll") + '</span>';
+        const swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+        const content = swatch + series.label + ": " + formatter(y) + '<br/>' + date;
+        return content;
+      }.bind(this)
+    });
+
+    // Time line
+    this.annotator = new Rickshaw.Graph.Annotate( {
+      graph: this.graph,
+      element: this.$refs.graphTimeline
+    });
+
+    // Legend
+    this.legend = new Rickshaw.Graph.Legend( {
+        graph: this.graph,
+        element: this.$refs.graphLegend
+    });
+    this.legend.render();
+    new Rickshaw.Graph.Behavior.Series.Toggle( {
+      graph: this.graph,
+      legend: this.legend
+    });
+    new Rickshaw.Graph.Behavior.Series.Highlight( {
+      graph: this.graph,
+      legend: this.legend
+    });
   }
 
   initAxes(series) {
     let i = 0;
-    const metricGroup = _.uniq(_.map(this.config.metrics, (metric) => {
-      return metric.split('.')[0];
-    }));
     const metrics = _.map(this.config.metrics, (metric) => {
       return metric.split('.')[1];
     });
-    const sourceConfig = store.dataSources[metricGroup];
     _.each(metrics, (metric, index) => {
-      var type = sourceConfig.metrics[metric].type || "number";
+      const type = this.getType(metric);
       if (this.yAxes[type] == undefined) {
-        var formatter = this.axisFormats[type];
-        var orientation = i % 2 == 0 ? "left" : "right";
+        const formatter = this.axisFormats[type];
+        const orientation = i % 2 == 0 ? "left" : "right";
         this.yAxes[type] = new Rickshaw.Graph.Axis.Y.Scaled({
             element: this.$refs[orientation + "Axis"],
             graph: this.graph,
