@@ -27,6 +27,7 @@ $('script[type="text/datasources"]').each(function() {
     store.dataSources[dataSource.name] = dataSource;
     try {
       if (dataSource.type == "metric_group") {
+        dataSource.metrics = _.keyBy(dataSource.metrics, 'name');
         //ds.add(MetricGroup.fromJSON(this));
       } else if (dataSource.type == "content") {
         //ds.add(ContentSource.fromJSON(this));
