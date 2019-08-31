@@ -20,6 +20,7 @@
         :id="tab.uuid"
         :key="tab.uuid"
         :class="['content', {'active': index === 0}]"
+        style="display:inline-block"
       >
         <component
           :is="widgetComponent(tab.type)"
