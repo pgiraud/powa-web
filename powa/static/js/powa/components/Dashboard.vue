@@ -1,15 +1,19 @@
 <template>
   <div>
     <div
-      v-for="widget in widgets"
-      :key="widget.uuid"
+      v-for="(row, rIndex) in config.widgets"
+      :key="rIndex"
       class="row"
     >
-      <div class="columns large-12">
+      <div
+        v-for="(widget, wIndex) in row"
+        :key="rIndex + wIndex"
+        :class="['columns', 'large-' + 12 / Object.keys(row).length]"
+      >
         <div class="widget panel">
           <component
-            :is="widgetComponent(widget[0].type)"
-            :config="widget[0]"
+            :is="widgetComponent(widget.type)"
+            :config="widget"
           />
         </div>
       </div>
@@ -25,11 +29,6 @@ import Widget from './Widget.vue';
 
 @Component()
 class Dashboard extends Widget {
-  get widgets () {
-    // Provide a unique Id to widgets
-    return _.map(this.config.widgets,
-                 (widget) => Object.assign({uuid: _.uniqueId('widget-')}, widget));
-  }
 }
 export default Dashboard
 </script>
