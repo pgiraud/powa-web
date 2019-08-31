@@ -100,6 +100,22 @@ class MetricWidget extends Widget {
     const sourceConfig = store.dataSources[metricGroup];
     return sourceConfig.metrics[metric].type || 'number';
   }
+
+  getLabel(metric) {
+    const metricGroup = _.uniq(_.map(this.config.metrics, (metric) => {
+      return metric.split('.')[0];
+    }));
+    const sourceConfig = store.dataSources[metricGroup];
+    return sourceConfig.metrics[metric].label;
+  }
+
+  getDesc(metric) {
+    const metricGroup = _.uniq(_.map(this.config.metrics, (metric) => {
+      return metric.split('.')[0];
+    }));
+    const sourceConfig = store.dataSources[metricGroup];
+    return sourceConfig.metrics[metric].desc;
+  }
 }
 export default MetricWidget
 </script>
