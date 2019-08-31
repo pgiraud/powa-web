@@ -2,7 +2,10 @@
   <div>
     <h4 class="title graph-title">
       {{ config.title }}
-      <i class="fi-info" />
+      <i
+        ref="help"
+        class="fi-info"
+      />
     </h4>
     <div class="row graph">
       <div
@@ -38,6 +41,7 @@ import size from '../utils2/size';
 import store from '../store';
 import moment from 'moment';
 import '../utils2/precisediff';
+import tippy from 'tippy.js';
 
 @Component()
 class Graph extends MetricWidget {
@@ -52,6 +56,9 @@ class Graph extends MetricWidget {
   }
 
   dataLoaded(series) {
+    // Help
+    this.initGraphHelp();
+
     const size = $(this.$refs.graphContainer).parent().innerWidth();
     const attributes = this.config;
     const options = $.extend(
@@ -135,6 +142,30 @@ class Graph extends MetricWidget {
         i++;
         this.yAxes[type].render();
       }
+    });
+  }
+
+  initGraphHelp() {
+    let labels = '';
+    const metrics = _.map(this.config.metrics, (metric) => {
+      return metric.split('.')[1];
+    });
+    _.each(metrics, (metric, index) => {
+      labels = '<tr>'
+        + '<td><b>' + this.getLabel(metric) + '</b></td>'
+        + '<td>'
+        + this.getDesc(metric)
+        + '</td></td>'
+        + labels;
+    });
+    const help = '<table>' + labels + '</table class="stack">';
+    // add the hover info
+    tippy(this.$refs.help, {
+      content: help,
+      arrow: true,
+      arrowType: 'round',
+      maxWidth: '100%',
+      theme: 'translucent',
     });
   }
 }
