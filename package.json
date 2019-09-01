@@ -19,14 +19,17 @@
     "eslint": "^5.16.0",
     "eslint-loader": "^2.2.1",
     "eslint-plugin-vue": "^5.2.3",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
     "vue-class-component": "^7.1.0",
     "vue-loader": "^15.7.1",
     "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.39.2",
+    "webpack": "^4.39.3",
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
     "bootstrap-vue": "^2.0.0-rc.28",
+    "highlight.js": "^9.15.10",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
     "rickshaw": "^1.6.6",

@@ -82,7 +82,7 @@ moment.preciseDiff = function(d1, d2, imprecise) {
   function pluralize(num, word) {
     return num + ' ' + STRINGS[word + (num === 1 ? '' : 's')];
   }
-  const result = [];
+  let result = [];
   if (yDiff) {
     result.push(pluralize(yDiff, 'year'));
   }
