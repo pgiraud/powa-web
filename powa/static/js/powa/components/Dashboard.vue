@@ -8,7 +8,7 @@
       <div
         v-for="(widget, wIndex) in row"
         :key="rIndex + wIndex"
-        :class="['columns', 'large-' + 12 / Object.keys(row).length]"
+        :class="['col-lg-' + 12 / Object.keys(row).length]"
       >
         <div class="widget panel">
           <component
