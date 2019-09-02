@@ -1,22 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-<div id="dashboard">
+<div id="dashboard" class="container-fluid">
   <dashboard :config="config"></dashboard>
 </div>
-<div class="dashboard">
-    <div class="widgets">
+<script type="text/dashboard">
+    {% raw to_json(dashboard) %}
+</script>
 
-    </div>
-    <script type="text/dashboard">
-        {% raw to_json(dashboard) %}
-    </script>
+<script type="text/datasources">
+    {% raw to_json(datasources) %}
+</script>
 
-    <script type="text/datasources">
-        {% raw to_json(datasources) %}
-    </script>
-
-    <script type="text/datasource_timeline">
-        {% raw to_json(timeline) %}
-    </script>
-</div>
+<script type="text/datasource_timeline">
+    {% raw to_json(timeline) %}
+</script>
 {% end %}
