@@ -158,6 +158,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./powa/static/js/powa/components/Wizard.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--1!./node_modules/vue-loader/lib??vue-loader-options!./powa/static/js/powa/components/Wizard.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_class_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-class-component */ \"./node_modules/vue-class-component/dist/vue-class-component.esm.js\");\n/* harmony import */ var _Widget_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Widget.vue */ \"./powa/static/js/powa/components/Widget.vue\");\nvar _dec, _class;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\nvar Wizard = (_dec = Object(vue_class_component__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(), _dec(_class =\n/*#__PURE__*/\nfunction (_Widget) {\n  _inherits(Wizard, _Widget);\n\n  function Wizard() {\n    _classCallCheck(this, Wizard);\n\n    return _possibleConstructorReturn(this, _getPrototypeOf(Wizard).apply(this, arguments));\n  }\n\n  return Wizard;\n}(_Widget_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"])) || _class);\n/* harmony default export */ __webpack_exports__[\"default\"] = (Wizard);\n\n//# sourceURL=webpack:///./powa/static/js/powa/components/Wizard.vue?./node_modules/babel-loader/lib??ref--1!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
 /***/ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/dist/bootstrap-vue.css ***!
@@ -4831,6 +4843,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./powa/static/js/powa/components/Wizard.vue?vue&type=template&id=bb1f352a&":
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./powa/static/js/powa/components/Wizard.vue?vue&type=template&id=bb1f352a& ***!
+  \****************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"card mb-4\" }, [\n    _c(\"div\", { staticClass: \"card-body\" }, [\n      _c(\"h4\", [_vm._v(_vm._s(_vm.config.title))]),\n      _vm._v(\" \"),\n      _c(\"em\", [_vm._v(\"Wizard component not implemented.\")])\n    ])\n  ])\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./powa/static/js/powa/components/Wizard.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
 /*!********************************************************************!*\
   !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
@@ -5105,6 +5129,42 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 /***/ }),
 
+/***/ "./powa/static/js/powa/components/Wizard.vue":
+/*!***************************************************!*\
+  !*** ./powa/static/js/powa/components/Wizard.vue ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Wizard_vue_vue_type_template_id_bb1f352a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Wizard.vue?vue&type=template&id=bb1f352a& */ \"./powa/static/js/powa/components/Wizard.vue?vue&type=template&id=bb1f352a&\");\n/* harmony import */ var _Wizard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Wizard.vue?vue&type=script&lang=js& */ \"./powa/static/js/powa/components/Wizard.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _Wizard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _Wizard_vue_vue_type_template_id_bb1f352a___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _Wizard_vue_vue_type_template_id_bb1f352a___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"powa/static/js/powa/components/Wizard.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./powa/static/js/powa/components/Wizard.vue?");
+
+/***/ }),
+
+/***/ "./powa/static/js/powa/components/Wizard.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./powa/static/js/powa/components/Wizard.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_1_node_modules_vue_loader_lib_index_js_vue_loader_options_Wizard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--1!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Wizard.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./powa/static/js/powa/components/Wizard.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_ref_1_node_modules_vue_loader_lib_index_js_vue_loader_options_Wizard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack:///./powa/static/js/powa/components/Wizard.vue?");
+
+/***/ }),
+
+/***/ "./powa/static/js/powa/components/Wizard.vue?vue&type=template&id=bb1f352a&":
+/*!**********************************************************************************!*\
+  !*** ./powa/static/js/powa/components/Wizard.vue?vue&type=template&id=bb1f352a& ***!
+  \**********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Wizard_vue_vue_type_template_id_bb1f352a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./Wizard.vue?vue&type=template&id=bb1f352a& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./powa/static/js/powa/components/Wizard.vue?vue&type=template&id=bb1f352a&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Wizard_vue_vue_type_template_id_bb1f352a___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Wizard_vue_vue_type_template_id_bb1f352a___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./powa/static/js/powa/components/Wizard.vue?");
+
+/***/ }),
+
 /***/ "./powa/static/js/powa/components/index.js":
 /*!*************************************************!*\
   !*** ./powa/static/js/powa/components/index.js ***!
@@ -5113,7 +5173,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n/* harmony import */ var _Dashboard_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Dashboard.vue */ \"./powa/static/js/powa/components/Dashboard.vue\");\n/* harmony import */ var _Graph_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Graph.vue */ \"./powa/static/js/powa/components/Graph.vue\");\n/* harmony import */ var _Grid_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Grid.vue */ \"./powa/static/js/powa/components/Grid.vue\");\n/* harmony import */ var _Tabcontainer_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Tabcontainer.vue */ \"./powa/static/js/powa/components/Tabcontainer.vue\");\n\n\n\n\n\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('dashboard', _Dashboard_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('graph', _Graph_vue__WEBPACK_IMPORTED_MODULE_2__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('grid', _Grid_vue__WEBPACK_IMPORTED_MODULE_3__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('tabcontainer', _Tabcontainer_vue__WEBPACK_IMPORTED_MODULE_4__[\"default\"]);\n\n//# sourceURL=webpack:///./powa/static/js/powa/components/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.esm.js\");\n/* harmony import */ var _Dashboard_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Dashboard.vue */ \"./powa/static/js/powa/components/Dashboard.vue\");\n/* harmony import */ var _Graph_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Graph.vue */ \"./powa/static/js/powa/components/Graph.vue\");\n/* harmony import */ var _Grid_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Grid.vue */ \"./powa/static/js/powa/components/Grid.vue\");\n/* harmony import */ var _Tabcontainer_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Tabcontainer.vue */ \"./powa/static/js/powa/components/Tabcontainer.vue\");\n/* harmony import */ var _Wizard_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Wizard.vue */ \"./powa/static/js/powa/components/Wizard.vue\");\n\n\n\n\n\n\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('dashboard', _Dashboard_vue__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('graph', _Graph_vue__WEBPACK_IMPORTED_MODULE_2__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('grid', _Grid_vue__WEBPACK_IMPORTED_MODULE_3__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('tabcontainer', _Tabcontainer_vue__WEBPACK_IMPORTED_MODULE_4__[\"default\"]);\nvue__WEBPACK_IMPORTED_MODULE_0__[\"default\"].component('wizard', _Wizard_vue__WEBPACK_IMPORTED_MODULE_5__[\"default\"]);\n\n//# sourceURL=webpack:///./powa/static/js/powa/components/index.js?");
 
 /***/ }),
 
