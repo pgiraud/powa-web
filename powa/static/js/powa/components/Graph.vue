@@ -1,29 +1,25 @@
 <template>
   <div>
-    <h4 class="title graph-title">
+    <h4>
       {{ config.title }}
       <i
         ref="help"
-        class="fi-info"
+        class="fa fa-info"
       />
     </h4>
-    <div class="row graph">
+    <div class="row">
       <div
         ref="leftAxis"
-        class="columns large-1 small-1"
+        class="col-sm-1"
       />
-      <div class="columns large-10 small-10">
-        <div class="row">
-          <div ref="graphContainer" />
-        </div>
+      <div class="col-sm-10">
+        <div ref="graphContainer" />
         <div ref="graphTimeline" />
-        <div class="row">
-          <div class="graph_preview" />
-        </div>
+        <div class="graph_preview" />
       </div>
       <div
         ref="rightAxis"
-        class="columns large-1 small-1"
+        class="col-sm-1"
       />
     </div>
     <div class="row">
@@ -37,6 +33,7 @@
 import Component from 'vue-class-component'
 import MetricWidget from './MetricWidget.vue';
 import Rickshaw from 'rickshaw';
+import 'rickshaw/rickshaw.css'
 import size from '../utils2/size';
 import store from '../store';
 import moment from 'moment';
