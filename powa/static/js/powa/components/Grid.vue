@@ -39,6 +39,11 @@
         >
           <pre v-html="data.value" />
         </template>
+        <template
+          v-slot:cell(where_clause)="data"
+        >
+          <pre v-html="data.value" />
+        </template>
       </b-table>
       <div class="row">
         <div class="col-sm-4">
