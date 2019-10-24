@@ -141,7 +141,6 @@ class Grid extends Widget {
   }
 
   getFormatter(type) {
-    console.log (type);
     switch (type) {
       case 'duration':
         return this.formatDuration;
