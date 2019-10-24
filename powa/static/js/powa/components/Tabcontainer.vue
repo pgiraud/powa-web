@@ -1,26 +1,34 @@
 <template>
   <div>
     <ul
-      data-tab
-      class="tabs"
+      class="nav nav-tabs"
+      role="tablist"
     >
       <li
         v-for="(tab, index) in tabs"
         :key="tab.uuid"
-        :class="['tab-title', {'active': index === 0}]"
+        class="nav-item"
       >
-        <a :href="'#' + tab.uuid">
+        <a
+          :href="'#' + tab.uuid"
+          :class="['nav-link', {'active': index === 0}]"
+          data-toggle="tab"
+          role="tab"
+          :aria-controls="tab.uuid"
+          :aria-selected="index === 0 ? 'true' : 'false'"
+        >
           {{ tab.title }}
         </a>
       </li>
     </ul>
-    <div class="tabs-content">
+    <div class="tab-content">
       <div
         v-for="(tab, index) in tabs"
         :id="tab.uuid"
         :key="tab.uuid"
-        :class="['content', {'active': index === 0}]"
-        style="display:inline-block"
+        :class="['tab-pane', {'show active': index === 0}]"
+        role="tabpanel"
+        :aria-labelledby="tab.uuid"
       >
         <component
           :is="widgetComponent(tab.type)"
