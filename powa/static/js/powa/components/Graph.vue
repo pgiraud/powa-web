@@ -1,29 +1,31 @@
 <template>
-  <div>
-    <h4>
-      {{ config.title }}
-      <i
-        ref="help"
-        class="fa fa-info"
-      />
-    </h4>
-    <div class="row">
-      <div
-        ref="leftAxis"
-        class="col-sm-1"
-      />
-      <div class="col-sm-10">
-        <div ref="graphContainer" />
-        <div ref="graphTimeline" />
-        <div class="graph_preview" />
+  <div class="card shadow border-0 mb-4">
+    <div class="card-body">
+      <h4 class="card-title">
+        {{ config.title }}
+        <i
+          ref="help"
+          class="fa fa-info"
+        />
+      </h4>
+      <div class="row no-gutters">
+        <div
+          ref="leftAxis"
+          class="col-sm-1"
+        />
+        <div class="col-sm-10">
+          <div ref="graphContainer" />
+          <div ref="graphTimeline" />
+          <div class="graph_preview" />
+        </div>
+        <div
+          ref="rightAxis"
+          class="col-sm-1"
+        />
       </div>
-      <div
-        ref="rightAxis"
-        class="col-sm-1"
-      />
-    </div>
-    <div class="row">
-      <div ref="graphLegend" />
+      <div class="row">
+        <div ref="graphLegend" />
+      </div>
     </div>
   </div>
 </template>
@@ -168,3 +170,28 @@ class Graph extends MetricWidget {
 }
 export default Graph
 </script>
+
+<style lang="scss">
+.y_axis {
+  overflow: visible;
+}
+.rickshaw_legend {
+  color: black;
+  background: transparent;
+  padding: 0;
+  .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 8px 0 0;
+  }
+  .label {
+    display: inline-block;
+  }
+  .line {
+    display: inline-block;
+    margin: 0 0 0 30px;
+  }
+}
+
+</style>

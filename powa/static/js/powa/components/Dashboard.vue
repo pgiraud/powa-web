@@ -10,7 +10,7 @@
         :key="rIndex + wIndex"
         :class="['col-lg-' + 12 / Object.keys(row).length]"
       >
-        <div class="widget panel">
+        <div class="">
           <component
             :is="widgetComponent(widget.type)"
             :config="widget"
