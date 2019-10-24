@@ -18,6 +18,10 @@ import Component from 'vue-class-component'
 })
 class Widget extends Vue {
   widgetComponent (type) {
+    if (type === 'content') {
+      // we cannot use <content> reserved HTML tag
+      return 'content-cmp';
+    }
     return type;
   }
 }
