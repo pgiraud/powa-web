@@ -35,8 +35,7 @@
         @row-clicked="onRowClicked"
       >
         <template
-          slot="[query]"
-          slot-scope="data"
+          v-slot:cell(query)="data"
         >
           <pre v-html="data.value" />
         </template>
