@@ -1,32 +1,34 @@
 <template>
-  <div>
-    <ul
-      class="nav nav-pills mb-2"
-      role="tablist"
-    >
-      <li
-        v-for="(tab, index) in tabs"
-        :key="tab.uuid"
-        class="nav-item"
+  <div class="card mb-4">
+    <div class="card-header">
+      <ul
+        class="nav nav-tabs card-header-tabs"
+        role="tablist"
       >
-        <a
-          :href="'#' + tab.uuid"
-          :class="['nav-link', {'active': index === 0}]"
-          data-toggle="tab"
-          role="tab"
-          :aria-controls="tab.uuid"
-          :aria-selected="index === 0 ? 'true' : 'false'"
+        <li
+          v-for="(tab, index) in tabs"
+          :key="tab.uuid"
+          class="nav-item"
         >
-          {{ tab.title }}
-        </a>
-      </li>
-    </ul>
+          <a
+            :href="'#' + tab.uuid"
+            :class="['nav-link', {'active': index === 0}]"
+            data-toggle="tab"
+            role="tab"
+            :aria-controls="tab.uuid"
+            :aria-selected="index === 0 ? 'true' : 'false'"
+          >
+            {{ tab.title }}
+          </a>
+        </li>
+      </ul>
+    </div>
     <div class="tab-content">
       <div
         v-for="(tab, index) in tabs"
         :id="tab.uuid"
         :key="tab.uuid"
-        :class="['tab-pane', {'show active': index === 0}]"
+        :class="['tab-pane card-body', {'show active': index === 0}]"
         role="tabpanel"
         :aria-labelledby="tab.uuid"
       >
