@@ -171,7 +171,9 @@ class Grid extends Widget {
   }
 
   onRowClicked(row) {
-    window.location.href = row.url;
+    if (row.url) {
+      window.location.href = row.url;
+    }
   }
 }
 
