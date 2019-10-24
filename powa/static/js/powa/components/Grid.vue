@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h4>{{ config.title }}</h4>
-    <div class="container-fluid">
+  <div class="card mb-4">
+    <div class="card-body">
+      <h4>{{ config.title }}</h4>
       <div class="row">
         <div class="col-sm-4">
           <b-input-group size="sm">
