@@ -32,6 +32,7 @@
       >
         <component
           :is="widgetComponent(tab.type)"
+          v-if="activeTab == tab.uuid"
           :config="tab"
         />
       </div>
@@ -46,10 +47,18 @@ import Widget from './Widget.vue';
 
 @Component()
 class Tabcontainer extends Widget {
+  activeTab = null;
   get tabs () {
     // Provide a unique Id to tabs
     return _.map(this.config.tabs,
                  (tab) => Object.assign({uuid: _.uniqueId('tab-')}, tab));
+  }
+
+  mounted() {
+    this.activeTab = this.tabs[0].uuid;
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      this.activeTab = e.target.getAttribute('aria-controls');
+    }.bind(this));
   }
 }
 export default Tabcontainer
