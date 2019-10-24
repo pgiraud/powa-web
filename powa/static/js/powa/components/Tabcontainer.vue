@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul
-      class="nav nav-tabs"
+      class="nav nav-pills mb-2"
       role="tablist"
     >
       <li
