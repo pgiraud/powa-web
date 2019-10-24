@@ -152,6 +152,8 @@ class Grid extends Widget {
         return this.formatSize;
       case 'query':
         return this.formatQuery;
+      case 'percent':
+        return (value) => value + '%';
       default:
         return (value) => value;
     }
