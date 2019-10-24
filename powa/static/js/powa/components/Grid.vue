@@ -132,6 +132,10 @@ class Grid extends Widget {
     return columns;
   }
 
+  formatBool(value) {
+    return value ? '✓' : '✗';
+  }
+
   formatDuration(value) {
     return moment(parseFloat(value, 10)).preciseDiff(moment(0), true);
   }
@@ -146,14 +150,16 @@ class Grid extends Widget {
 
   getFormatter(type) {
     switch (type) {
+      case 'bool':
+        return this.formatBool;
       case 'duration':
         return this.formatDuration;
-      case 'size':
-        return this.formatSize;
-      case 'query':
-        return this.formatQuery;
       case 'percent':
         return (value) => value + '%';
+      case 'query':
+        return this.formatQuery;
+      case 'size':
+        return this.formatSize;
       default:
         return (value) => value;
     }
