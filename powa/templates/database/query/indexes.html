@@ -3,8 +3,7 @@
 <div class="indexes">
 
   <div class="row" data-equalizer>
-    <div class="columns large-4">
-    <h4>Index suggestion</h4>
+    <div class="col-4">
         {% if indexes %}
           <ul>
                 {% for clause, inds in indexes.items() %}
@@ -40,10 +39,10 @@
             No suitable index to suggest.
         {% end %}
   </div>
-  <div class="columns large-8">
+  <div class="col-8">
 {% if hypoplan  %}
     <div class="row">
-      <div class="columns large-12">
+      <div class="col-12">
         {% if hypoplan.indexes %}
         The following indexes would be <span class="label radius"
           title="Tooltip" style="background-color: #12cd21">used</span>:
@@ -57,19 +56,19 @@
         {% end %}
       </div>
       {% if hypoplan.indexes %}
-      <div class="columns large-6">
+      <div class="col-6">
       {% else %}
-      <div class="columns large-12">
+      <div class="col-12">
       {% end %}
         <pre>EXPLAIN plan <b>without</b> suggested indexes:</pre>
         <pre><code data-equalizer-watch="">{{ hypoplan.baseplan }}</code></pre>
       </div>
       {% if hypoplan.indexes %}
-      <div class="columns large-6">
+      <div class="col-6">
         <pre>EXPLAIN plan <b>with</b> suggested index</pre>
         <pre><code data-equalizer-watch="">{{ hypoplan.hypoplan }}</code></pre>
       </div>
-      <div class="columns large-12">
+      <div class="col-12">
         <pre>Query cost gain factor with hypothetical index: <b>{{
           hypoplan.gain_percent }} %</b></pre>
       </div>
