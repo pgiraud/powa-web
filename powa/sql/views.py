@@ -64,7 +64,7 @@ def powa_base_statdata_detailed_db():
     interval.
     """
     base_query = text("""
-  powa_databases,
+  {powa}.powa_databases,
   LATERAL
   (
     -- Left bound: the search interval is a single timestamp, the smallest one
@@ -76,12 +76,12 @@ def powa_base_statdata_detailed_db():
     FROM (
       SELECT psh.dbid, psh.userid, psh.queryid, psh.coalesce_range,
         unnest(records) AS records
-      FROM powa_statements_history psh
+      FROM {powa}.powa_statements_history psh
       WHERE coalesce_range && tstzrange(:from, :from, '[]')
       AND psh.dbid = powa_databases.oid
       AND psh.queryid IN (
         SELECT powa_statements.queryid
-        FROM powa_statements
+        FROM {powa}.powa_statements
         WHERE powa_statements.dbid = powa_databases.oid
           AND powa_statements.srvid = :server
       )
@@ -100,12 +100,12 @@ def powa_base_statdata_detailed_db():
     FROM (
       SELECT psh.dbid, psh.userid, psh.queryid, psh.coalesce_range,
         unnest(records) AS records
-      FROM powa_statements_history psh
+      FROM {powa}.powa_statements_history psh
       WHERE coalesce_range && tstzrange(:to, :to, '[]')
       AND psh.dbid = powa_databases.oid
       AND psh.queryid IN (
         SELECT powa_statements.queryid
-        FROM powa_statements
+        FROM {powa}.powa_statements
         WHERE powa_statements.dbid = powa_databases.oid
           AND powa_statements.srvid = :server
       )
@@ -124,12 +124,12 @@ def powa_base_statdata_detailed_db():
     FROM (
       SELECT psh.dbid, psh.userid, psh.queryid, psh.coalesce_range,
         unnest(ARRAY[mins_in_range,maxs_in_range]) AS records
-      FROM powa_statements_history psh
+      FROM {powa}.powa_statements_history psh
       WHERE coalesce_range && tstzrange(:from, :to, '[]')
       AND psh.dbid = powa_databases.oid
       AND psh.queryid IN (
         SELECT powa_statements.queryid
-        FROM powa_statements
+        FROM {powa}.powa_statements
         WHERE powa_statements.dbid = powa_databases.oid
           AND powa_statements.srvid = :server
       )
@@ -141,12 +141,12 @@ def powa_base_statdata_detailed_db():
 
     -- The "current" records are simply returned after filtering
     SELECT psc.dbid, psc.userid, psc.queryid,(psc.record).*
-    FROM powa_statements_history_current psc
+    FROM {powa}.powa_statements_history_current psc
     WHERE (record).ts <@ tstzrange(:from,:to,'[]')
     AND psc.dbid = powa_databases.oid
     AND psc.queryid IN (
       SELECT powa_statements.queryid
-      FROM powa_statements
+      FROM {powa}.powa_statements
       WHERE powa_statements.dbid = powa_databases.oid
         AND powa_statements.srvid = :server
     )
@@ -167,10 +167,10 @@ def powa_base_statdata_db():
     base_query = text("""(
  SELECT d.srvid, d.oid as dbid, h.*
  FROM
- powa_databases d LEFT JOIN
+ {powa}.powa_databases d LEFT JOIN
  (
    SELECT srvid, dbid
-   FROM powa_statements_history_db dbh
+   FROM {powa}.powa_statements_history_db dbh
    WHERE coalesce_range && tstzrange(:from, :to, '[]')
    AND dbh.srvid = :server
    GROUP BY srvid, dbid
@@ -183,7 +183,7 @@ def powa_base_statdata_db():
    SELECT (unnested1.records).*
    FROM (
      SELECT dbh.coalesce_range, unnest(records) AS records
-     FROM powa_statements_history_db dbh
+     FROM {powa}.powa_statements_history_db dbh
      WHERE coalesce_range && tstzrange(:from, :from, '[]')
      AND dbh.dbid = ranges.dbid
      AND dbh.srvid = :server
@@ -198,7 +198,7 @@ def powa_base_statdata_db():
    SELECT (unnested2.records).*
    FROM (
      SELECT dbh.coalesce_range, unnest(records) AS records
-     FROM powa_statements_history_db dbh
+     FROM {powa}.powa_statements_history_db dbh
      WHERE coalesce_range && tstzrange(:to, :to, '[]')
      AND dbh.dbid = ranges.dbid
      AND dbh.srvid = :server
@@ -215,7 +215,7 @@ def powa_base_statdata_db():
    FROM (
      SELECT dbh.coalesce_range,
        unnest(ARRAY[mins_in_range,maxs_in_range]) AS records
-     FROM powa_statements_history_db dbh
+     FROM {powa}.powa_statements_history_db dbh
      WHERE coalesce_range && tstzrange(:from, :to, '[]')
      AND dbh.dbid = ranges.dbid
      AND dbh.srvid = :server
@@ -225,7 +225,7 @@ def powa_base_statdata_db():
    SELECT (unnested2.records).*
    FROM (
      SELECT dbh.coalesce_range, unnest(records) AS records
-     FROM powa_statements_history_db dbh
+     FROM {powa}.powa_statements_history_db dbh
      WHERE coalesce_range && tstzrange(:from, :to, '[]')
      AND dbh.dbid = ranges.dbid
      AND dbh.srvid = :server
@@ -236,7 +236,7 @@ def powa_base_statdata_db():
 
    -- The "current" records are simply returned after filtering
    SELECT (dbc.record).*
-   FROM powa_statements_history_current_db dbc
+   FROM {powa}.powa_statements_history_current_db dbc
    WHERE  (dbc.record).ts <@ tstzrange(:from, :to, '[]')
    AND dbc.dbid = d.oid
    AND dbc.srvid = d.srvid
@@ -253,7 +253,7 @@ def powa_base_bgwriter():
  FROM
  (
    SELECT srvid
-   FROM powa_stat_bgwriter_history bgwh
+   FROM {powa}.powa_stat_bgwriter_history bgwh
    WHERE coalesce_range && tstzrange(:from, :to, '[]')
    AND dbh.srvid = :server
    GROUP BY srvid
@@ -262,14 +262,14 @@ def powa_base_bgwriter():
    SELECT (unnested1.records).*
    FROM (
      SELECT bgwh.coalesce_range, unnest(records) AS records
-     FROM powa_stat_bgwriter_history bgwh
+     FROM {powa}.powa_stat_bgwriter_history bgwh
      WHERE coalesce_range && tstzrange(:from, :to, '[]')
      AND bgwh.srvid = :server
    ) AS unnested1
    WHERE  (unnested1.records).ts <@ tstzrange(:from, :to, '[]')
    UNION ALL
    SELECT (bgwc.record).*
-   FROM powa_stat_bgwriter_history_current bgwc
+   FROM {powa}.powa_stat_bgwriter_history_current bgwc
    WHERE  (dbc.record).ts <@ tstzrange(:from, :to, '[]')
    AND dbc.srvid = d.srvid
    AND dbc.srvid = :server
@@ -338,7 +338,7 @@ def powa_getstatdata_db(srvid):
 
 
 BASE_QUERY_SAMPLE_DB = text("""(
-  SELECT d.srvid, d.datname, base.* FROM powa_databases d,
+  SELECT d.srvid, d.datname, base.* FROM {powa}.powa_databases d,
   LATERAL (
     SELECT *
     FROM (
@@ -352,7 +352,7 @@ BASE_QUERY_SAMPLE_DB = text("""(
         SELECT dbid, (unnested.records).*
         FROM (
           SELECT psh.dbid, psh.coalesce_range, unnest(records) AS records
-          FROM powa_statements_history_db psh
+          FROM {powa}.powa_statements_history_db psh
           WHERE coalesce_range && tstzrange(:from, :to,'[]')
           AND psh.dbid = d.oid
           AND psh.srvid = d.srvid
@@ -361,7 +361,7 @@ BASE_QUERY_SAMPLE_DB = text("""(
         WHERE (records).ts <@ tstzrange(:from, :to, '[]')
         UNION ALL
         SELECT dbid, (record).*
-        FROM powa_statements_history_current_db
+        FROM {powa}.powa_statements_history_current_db
         WHERE  (record).ts <@ tstzrange(:from, :to, '[]')
         AND dbid = d.oid
         AND srvid = d.srvid
@@ -376,8 +376,8 @@ BASE_QUERY_SAMPLE_DB = text("""(
 
 BASE_QUERY_SAMPLE = text("""(
   SELECT powa_statements.srvid, datname, dbid, queryid, userid, base.*
-  FROM powa_statements
-  JOIN powa_databases ON powa_databases.oid = powa_statements.dbid
+  FROM {powa}.powa_statements
+  JOIN {powa}.powa_databases ON powa_databases.oid = powa_statements.dbid
    AND powa_databases.srvid = powa_statements.srvid,
   LATERAL (
       SELECT *
@@ -392,7 +392,7 @@ BASE_QUERY_SAMPLE = text("""(
               FROM (
                   SELECT psh.queryid, psh.coalesce_range,
                     unnest(records) AS records
-                  FROM powa_statements_history psh
+                  FROM {powa}.powa_statements_history psh
                   WHERE coalesce_range && tstzrange(:from, :to, '[]')
                   AND psh.queryid = powa_statements.queryid
                   AND psh.userid = powa_statements.userid
@@ -401,7 +401,7 @@ BASE_QUERY_SAMPLE = text("""(
               WHERE  (records).ts <@ tstzrange(:from, :to, '[]')
               UNION ALL
               SELECT (record).*
-              FROM powa_statements_history_current phc
+              FROM {powa}.powa_statements_history_current phc
               WHERE (record).ts <@ tstzrange(:from, :to, '[]')
               AND phc.queryid = powa_statements.queryid
               AND phc.userid = powa_statements.userid
@@ -465,7 +465,7 @@ def qualstat_base_statdata():
     FROM (
         SELECT pqnh.srvid, pqnh.qualid, pqnh.queryid, pqnh.dbid, pqnh.userid,
           pqnh.coalesce_range, unnest(records) AS records
-        FROM powa_qualstats_quals_history pqnh
+        FROM {powa}.powa_qualstats_quals_history pqnh
         WHERE coalesce_range  && tstzrange(:from, :to, '[]')
         AND pqnh.srvid = :server
     ) AS unnested
@@ -474,11 +474,11 @@ def qualstat_base_statdata():
     SELECT pqnc.srvid, qualid, queryid, dbid, userid, pqnc.ts, pqnc.occurences,
       pqnc.execution_count, pqnc.nbfiltered,
       pqnc.mean_err_estimate_ratio, pqnc.mean_err_estimate_num
-    FROM powa_qualstats_quals_history_current pqnc
+    FROM {powa}.powa_qualstats_quals_history_current pqnc
     WHERE pqnc.ts <@ tstzrange(:from, :to, '[]')
     AND pqnc.srvid = :server
     ) h
-    JOIN powa_qualstats_quals pqnh USING (srvid, queryid, qualid)
+    JOIN {powa}.powa_qualstats_quals pqnh USING (srvid, queryid, qualid)
     """)
     return base_query
 
@@ -564,7 +564,7 @@ FROM (SELECT t.nspname,
 """
 
 BASE_QUERY_KCACHE_SAMPLE_DB = text("""
-        powa_databases d,
+        {powa}.powa_databases d,
         LATERAL (
             SELECT *
             FROM (
@@ -589,7 +589,7 @@ BASE_QUERY_KCACHE_SAMPLE_DB = text("""
                     FROM (
                         SELECT * FROM (
                             SELECT (unnest(metrics)).*
-                            FROM powa_kcache_metrics_db kmd
+                            FROM {powa}.powa_kcache_metrics_db kmd
                             WHERE kmd.srvid = d.srvid
                             AND kmd.dbid = d.oid
                             AND kmd.coalesce_range &&
@@ -598,7 +598,7 @@ BASE_QUERY_KCACHE_SAMPLE_DB = text("""
                         WHERE his.ts <@ tstzrange(:from, :to, '[]')
                         UNION ALL
                         SELECT (metrics).*
-                        FROM powa_kcache_metrics_current_db kmcd
+                        FROM {powa}.powa_kcache_metrics_current_db kmcd
                         WHERE kmcd.srvid = d.srvid
                         AND kmcd.dbid = d.oid
                         AND (metrics).ts <@ tstzrange(:from, :to, '[]')
@@ -612,7 +612,7 @@ BASE_QUERY_KCACHE_SAMPLE_DB = text("""
 
 
 BASE_QUERY_KCACHE_SAMPLE = text("""
-        powa_statements s JOIN powa_databases d
+        {powa}.powa_statements s JOIN {powa}.powa_databases d
             ON d.oid = s.dbid AND d.srvid = s.srvid
             AND s.srvid = :server,
         LATERAL (
@@ -639,7 +639,7 @@ BASE_QUERY_KCACHE_SAMPLE = text("""
                     FROM (
                         SELECT * FROM (
                             SELECT (unnest(metrics)).*
-                            FROM powa_kcache_metrics km
+                            FROM {powa}.powa_kcache_metrics km
                             WHERE km.srvid = s.srvid
                             AND km.queryid = s.queryid
                             AND km.dbid = s.dbid
@@ -649,7 +649,7 @@ BASE_QUERY_KCACHE_SAMPLE = text("""
                         WHERE his.ts <@ tstzrange(:from, :to, '[]')
                         UNION ALL
                         SELECT (metrics).*
-                        FROM powa_kcache_metrics_current kmc
+                        FROM {powa}.powa_kcache_metrics_current kmc
                         WHERE kmc.srvid = s.srvid
                         AND kmc.queryid = s.queryid
                         AND kmc.dbid = s.dbid
@@ -701,7 +701,7 @@ def kcache_getstatdata_sample(mode):
 
 BASE_QUERY_WAIT_SAMPLE_DB = text("""(
   SELECT d.oid AS dbid, datname, base.*
-  FROM powa_databases d,
+  FROM {powa}.powa_databases d,
   LATERAL (
     SELECT *
     FROM (SELECT
@@ -732,7 +732,7 @@ BASE_QUERY_WAIT_SAMPLE_DB = text("""(
         FROM (
           SELECT wsh.srvid, wsh.dbid, wsh.coalesce_range, event_type,
               unnest(records) AS records
-          FROM powa_wait_sampling_history_db wsh
+          FROM {powa}.powa_wait_sampling_history_db wsh
           WHERE coalesce_range && tstzrange(:from, :to,'[]')
           AND wsh.dbid = d.oid
           AND wsh.srvid = :server
@@ -743,7 +743,7 @@ BASE_QUERY_WAIT_SAMPLE_DB = text("""(
         UNION ALL
         SELECT wshc.srvid, wshc.dbid, event_type, (wshc.record).ts,
             sum((wshc.record).count) AS count
-        FROM powa_wait_sampling_history_current_db wshc
+        FROM {powa}.powa_wait_sampling_history_current_db wshc
         WHERE (wshc.record).ts <@ tstzrange(:from, :to, '[]')
         AND wshc.dbid = d.oid
         AND wshc.srvid = :server
@@ -761,8 +761,8 @@ BASE_QUERY_WAIT_SAMPLE_DB = text("""(
 
 BASE_QUERY_WAIT_SAMPLE = text("""(
   SELECT d.srvid, datname, dbid, queryid, base.*
-  FROM powa_statements s
-  JOIN powa_databases d ON d.oid = s.dbid
+  FROM {powa}.powa_statements s
+  JOIN {powa}.powa_databases d ON d.oid = s.dbid
       AND d.srvid = s.srvid,
   LATERAL (
     SELECT *
@@ -793,7 +793,7 @@ BASE_QUERY_WAIT_SAMPLE = text("""(
         FROM (
           SELECT coalesce_range, event_type,
               unnest(records) AS records
-          FROM powa_wait_sampling_history wsh
+          FROM {powa}.powa_wait_sampling_history wsh
           WHERE coalesce_range && tstzrange(:from, :to, '[]')
           AND wsh.queryid = s.queryid
           AND wsh.srvid = :server
@@ -803,7 +803,7 @@ BASE_QUERY_WAIT_SAMPLE = text("""(
         UNION ALL
         SELECT wshc.event_type, (wshc.record).ts,
           sum((wshc.record).count) AS count
-        FROM powa_wait_sampling_history_current wshc
+        FROM {powa}.powa_wait_sampling_history_current wshc
         WHERE (wshc.record).ts <@ tstzrange(:from, :to, '[]')
         AND wshc.queryid = s.queryid
         AND wshc.srvid = :server
@@ -837,14 +837,14 @@ BASE_QUERY_BGWRITER_SAMPLE = text("""
         SELECT *
         FROM (
           SELECT srvid, (unnest(records)).*
-          FROM powa_stat_bgwriter_history bgwh
+          FROM {powa}.powa_stat_bgwriter_history bgwh
           WHERE coalesce_range && tstzrange(:from, :to, '[]')
           AND bgwh.srvid = :server
         ) AS unnested
         WHERE ts <@ tstzrange(:from, :to, '[]')
         UNION ALL
         SELECT srvid, (record).*
-        FROM powa_stat_bgwriter_history_current bgwc
+        FROM {powa}.powa_stat_bgwriter_history_current bgwc
         WHERE (bgwc.record).ts <@ tstzrange(:from, :to, '[]')
         AND bgwc.srvid = :server
       ) AS bgw_history
@@ -864,7 +864,7 @@ def powa_base_waitdata_detailed_db():
     This uses the same optimization as powa_base_statdata_detailed_db.
     """
     base_query = text("""
-  powa_databases,
+  {powa}.powa_databases,
   LATERAL
   (
     -- Left bound: the search interval is a single timestamp, the smallest one
@@ -876,14 +876,14 @@ def powa_base_waitdata_detailed_db():
     FROM (
       SELECT wsh.dbid, wsh.queryid, wsh.event_type, wsh.event,
         wsh.coalesce_range, unnest(records) AS records
-      FROM powa_wait_sampling_history wsh
+      FROM {powa}.powa_wait_sampling_history wsh
       WHERE coalesce_range && tstzrange(:from, :from, '[]')
       AND wsh.dbid = powa_databases.oid
       -- we can't simply join powa_statements as there's no userid in
       -- powa_wait_sampling_* tables
       AND wsh.queryid IN (
         SELECT ps.queryid
-        FROM powa_statements ps
+        FROM {powa}.powa_statements ps
         WHERE ps.dbid = powa_databases.oid
           AND ps.srvid = :server
       )
@@ -902,14 +902,14 @@ def powa_base_waitdata_detailed_db():
     FROM (
       SELECT wsh.dbid, wsh.queryid, wsh.event_type, wsh.event,
         wsh.coalesce_range, unnest(records) AS records
-      FROM powa_wait_sampling_history wsh
+      FROM {powa}.powa_wait_sampling_history wsh
       WHERE coalesce_range && tstzrange(:to, :to, '[]')
       AND wsh.dbid = powa_databases.oid
       -- we can't simply join powa_statements as there's no userid in
       -- powa_wait_sampling_* tables
       AND wsh.queryid IN (
         SELECT ps.queryid
-        FROM powa_statements ps
+        FROM {powa}.powa_statements ps
         WHERE ps.dbid = powa_databases.oid
           AND ps.srvid = :server
       )
@@ -929,14 +929,14 @@ def powa_base_waitdata_detailed_db():
       SELECT wsh.dbid, wsh.queryid, wsh.event_type, wsh.event,
         wsh.coalesce_range,
         unnest(ARRAY[mins_in_range,maxs_in_range]) AS records
-      FROM powa_wait_sampling_history wsh
+      FROM {powa}.powa_wait_sampling_history wsh
       WHERE coalesce_range && tstzrange(:from, :to, '[]')
       AND wsh.dbid = powa_databases.oid
       -- we can't simply join powa_statements as there's no userid in
       -- powa_wait_sampling_* tables
       AND wsh.queryid IN (
         SELECT ps.queryid
-        FROM powa_statements ps
+        FROM {powa}.powa_statements ps
         WHERE ps.dbid = powa_databases.oid
           AND ps.srvid = :server
       )
@@ -948,14 +948,14 @@ def powa_base_waitdata_detailed_db():
 
     -- The "current" records are simply returned after filtering
     SELECT wsc.dbid, wsc.queryid, wsc.event_type, wsc.event, (wsc.record).*
-    FROM powa_wait_sampling_history_current wsc
+    FROM {powa}.powa_wait_sampling_history_current wsc
     WHERE (record).ts <@ tstzrange(:from,:to,'[]')
     AND wsc.dbid = powa_databases.oid
     -- we can't simply join powa_statements as there's no userid in
     -- powa_wait_sampling_* tables
     AND wsc.queryid IN (
       SELECT ps.queryid
-      FROM powa_statements ps
+      FROM {powa}.powa_statements ps
       WHERE ps.dbid = powa_databases.oid
         AND ps.srvid = :server
     )
@@ -978,10 +978,10 @@ def powa_base_waitdata_db():
     base_query = text("""(
   SELECT powa_databases.srvid, powa_databases.oid as dbid, h.*
   FROM
-  powa_databases LEFT JOIN
+  {powa}.powa_databases LEFT JOIN
   (
     SELECT dbid
-    FROM powa_wait_sampling_history_db wsh
+    FROM {powa}.powa_wait_sampling_history_db wsh
     WHERE coalesce_range && tstzrange(:from, :to, '[]')
     AND wsh.srvid = :server
     GROUP BY dbid
@@ -994,7 +994,7 @@ def powa_base_waitdata_db():
     SELECT event_type, event, (unnested1.records).*
     FROM (
       SELECT wsh.event_type, wsh.event, unnest(records) AS records
-      FROM powa_wait_sampling_history_db wsh
+      FROM {powa}.powa_wait_sampling_history_db wsh
       WHERE coalesce_range && tstzrange(:from, :from, '[]')
       AND wsh.dbid = ranges.dbid
       AND wsh.srvid = :server
@@ -1010,7 +1010,7 @@ def powa_base_waitdata_db():
     SELECT event_type, event, (unnested1.records).*
     FROM (
       SELECT wsh.event_type, wsh.event, unnest(records) AS records
-      FROM powa_wait_sampling_history_db wsh
+      FROM {powa}.powa_wait_sampling_history_db wsh
       WHERE coalesce_range && tstzrange(:to, :to, '[]')
       AND wsh.dbid = ranges.dbid
       AND wsh.srvid = :server
@@ -1027,7 +1027,7 @@ def powa_base_waitdata_db():
     FROM (
       SELECT wsh.event_type, wsh.event,
         unnest(ARRAY[mins_in_range,maxs_in_range]) AS records
-      FROM powa_wait_sampling_history_db wsh
+      FROM {powa}.powa_wait_sampling_history_db wsh
       WHERE coalesce_range && tstzrange(:from, :to, '[]')
       AND wsh.dbid = ranges.dbid
       AND wsh.srvid = :server
@@ -1038,7 +1038,7 @@ def powa_base_waitdata_db():
 
     -- The "current" records are simply returned after filtering
     SELECT event_type, event, (wsc.record).*
-    FROM powa_wait_sampling_history_current_db wsc
+    FROM {powa}.powa_wait_sampling_history_current_db wsc
     WHERE (wsc.record).ts <@ tstzrange(:from, :to, '[]')
     AND wsc.dbid = powa_databases.oid
     AND wsc.srvid = :server
@@ -1051,7 +1051,7 @@ def powa_base_waitdata_db():
 
 BASE_QUERY_ALL_RELS_SAMPLE_DB = text("""(
   SELECT d.srvid, d.datname, base.*
-  FROM powa_databases d,
+  FROM {powa}.powa_databases d,
   LATERAL (
     SELECT *
     FROM (
@@ -1063,7 +1063,7 @@ BASE_QUERY_ALL_RELS_SAMPLE_DB = text("""(
         SELECT dbid, (unnested.records).*
         FROM (
           SELECT arh.dbid, unnest(records) AS records
-          FROM powa_all_relations_history_db arh
+          FROM {powa}.powa_all_relations_history_db arh
           WHERE arh.dbid = d.oid
           AND arh.srvid = d.srvid
           AND arh.srvid = :server
@@ -1071,7 +1071,7 @@ BASE_QUERY_ALL_RELS_SAMPLE_DB = text("""(
         WHERE (records).ts <@ tstzrange(:from, :to, '[]')
         UNION ALL
         SELECT dbid, (record).*
-        FROM powa_all_relations_history_current_db arhc
+        FROM {powa}.powa_all_relations_history_current_db arhc
         WHERE (record).ts <@ tstzrange(:from, :to, '[]')
         AND arhc.dbid = d.oid
         AND arhc.srvid = d.srvid
@@ -1107,7 +1107,7 @@ BASE_QUERY_ALL_RELS_SAMPLE = text("""(
   END AS seq_scan,
   base.*
   FROM
-  powa_databases d,
+  {powa}.powa_databases d,
   LATERAL (
     SELECT *
     FROM (
@@ -1119,7 +1119,7 @@ BASE_QUERY_ALL_RELS_SAMPLE = text("""(
         SELECT dbid, relid, (unnested.records).*
         FROM (
           SELECT arh.dbid, relid, unnest(records) AS records
-          FROM powa_all_relations_history_db arh
+          FROM {powa}.powa_all_relations_history_db arh
           WHERE arh.dbid = d.oid
           AND arh.srvid = d.srvid
           AND arh.srvid = :server
@@ -1127,7 +1127,7 @@ BASE_QUERY_ALL_RELS_SAMPLE = text("""(
         WHERE (records).ts <@ tstzrange(:from, :to, '[]')
         UNION ALL
         SELECT dbid, relid, (record).*
-        FROM powa_all_relations_history_current_db arhc
+        FROM {powa}.powa_all_relations_history_current_db arhc
         WHERE (record).ts <@ tstzrange(:from, :to, '[]')
         AND arhc.dbid = d.oid
         AND arhc.srvid = d.srvid
@@ -1293,7 +1293,7 @@ def get_config_changes(restrict_database=False):
     setting_pretty AS new_val,
     lag(is_dropped) OVER (PARTITION BY name ORDER BY ts) AS prev_is_dropped,
     is_dropped as is_dropped
-    FROM public.pg_track_settings_history h
+    FROM {pg_track_settings}.pg_track_settings_history h
     WHERE srvid = :server
     AND ts <= :to
   )
@@ -1321,8 +1321,8 @@ SELECT * FROM
     is_dropped as is_dropped,
     d.datname,
     h.setrole
-    FROM public.pg_track_db_role_settings_history h
-    LEFT JOIN public.powa_databases d
+    FROM {pg_track_settings}.pg_track_db_role_settings_history h
+    LEFT JOIN {powa}.powa_databases d
       ON d.srvid = h.srvid
       AND d.oid = h.setdatabase
     WHERE h.srvid = :server
@@ -1347,7 +1347,7 @@ UNION ALL
 
 SELECT extract("epoch" FROM ts) AS ts, 'reboot' AS kind,
 NULL AS data
-FROM public.pg_reboot AS r
+FROM {pg_track_settings}.pg_reboot AS r
 WHERE r.srvid = :server
 AND r.ts>= :from
 AND r.ts <= :to
