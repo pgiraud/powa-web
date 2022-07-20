@@ -926,3 +926,7 @@ class DatabaseOverview(DashboardPage):
 
         self._dashboard.widgets.extend([[Wizard("Index suggestions")]])
         return self._dashboard
+
+    @classmethod
+    def breadcrum_title(cls, handler, param):
+        return param["database"]
