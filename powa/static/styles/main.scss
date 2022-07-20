@@ -1,0 +1,76 @@
+[v-cloak] {
+  display: none;
+}
+pre.sql {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.v-data-table.superdense > .v-data-table__wrapper > table {
+  tbody,
+  thead,
+  tfoot {
+    th,
+    td {
+      padding: 0 0.3rem;
+    }
+  }
+}
+
+.v-data-table {
+  td {
+    white-space: nowrap;
+  }
+}
+
+td {
+  &:not(.query) {
+    width: 1%;
+  }
+  &.query {
+    overflow: hidden;
+    max-width: 0;
+    pre,
+    code {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 0;
+    }
+  }
+}
+
+table {
+  .clickable {
+    cursor: pointer;
+  }
+}
+
+.theme--light.v-icon,
+.theme--dark.v-icon {
+    color: inherit !important;
+}
+
+h1 {
+  font-size: 2.75rem;
+}
+
+h2 {
+  font-size: 2.313rem;
+}
+
+h3 {
+  font-size: 1.688rem;
+}
+
+h4 {
+  font-size: 1.4375rem;
+}
+
+h5 {
+  font-size: 1.125rem;
+}
+
+h6 {
+  font-size: 1rem;
+}

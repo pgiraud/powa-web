@@ -1,32 +1,33 @@
 {% extends "../xhr.html" %}
 {% block content %}
 
-<div class="row">
-  <div class="columns large-12">
+<v-row>
+  <v-col>
     <h4>Collector processes</h4>
-  {% if (collector) %}
+    {% if (collector) %}
     {% for c in collector %}
-    <ul class="large-block-grid-4">
+    <v-row>
       {% if (c.start) %}
-      <li><b>{{c.powa_kind}}:</b> <i class="fi-check ok"></i></li>
-      <li><b>Connected as:</b> {{c.usename}}</li>
-      <li><b>Connected from:</b> {{c.client_addr}}</li>
-      <li><b>Connected since:</b> {{c.start}}</li>
+      <v-col cols="3"><b>{{c.powa_kind}}:</b> <span class="green--text">✓</span></v-col>
+      <v-col cols="3"><b>Connected as:</b> {{c.usename}}</v-col>
+      <v-col cols="3"><b>Connected from:</b> {{c.client_addr}}</v-col>
+      <v-col cols="3"><b>Connected since:</b> {{c.start}}</v-col>
       {% else %}
-      <li><b>{{c.powa_kind}}:</b> <i class="fi-x ko"></i></li>
+      <v-col cols="12"><b>{{c.powa_kind}}:</b> <span class="red--text">✗</span></v-col>
       {% end %}
-    </ul>
+    </v-row>
     {% end %}
-  {% else %}
-  <div class="columns large-12">
-    <p class="alert-box alert">No PoWA collector daemon is running!</p>
-    <ul class="large-block-grid-2">
-      <li><b>Background worker status:</b> <i class="fi-x ko"></i></li>
-    </ul>
-    <ul class="large-block-grid-2">
-      <li><b>Remote Collector status:</b> <i class="fi-x ko"></i></li>
-    </ul>
-  {% end %}
-  </div>
-</div>
+    {% else %}
+    <v-alert type="error" role="alert">
+      No PoWA collector daemon is running!
+    </v-alert>
+    <v-row>
+      <v-col cols="12"><b>Background worker status:</b> <span class="red--text">✗</span></v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12"><b>Remote Collector status:</b> <span class="red--text">✗</span></v-col>
+    </v-row>
+    {% end %}
+  </v-col>
+</v-row>
 {% end %}
