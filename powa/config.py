@@ -100,7 +100,7 @@ class AllCollectorsDetail(ContentWidget):
     Detail widget showing summarized information for the background worker and
     the remote collector daemon.
     """
-    title = "Collector Detail"
+    title = "Collector Processes"
     data_url = r"/config/allcollectors"
 
     def get(self):
