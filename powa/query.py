@@ -353,7 +353,7 @@ class QueryExplains(ContentWidget):
     """
     Content widget showing explain plans for various const values.
     """
-    title = "Query Explains"
+    title = "Example Values"
     data_url = r"/server/(\d+)/metrics/database/([^\/]+)/query/(-?\d+)/explains"
 
     def get(self, server, database, query):
@@ -539,7 +539,7 @@ class QueryDetail(ContentWidget):
     """
     Detail widget showing summarized information for the query.
     """
-    title = "Query Detail"
+    title = "Index Suggestions"
     data_url = r"/server/(\d+)/metrics/database/([^\/]+)/query/(-?\d+)/detail"
 
     def get(self, srvid, database, query):
