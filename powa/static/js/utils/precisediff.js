@@ -119,9 +119,9 @@ moment.preciseDiff = function (d1, d2, imprecise) {
   if (result.length == 0) {
     return "0";
   }
-  // Keep only the first 2 results, more it too precise
+  // Keep only the first result, more it too precise
   if (imprecise) {
-    result = result.slice(0, 2);
+    result = result.slice(0, 1);
   }
   return result.join(STRINGS.delimiter);
 };

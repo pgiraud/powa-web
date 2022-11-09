@@ -233,4 +233,12 @@ function clickOutside() {
   }
   isShown.value = false;
 }
+
+watch(
+  () => store.from + store.to,
+  () => {
+    rawFrom.value = store.from;
+    rawTo.value = store.to;
+  }
+);
 </script>

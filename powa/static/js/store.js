@@ -4,6 +4,7 @@ const initialQuery = parseQuery(window.location.search);
 
 const store = reactive({
   dataSources: {},
+  changes: [],
   from: initialQuery.from || "now-1h",
   to: initialQuery.to || "now",
   setFromTo(from, to, silent) {

@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@mdi/js": "^7.0.96",
+    "@types/d3": "^7.4.0",
     "@types/lodash": "^4.14.186",
     "@types/luxon": "^3.0.2",
     "@vitejs/plugin-vue2": "^2.0.0",
@@ -27,7 +28,7 @@
   "dependencies": {
     "@grafana/data": "^9.2.1",
     "bootstrap": "^4.6.2",
-    "echarts": "^5.3.3",
+    "d3": "^7.6.1",
     "highlight.js": "^11.6.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",

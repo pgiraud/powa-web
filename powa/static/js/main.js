@@ -98,3 +98,7 @@ $("#reload_collector").click(function () {
       addMessage("danger", "Error while trying to reload the collector.");
     });
 });
+
+$('script[type="text/datasource_timeline"]').each(function () {
+  store.changes = JSON.parse(this.text);
+});
