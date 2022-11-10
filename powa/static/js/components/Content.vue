@@ -19,7 +19,7 @@
 
 <script setup>
 import Vue, { onMounted, ref } from "vue";
-import { components, createVuetify } from "../plugins/vuetify.js";
+import { components, createVuetify, icons } from "../plugins/vuetify.js";
 import store from "../store";
 import moment from "moment";
 import hljs from "highlight.js";
@@ -57,6 +57,9 @@ function loadData() {
   }).done((response) => {
     const el = new Vue({
       components,
+      data: () => ({
+        icons,
+      }),
       template: response,
       vuetify: createVuetify(),
     });
