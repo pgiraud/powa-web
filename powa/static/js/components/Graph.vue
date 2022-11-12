@@ -47,9 +47,8 @@ import { mdiInformation } from "@mdi/js";
 import { dateMath } from "@grafana/data";
 import size from "../utils/size";
 import store from "../store";
-import moment from "moment";
-import "../utils/precisediff";
 import $ from "jquery";
+import { formatDuration } from "../utils/duration";
 
 const props = defineProps({
   config: {
@@ -65,15 +64,9 @@ const loading = ref(false);
 const axisFormats = {
   //"number": Rickshaw.Fixtures.Number.formatKMBT,
   size: new size.SizeFormatter().fromRaw,
-  sizerate: function (value) {
-    return new size.SizeFormatter({ suffix: "ps" }).fromRaw(value);
-  },
-  duration: function (data) {
-    return moment(parseFloat(data, 10)).preciseDiff(moment(0));
-  },
-  percent: function (value) {
-    return Math.round(value * 100) / 100 + "%";
-  },
+  sizerate: new size.SizeFormatter({ suffix: "ps" }).fromRaw,
+  duration: (value) => formatDuration(value, true),
+  percent: (value) => Math.round(value * 100) / 100 + "%",
 };
 
 const graphContainer = ref(null);

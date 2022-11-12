@@ -25,6 +25,7 @@ import moment from "moment";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 import $ from "jquery";
+import { formatDuration } from "../utils/duration";
 
 const props = defineProps({
   config: {
@@ -76,8 +77,8 @@ function loaded() {
     hljs.highlightBlock(block);
   });
   el.find("span.duration").each(function (i, block) {
-    const date = moment(parseInt($(block).html()));
-    $(block).html(date.preciseDiff(moment.unix(0)));
+    const duration = parseInt($(block).html());
+    $(block).html(formatDuration(duration, true));
   });
 }
 </script>

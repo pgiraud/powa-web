@@ -77,12 +77,12 @@ import { serialize } from "../store";
 import { dateMath } from "@grafana/data";
 import * as _ from "lodash";
 import $ from "jquery";
-import * as moment from "moment";
 import size from "../utils/size";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 import pgsql from "highlight.js/lib/languages/pgsql";
 import { mdiMagnify } from "@mdi/js";
+import { formatDuration } from "../utils/duration";
 
 hljs.registerLanguage("pgsql", pgsql);
 
@@ -170,10 +170,6 @@ function formatBool(value) {
   return value ? "✓" : "✗";
 }
 
-function formatDuration(value) {
-  return moment(parseFloat(value, 10)).preciseDiff(moment(0), true);
-}
-
 function formatSize(value) {
   return new size.SizeFormatter().fromRaw(value);
 }
@@ -187,7 +183,7 @@ function getFormatter(type) {
     case "bool":
       return formatBool;
     case "duration":
-      return formatDuration;
+      return (value) => formatDuration(value, true);
     case "percent":
       return (value) => value + "%";
     case "query":
