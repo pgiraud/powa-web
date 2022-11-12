@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@grafana/data": "^9.2.1",
-    "bootstrap": "^4.6.2",
     "d3": "^7.6.1",
     "highlight.js": "^11.6.0",
     "lodash": "^4.17.21",

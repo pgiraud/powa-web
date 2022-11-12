@@ -12,8 +12,6 @@ import Content from "./components/Content.vue";
 import { addMessage } from "./utils/message.js";
 import * as d3 from "d3";
 
-import "bootstrap";
-
 //import "vuetify/src/styles/styles";
 //import "bootstrap/dist/css/bootstrap.css";
 //import "vuetify/dist/vuetify.min.css";
