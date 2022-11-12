@@ -6,6 +6,9 @@ export default {
       if (val === undefined) {
         return "(NA)";
       }
+      if (val === 0) {
+        return "-";
+      }
       if (val <= 1024) {
         return val.toFixed(2) + " " + "B";
       }
