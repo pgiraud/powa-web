@@ -115,13 +115,13 @@
 import { computed, onMounted, ref, watch } from "vue";
 import _ from "lodash";
 import * as d3 from "d3";
-import $ from "jquery";
 import { mdiInformation } from "@mdi/js";
 import store from "../store";
 import { dateMath } from "@grafana/data";
 import size from "../utils/size";
 import { icons } from "../plugins/vuetify";
 import { formatDuration } from "../utils/duration";
+import { encodeQueryData } from "../utils/query";
 
 const props = defineProps({
   config: {
@@ -333,8 +333,8 @@ function loadData() {
   xScale.domain([from, to]);
 
   const promises = [
-    d3.json(sourceConfig.data_url + "?" + $.param(params)),
-    d3.json(store.changes + "?" + $.param(params)),
+    d3.json(sourceConfig.data_url + "?" + encodeQueryData(params)),
+    d3.json(store.changes + "?" + encodeQueryData(params)),
   ];
   Promise.all(promises).then((data) => {
     dataLoaded(data[0]);

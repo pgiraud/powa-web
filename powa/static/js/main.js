@@ -9,8 +9,8 @@ import Grid from "./components/Grid.vue";
 import Tabcontainer from "./components/Tabcontainer.vue";
 import Wizard from "./components/Wizard.vue";
 import Content from "./components/Content.vue";
-import $ from "jquery";
 import { addMessage } from "./utils/message.js";
+import * as d3 from "d3";
 
 import "bootstrap";
 
@@ -43,62 +43,68 @@ Vue.component("Tabcontainer", Tabcontainer);
 Vue.component("Wizard", Wizard);
 Vue.component("ContentCmp", Content);
 
-$('script[type="text/datasources"]').each(function () {
-  const dataSources = JSON.parse(this.text);
-  _.each(dataSources, function (dataSource) {
-    store.dataSources[dataSource.name] = dataSource;
-    try {
-      if (dataSource.type == "metric_group") {
-        dataSource.metrics = _.keyBy(dataSource.metrics, "name");
-      } else if (dataSource.type == "content") {
-        // nothing to do
+document
+  .querySelectorAll('script[type="text/datasources"]')
+  .forEach(function (el) {
+    const dataSources = JSON.parse(el.innerText);
+    _.each(dataSources, function (dataSource) {
+      store.dataSources[dataSource.name] = dataSource;
+      try {
+        if (dataSource.type == "metric_group") {
+          dataSource.metrics = _.keyBy(dataSource.metrics, "name");
+        } else if (dataSource.type == "content") {
+          // nothing to do
+        }
+      } catch (e) {
+        console.error(
+          "Could not instantiate metric group. Check the metric group definition"
+        );
       }
-    } catch (e) {
-      console.error(
-        "Could not instantiate metric group. Check the metric group definition"
-      );
-    }
+    });
   });
-});
 
-$('script[type="text/dashboard"]').each(function () {
-  app.config = JSON.parse(this.text);
-  //const widgetsEl = $('.widgets');
+document
+  .querySelectorAll('script[type="text/dashboard"]')
+  .forEach(function (el) {
+    app.config = JSON.parse(el.innerText);
+    //const widgetsEl = $('.widgets');
 
-  //_.each(config.widgets, (w) => {
-  //const widget = w[0];
-  //console.log (widget.type);
-  //app.widgets.push(widget);
-  //});
-  //var dashboard = Widget.fromJSON(JSON.parse(this.text));
-  //var dashboardview = dashboard.makeView({el: $(self).find('.widgets')});
-  //dashboards.push(dashboard);
-  //dashboardview.listenTo(picker, "pickerChanged", dashboardview.refreshSources, dashboardview);
-  //dashboardview.refreshSources(picker.start_date, picker.end_date);
-  //picker.listenTo(dashboardview, "dashboard:updatePeriod", picker.updateUrls, picker);
-});
+    //_.each(config.widgets, (w) => {
+    //const widget = w[0];
+    //console.log (widget.type);
+    //app.widgets.push(widget);
+    //});
+    //var dashboard = Widget.fromJSON(JSON.parse(this.text));
+    //var dashboardview = dashboard.makeView({el: $(self).find('.widgets')});
+    //dashboards.push(dashboard);
+    //dashboardview.listenTo(picker, "pickerChanged", dashboardview.refreshSources, dashboardview);
+    //dashboardview.refreshSources(picker.start_date, picker.end_date);
+    //picker.listenTo(dashboardview, "dashboard:updatePeriod", picker.updateUrls, picker);
+  });
 
-$('script[type="text/breadcrumb"]').each(function () {
-  app.breadCrumbItems = JSON.parse(this.text);
-});
+document
+  .querySelectorAll('script[type="text/breadcrumb"]')
+  .forEach(function (el) {
+    app.breadCrumbItems = JSON.parse(el.innerText);
+  });
 
-$("#reload_collector").click(function () {
-  $.ajax({
-    url: "/reload_collector/",
-    type: "GET",
-  })
-    .done(function (response) {
+document.getElementById("reload_collector").addEventListener("click", () => {
+  d3.text("/reload_collector/").then(
+    (response) => {
       if (response) {
         addMessage("success", "Collector successfully reloaded!");
       } else {
         addMessage("danger", "Could not reload collector");
       }
-    })
-    .fail(function () {
+    },
+    () => {
       addMessage("danger", "Error while trying to reload the collector.");
-    });
+    }
+  );
 });
 
-$('script[type="text/datasource_timeline"]').each(function () {
-  store.changes = JSON.parse(this.text);
-});
+document
+  .querySelectorAll('script[type="text/datasource_timeline"]')
+  .forEach(function (el) {
+    store.changes = JSON.parse(el.innerText);
+  });

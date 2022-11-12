@@ -23,9 +23,10 @@ import { components, createVuetify, icons } from "../plugins/vuetify.js";
 import store from "../store";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
-import $ from "jquery";
 import { dateMath } from "@grafana/data";
 import { formatDuration } from "../utils/duration";
+import { encodeQueryData } from "../utils/query";
+import * as d3 from "d3";
 
 const props = defineProps({
   config: {
@@ -53,32 +54,32 @@ function loadData() {
     from: from.format("YYYY-MM-DD HH:mm:ssZZ"),
     to: to.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
-  $.ajax({
-    url: sourceConfig.data_url + "?" + $.param(params),
-  }).done((response) => {
-    const el = new Vue({
-      components,
-      data: () => ({
-        icons,
-      }),
-      template: response,
-      vuetify: createVuetify(),
-    });
-    const html = el.$mount().$el.outerHTML;
-    content.value = html;
-    window.setTimeout(loaded, 1);
-    loading.value = false;
-  });
+  d3.text(sourceConfig.data_url + "?" + encodeQueryData(params)).then(
+    (response) => {
+      const el = new Vue({
+        components,
+        data: () => ({
+          icons,
+        }),
+        template: response,
+        vuetify: createVuetify(),
+      });
+      const html = el.$mount().$el.outerHTML;
+      content.value = html;
+      window.setTimeout(loaded, 1);
+      loading.value = false;
+    }
+  );
 }
 
 function loaded() {
-  const el = $(contentEl.value);
-  el.find("pre.sql code").each(function (i, block) {
+  const el = contentEl.value;
+  el.querySelectorAll("pre.sql code").forEach((block) => {
     hljs.highlightBlock(block);
   });
-  el.find("span.duration").each(function (i, block) {
-    const duration = parseInt($(block).html());
-    $(block).html(formatDuration(duration, true));
+  el.querySelectorAll("span.duration").forEach((block) => {
+    const duration = parseInt(block.innerHTML);
+    block.innerHTML = formatDuration(duration, true);
   });
 }
 

@@ -75,14 +75,15 @@ import { computed, onMounted, ref, watch } from "vue";
 import store from "../store";
 import { serialize } from "../store";
 import { dateMath } from "@grafana/data";
-import * as _ from "lodash";
-import $ from "jquery";
+import _ from "lodash";
 import size from "../utils/size";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 import pgsql from "highlight.js/lib/languages/pgsql";
 import { mdiMagnify } from "@mdi/js";
 import { formatDuration } from "../utils/duration";
+import { encodeQueryData } from "../utils/query";
+import * as d3 from "d3";
 
 hljs.registerLanguage("pgsql", pgsql);
 
@@ -116,10 +117,10 @@ const fields = computed(() => {
 
   const columns = props.config.columns;
   _.each(metrics, function (metric) {
-    columns.push($.extend({}, sourceConfig.metrics[metric]));
+    columns.push(Object.assign({}, sourceConfig.metrics[metric]));
   });
   _.each(columns, (c) => {
-    $.extend(c, {
+    Object.assign(c, {
       key: c.name,
       label: c.label,
       formatter: getFormatter(c.type),
@@ -154,12 +155,12 @@ function loadData() {
     from: dateMath.parse(store.from).format("YYYY-MM-DD HH:mm:ssZZ"),
     to: dateMath.parse(store.to, true).format("YYYY-MM-DD HH:mm:ssZZ"),
   };
-  $.ajax({
-    url: sourceConfig.data_url + "?" + $.param(params),
-  }).done((response) => {
-    dataLoaded(response.data);
-    loading.value = false;
-  });
+  d3.json(sourceConfig.data_url + "?" + encodeQueryData(params)).then(
+    (response) => {
+      dataLoaded(response.data);
+      loading.value = false;
+    }
+  );
 }
 
 function dataLoaded(data) {

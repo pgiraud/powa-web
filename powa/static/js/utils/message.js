@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 export function addMessage(level, message) {
   const content = `
     <div class="alert alert-${level} alert-dismissible fade show" role="alert">
@@ -8,5 +6,5 @@ export function addMessage(level, message) {
         <span aria-hidden="true">&times;</span>
       </button>
     </div>`;
-  $("#messages").append(content);
+  document.getElementById("messages").innerHTML += content;
 }
