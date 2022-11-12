@@ -18,13 +18,13 @@
 </template>
 
 <script setup>
-import Vue, { onMounted, ref } from "vue";
+import Vue, { onMounted, ref, watch } from "vue";
 import { components, createVuetify, icons } from "../plugins/vuetify.js";
 import store from "../store";
-import moment from "moment";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 import $ from "jquery";
+import { dateMath } from "@grafana/data";
 import { formatDuration } from "../utils/duration";
 
 const props = defineProps({
@@ -47,11 +47,11 @@ onMounted(() => {
 function loadData() {
   loading.value = true;
   const sourceConfig = store.dataSources[props.config.name];
-  const toDate = moment();
-  const fromDate = toDate.clone().subtract(1, "hour");
+  const from = dateMath.parse(store.from);
+  const to = dateMath.parse(store.to, true);
   const params = {
-    from: fromDate.format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: toDate.format("YYYY-MM-DD HH:mm:ssZZ"),
+    from: from.format("YYYY-MM-DD HH:mm:ssZZ"),
+    to: to.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
   $.ajax({
     url: sourceConfig.data_url + "?" + $.param(params),
@@ -81,4 +81,11 @@ function loaded() {
     $(block).html(formatDuration(duration, true));
   });
 }
+
+watch(
+  () => store.from + store.to,
+  () => {
+    loadData();
+  }
+);
 </script>
