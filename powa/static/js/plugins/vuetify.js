@@ -1,5 +1,12 @@
 import Vue from "vue";
-import { mdiCog, mdiHome, mdiReload, mdiPower } from "@mdi/js";
+import {
+  mdiClockOutline,
+  mdiCog,
+  mdiHome,
+  mdiMagnifyMinusOutline,
+  mdiReload,
+  mdiPower,
+} from "@mdi/js";
 
 import Vuetify, {
   ClickOutside,
@@ -60,8 +67,10 @@ const components = {
 };
 
 const icons = {
+  mdiClockOutline,
   mdiCog,
   mdiHome,
+  mdiMagnifyMinusOutline,
   mdiPower,
   mdiReload,
 };

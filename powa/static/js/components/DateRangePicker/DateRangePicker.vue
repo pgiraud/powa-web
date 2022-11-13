@@ -1,8 +1,16 @@
 <template>
   <div v-click-outside="clickOutside" style="position: relative">
     <v-btn @click="isShown = true">
+      <v-icon class="text--secondary">
+        {{ icons.mdiClockOutline }}
+      </v-icon>
       <i class="fa fa-clock-o mr-2"></i>
       <span>{{ rangeString }}</span>
+    </v-btn>
+    <v-btn class="ml-4" @click="zoomOut">
+      <v-icon class="text--secondary">
+        {{ icons.mdiMagnifyMinusOutline }}
+      </v-icon>
     </v-btn>
     <div
       v-show="isShown"
@@ -119,6 +127,8 @@ import { computed, ref, watch } from "vue";
 import { quickOptions } from "./options.ts";
 import { dateMath, rangeUtil } from "@grafana/data";
 import { DateTime } from "luxon";
+import { icons } from "../../plugins/vuetify";
+import * as d3 from "d3";
 import store from "../../store";
 
 // The raw values (examples: 'now-24h', 'Tue Sep 01 2020 10:16:00 GMT+0200')
@@ -232,6 +242,17 @@ function clickOutside() {
     return;
   }
   isShown.value = false;
+}
+
+function zoomOut() {
+  const timeFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+  const from = dateMath.parse(store.from).toDate();
+  const to = dateMath.parse(store.to, true).toDate();
+  const diff = to - from;
+  store.setFromTo(
+    timeFormat(new Date(from.getTime() - diff / 2)),
+    timeFormat(new Date(to.getTime() + diff / 2))
+  );
 }
 
 watch(
