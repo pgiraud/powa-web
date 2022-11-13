@@ -1,5 +1,7 @@
 import Vue from "vue";
 import {
+  mdiAlert,
+  mdiCancel,
   mdiClockOutline,
   mdiCog,
   mdiHome,
@@ -67,6 +69,8 @@ const components = {
 };
 
 const icons = {
+  mdiAlert,
+  mdiCancel,
   mdiClockOutline,
   mdiCog,
   mdiHome,
