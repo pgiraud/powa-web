@@ -89,7 +89,7 @@
               <span v-else>{{ event.data.new_val }}</span>
             </b>
             <template v-if="event.data.datname">
-              <br />on event.data.ase <b>{{ event.data.datname }}</b>
+              <br />on database <b>{{ event.data.datname }}</b>
             </template>
             <template v-if="event.data.setrole && event.data.setrole != 0">
               <br />for role <b>{{ event.data.setrole }}</b>
