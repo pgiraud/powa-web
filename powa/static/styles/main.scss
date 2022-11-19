@@ -1,4 +1,53 @@
 pre.sql {
-	max-height: 400px;
-	overflow: auto;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.v-data-table.superdense > .v-data-table__wrapper > table {
+  tbody,
+  thead,
+  tfoot {
+    th,
+    td {
+      padding: 0 0.3rem;
+    }
+  }
+}
+
+.v-data-table {
+  td {
+    white-space: nowrap;
+  }
+}
+
+td {
+  &:not(.query) {
+    width: 1%;
+  }
+  &.query {
+    overflow: hidden;
+    max-width: 0;
+    pre,
+    code {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 0;
+    }
+  }
+  &.duration,
+  &.integer,
+  &.number,
+  &.size {
+    text-align: right;
+  }
+  &.bool {
+    text-align: center;
+  }
+}
+
+table {
+  .clickable {
+    cursor: pointer;
+  }
 }

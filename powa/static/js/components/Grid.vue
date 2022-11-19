@@ -210,43 +210,4 @@ watch(
 );
 </script>
 
-<style lang="scss">
-.v-data-table.superdense > .v-data-table__wrapper > table {
-  tbody,
-  thead,
-  tfoot {
-    td {
-      white-space: nowrap;
-
-      &.query {
-        width: 50%;
-        overflow: hidden;
-        max-width: 0;
-        pre,
-        code {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin-bottom: 0;
-        }
-      }
-    }
-    th,
-    td {
-      padding: 0 0.3rem;
-      &.duration,
-      &.integer,
-      &.number,
-      &.size {
-        text-align: right;
-      }
-      &.bool {
-        text-align: center;
-      }
-    }
-    .clickable {
-      cursor: pointer;
-    }
-  }
-}
-</style>
+<style lang="scss"></style>
