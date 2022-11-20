@@ -54,7 +54,6 @@
               disable-pagination
             >
               <template #item.quals="{ item }">
-                <!-- eslint-disable-next-line vue/no-v-html -->
                 <pre v-html="qualRepr(item)" />
               </template>
             </v-data-table>
@@ -73,11 +72,9 @@
               disable-pagination
             >
               <template #item.ddl="{ item }">
-                <!-- eslint-disable-next-line vue/no-v-html -->
                 <pre v-html="sqlFormat(indexDdl(item))" />
               </template>
               <template #item.quals="{ item }">
-                <!-- eslint-disable-next-line vue/no-v-html -->
                 <pre v-html="qualRepr(item.node)" />
               </template>
               <template #item.nbqueries="{ item }">
@@ -99,7 +96,6 @@
               disable-pagination
             >
               <template #item.ddl="{ item }">
-                <!-- eslint-disable-next-line vue/no-v-html -->
                 <pre v-html="sqlFormat(item.ddl)" />
               </template>
             </v-data-table>
@@ -118,7 +114,6 @@
               disable-pagination
             >
               <template #item.query="{ item }">
-                <!-- eslint-disable-next-line vue/no-v-html -->
                 <pre v-html="sqlFormat(item.query)" />
               </template>
               <template #item.used="{ item }">

@@ -12,7 +12,6 @@
         <v-card-title class="pl-0">{{ config.title }}</v-card-title>
       </v-toolbar-title>
     </v-app-bar>
-    <!-- eslint-disable-next-line vue/no-v-html -->
     <v-card-text ref="contentEl"><div v-html="content"></div></v-card-text>
   </v-card>
 </template>
