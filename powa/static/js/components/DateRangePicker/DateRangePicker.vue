@@ -1,10 +1,9 @@
 <template>
   <div v-click-outside="clickOutside" style="position: relative">
     <v-btn @click="isShown = true">
-      <v-icon class="text--secondary">
+      <v-icon class="text--secondary mr-2">
         {{ icons.mdiClockOutline }}
       </v-icon>
-      <i class="fa fa-clock-o mr-2"></i>
       <span>{{ rangeString }}</span>
     </v-btn>
     <v-btn class="ml-4" @click="zoomOut">
@@ -44,7 +43,9 @@
                   style="min-width: 0"
                   @click.stop="dialog = true"
                 >
-                  <i class="fa fa-calendar"></i>
+                  <v-icon class="text--secondary">
+                    {{ icons.mdiCalendar }}
+                  </v-icon>
                 </v-btn>
                 <v-text-field
                   v-model="inputFrom"
@@ -61,7 +62,9 @@
                   style="min-width: 0"
                   @click.stop="dialog = true"
                 >
-                  <i class="fa fa-calendar"></i>
+                  <v-icon class="text--secondary">
+                    {{ icons.mdiCalendar }}
+                  </v-icon>
                 </v-btn>
                 <v-text-field
                   v-model="inputTo"
