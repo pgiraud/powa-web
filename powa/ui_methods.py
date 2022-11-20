@@ -189,4 +189,4 @@ def inject_assets(self, entrypoint):
 
     tags = []
     generate_tags(entrypoint, tags)
-    return "\n hey".join(tags)
+    return "\n".join(tags)
