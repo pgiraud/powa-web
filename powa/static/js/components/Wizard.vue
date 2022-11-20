@@ -167,6 +167,7 @@ const indexHeaders = ref([
   {
     value: "nbqueries",
     text: "# Queries boosted",
+    align: "right",
   },
 ]);
 const indexItems = ref([]);
@@ -193,10 +194,12 @@ const indexCheckHeaders = ref([
   {
     value: "used",
     text: "Index used",
+    align: "center",
   },
   {
     value: "gain",
     text: "Gain",
+    align: "right",
   },
 ]);
 const indexCheckItems = ref([]);

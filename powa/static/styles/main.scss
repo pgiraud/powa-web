@@ -35,15 +35,6 @@ td {
       margin-bottom: 0;
     }
   }
-  &.duration,
-  &.integer,
-  &.number,
-  &.size {
-    text-align: right;
-  }
-  &.bool {
-    text-align: center;
-  }
 }
 
 table {

@@ -34,36 +34,24 @@
         :items-per-page="25"
         :search="search"
         :dense="true"
-        hide-default-header
         class="superdense"
+        @click:row="onRowClicked"
       >
-        <template #header>
-          <thead class="v-data-table-header">
-            <tr>
-              <th
-                v-for="header in headers"
-                :key="header.value"
-                :class="header.class"
-              >
-                {{ header.text }}
-              </th>
-            </tr>
-          </thead>
-        </template>
-        <template #item="{ item }">
-          <tr class="clickable" @click="onRowClicked(item)">
-            <td v-for="field in fields" :key="field.key" :class="field.type">
-              <template
-                v-if="field.type == 'query' || field.type == 'where_clause'"
-              >
-                <!-- eslint-disable-next-line vue/no-v-html -->
-                <pre v-html="field.formatter(item[field.key])" />
-              </template>
-              <template v-else>
-                {{ field.formatter(item[field.key]) }}
-              </template>
-            </td>
-          </tr>
+        <!-- This template looks for headers with formatters and executes them -->
+        <template
+          v-for="header in headers.filter((header) =>
+            header.hasOwnProperty('formatter')
+          )"
+          #[`item.${header.value}`]="{ value }"
+        >
+          <pre
+            v-if="header.type == 'query'"
+            :key="header.value"
+            v-html="header.formatter(value)"
+          />
+          <template v-else>
+            {{ header.formatter(value) }}
+          </template>
         </template>
       </v-data-table>
     </v-card-text>
@@ -123,8 +111,6 @@ const fields = computed(() => {
     Object.assign(c, {
       key: c.name,
       label: c.label,
-      formatter: getFormatter(c.type),
-      class: c.type,
     });
   });
   return columns;
@@ -137,6 +123,10 @@ const headers = computed(() => {
         text: n.label,
         value: n.key,
         class: n.type,
+        cellClass: n.type + " clickable",
+        formatter: getFormatter(n.type),
+        type: n.type,
+        align: getAlign(n.type),
       };
     }),
     "value"
@@ -193,6 +183,18 @@ function getFormatter(type) {
       return formatSize;
     default:
       return (value) => value;
+  }
+}
+
+function getAlign(type) {
+  switch (type) {
+    case "bool":
+      return "center";
+    case "duration":
+    case "percent":
+    case "size":
+    case "integer":
+      return "right";
   }
 }
 
