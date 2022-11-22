@@ -45,3 +45,8 @@ table {
     cursor: pointer;
   }
 }
+
+.theme--light.v-icon,
+.theme--dark.v-icon {
+    color: inherit !important;
+}
