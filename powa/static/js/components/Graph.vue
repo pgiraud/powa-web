@@ -27,6 +27,11 @@
             </dl>
           </div>
         </v-tooltip>
+        <a v-if="config.url" :href="config.url" target="_blank">
+          <v-icon class="pl-2">
+            {{ mdiLinkVariant }}
+          </v-icon>
+        </a>
       </v-toolbar-title>
     </v-app-bar>
     <v-card-text>
@@ -115,7 +120,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import _ from "lodash";
 import * as d3 from "d3";
-import { mdiInformation } from "@mdi/js";
+import { mdiInformation, mdiLinkVariant } from "@mdi/js";
 import store from "../store";
 import { dateMath } from "@grafana/data";
 import size from "../utils/size";

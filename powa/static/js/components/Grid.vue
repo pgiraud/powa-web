@@ -9,7 +9,14 @@
     </template>
     <v-app-bar flat height="40px;">
       <v-toolbar-title>
-        <v-card-title class="pl-0">{{ config.title }}</v-card-title>
+        <v-card-title class="pl-0">
+          {{ config.title }}
+          <a v-if="config.url" :href="config.url" target="_blank">
+            <v-icon class="pl-2">
+              {{ mdiLinkVariant }}
+            </v-icon>
+          </a>
+        </v-card-title>
       </v-toolbar-title>
     </v-app-bar>
     <v-card-text class="pb-0">
@@ -68,7 +75,7 @@ import size from "../utils/size";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 import pgsql from "highlight.js/lib/languages/pgsql";
-import { mdiMagnify } from "@mdi/js";
+import { mdiMagnify, mdiLinkVariant } from "@mdi/js";
 import { formatDuration } from "../utils/duration";
 import { encodeQueryData } from "../utils/query";
 import * as d3 from "d3";
