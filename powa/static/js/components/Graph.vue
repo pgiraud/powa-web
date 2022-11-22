@@ -365,6 +365,7 @@ function dataLoaded(response) {
         d3.max(data, (d) => d[metric])
       );
     });
+    max = max || 1; // Prevent empty domain
     axis.scale.domain([0, max]).nice();
   });
   // Then add the Y axis
