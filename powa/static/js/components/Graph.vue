@@ -12,7 +12,7 @@
         {{ config.title }}
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
-            <v-icon class="pl-2" v-bind="attrs" v-on="on">
+            <v-icon class="pl-2 text--secondary" v-bind="attrs" v-on="on">
               {{ mdiInformation }}
             </v-icon>
           </template>
