@@ -75,21 +75,21 @@
           <b>{{ timeFormat(event.date) }}</b>
           <br />
           <template v-if="event.kind == 'global' || event.kind == 'rds'">
-            <v-icon small>{{ icons.mdiInformation }}</v-icon>
+            <v-icon small>{{ mdiInformation }}</v-icon>
             <b
               ><u>{{ event.data.name }}</u></b
             >
             changed:<br />
             <b>
               <v-icon v-if="event.data.prev_is_dropped" small>{{
-                icons.mdiCancel
+                mdiCancel
               }}</v-icon>
               <span v-else>{{ event.data.prev_val }}</span>
             </b>
             ➡
             <b>
               <v-icon v-if="event.data.is_dropped" small>{{
-                icons.mdiCancel
+                mdiCancel
               }}</v-icon>
               <span v-else>{{ event.data.new_val }}</span>
             </b>
@@ -101,11 +101,11 @@
             </template>
           </template>
           <template v-else-if="kind == 'reboot'">
-            <v-icon small>{{ icons.mdiAlert }}</v-icon>
+            <v-icon small>{{ mdiAlert }}</v-icon>
             <b>Instance restarted!</b>
           </template>
           <template v-else>
-            <v-icon small>{{ icons.mdiAlert }}</v-icon>
+            <v-icon small>{{ mdiAlert }}</v-icon>
             Unknown configChanges
             {{ kind }}:<br />
             {{ event.data }}
@@ -120,11 +120,10 @@
 import { computed, onMounted, ref, watch } from "vue";
 import _ from "lodash";
 import * as d3 from "d3";
-import { mdiInformation, mdiLinkVariant } from "@mdi/js";
+import { mdiAlert, mdiCancel, mdiInformation, mdiLinkVariant } from "@mdi/js";
 import store from "../store";
 import { dateMath } from "@grafana/data";
 import size from "../utils/size";
-import { icons } from "../plugins/vuetify";
 import { formatDuration } from "../utils/duration";
 import { encodeQueryData } from "../utils/query";
 
