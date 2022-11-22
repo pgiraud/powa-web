@@ -264,7 +264,7 @@ function initChart() {
   markers = svg.append("g").style("pointer-events", "none");
   let index = 0;
   _.each(metrics.value, (metric) => {
-    const type = sourceConfig.metrics[metric].type;
+    const type = sourceConfig.metrics[metric].type || "number";
     if (!_.has(yAxisByType, type)) {
       yAxisByType[type] = {
         metrics: [],
@@ -450,7 +450,7 @@ function pointermoved(event) {
   const markersData = [];
   _.each(metrics.value, (metric) => {
     const Y = d3.map(data, (d) => d[metric]);
-    const type = sourceConfig.metrics[metric].type;
+    const type = sourceConfig.metrics[metric].type || "number";
     content[metric] = valueFormats[type](Y[i]);
     markersData.push(yAxisByType[type].scale(Y[i]));
   });
