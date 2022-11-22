@@ -30,7 +30,7 @@ function formatDuration(ms, rounded) {
     const n = parseInt(results[0]) < 3 && parseInt(results[1]) !== 0 ? 2 : 1;
     results = results.slice(0, n);
   }
-  return results.join(" ");
+  return results.length ? results.join(" ") : "0 ms";
 }
 
 export { formatDuration };
