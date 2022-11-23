@@ -15,6 +15,13 @@ const store = reactive({
       history.pushState({}, "", window.location.pathname + "?" + serialize());
     }
   },
+  alertMessages: [],
+  addAlertMessage(level, message) {
+    this.alertMessages.push({ level: level, message: message });
+  },
+  removeAlertMessage(index) {
+    this.alertMessages.splice(index, 1);
+  },
 });
 
 addEventListener("popstate", () => {

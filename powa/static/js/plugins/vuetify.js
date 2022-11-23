@@ -9,6 +9,7 @@ import {
   mdiMagnifyMinusOutline,
   mdiReload,
   mdiPower,
+  mdiCloseCircle,
 } from "@mdi/js";
 
 import Vuetify, {
@@ -81,6 +82,7 @@ const icons = {
   mdiMagnifyMinusOutline,
   mdiPower,
   mdiReload,
+  mdiCloseCircle,
 };
 
 /** Create Vuetify Instance */

@@ -10,7 +10,6 @@ import Tabcontainer from "./components/Tabcontainer.vue";
 import Wizard from "./components/Wizard.vue";
 import Content from "./components/Content.vue";
 import BreadCrumbs from "./components/BreadCrumbs.vue";
-import { addMessage } from "./utils/message.js";
 import * as d3 from "d3";
 
 //import "vuetify/src/styles/styles";
@@ -39,6 +38,7 @@ const app = new Vue({
     breadCrumbItems: breadCrumbItems,
     config: {},
     icons,
+    store,
   }),
 });
 
@@ -77,17 +77,36 @@ document
     app.config = JSON.parse(el.innerText);
   });
 
+document
+  .querySelectorAll('script[type="text/messages"]')
+  .forEach(function (el) {
+    let categories = JSON.parse(el.innerText);
+    _.forEach(categories, function (value, key) {
+      // We make corresponding alert level between "error" in vuetify
+      // and "alert" or "danger" in PoWa.
+      if (key == "alert" || key == "danger") {
+        key = "error";
+      }
+      for (let message of value) {
+        store.addAlertMessage(key, message);
+      }
+    });
+  });
+
 document.getElementById("reload_collector").addEventListener("click", () => {
   d3.text("/reload_collector/").then(
     (response) => {
       if (response) {
-        addMessage("success", "Collector successfully reloaded!");
+        store.addAlertMessage("success", "Collector successfully reloaded!");
       } else {
-        addMessage("danger", "Could not reload collector");
+        store.addAlertMessage("error", "Could not reload collector");
       }
     },
     () => {
-      addMessage("danger", "Error while trying to reload the collector.");
+      store.addAlertMessage(
+        "error",
+        "Error while trying to reload the collector."
+      );
     }
   );
 });

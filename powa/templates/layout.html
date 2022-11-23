@@ -66,14 +66,21 @@
         </v-app-bar>
         <v-main class="grey lighten-3">
           <v-container fluid>
+            <template v-for="( message, index) in store.alertMessages">
+              <v-alert outlined :type="message.level" role="alert">
+                {{! message.message }}
+                <template v-slot:close="">
+                  <v-icon @click="store.removeAlertMessage(index);">{{! icons.mdiCloseCircle }}</v-icon>
+                </template>
+              </v-alert>
+            </template>
+          </v-container>
+          <v-container fluid>
             <v-row>
               <v-col>
                 {% block content %} {% end %}
               </v-col>
             </v-row>
-          </v-container>
-          <v-container fluid id="messages">
-            {% module Messages() %}
           </v-container>
         </v-main>
         <v-footer>
@@ -95,6 +102,12 @@
         </v-footer>
       </v-app>
     </div>
+    <script type="text/messages">
+  {% raw to_json(dict(flashed_messages().items())) %}
+  </script>
+    <script type="text/messages">
+  {% raw to_json(dict(sanitycheck_messages().items())) %}
+  </script>
     {% if current_user %}
 <script type="text/breadcrumb">
   {%
