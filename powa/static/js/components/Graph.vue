@@ -37,14 +37,14 @@
     <v-card-text>
       <div ref="container" style="height: 250px; position: relative">
         <div
-          v-if="tooltipContent"
+          v-if="tooltip.content"
           class="chart-tooltip"
-          :style="`transform: translate(${tooltipX}px, ${tooltipY}px) translateX(${tooltipTranslateX}) translateY(-50%)`"
+          :style="`transform: translate(${tooltip.x}px, ${tooltip.y}px) translateX(${tooltipTranslateX}) translateY(-50%)`"
         >
           <div>
             <div>
               <b>
-                {{ tooltipContent["time"] }}
+                {{ tooltip.content["time"] }}
               </b>
             </div>
             <div v-for="(metric, index) in metrics" :key="metric">
@@ -61,43 +61,53 @@
                   color: #666;
                   font-weight: 900;
                 "
-                >{{ tooltipContent[metric] }}</span
+                >{{ tooltip.content[metric] }}</span
               >
               <div style="clear: both"></div>
             </div>
           </div>
         </div>
         <div
-          v-if="event"
+          v-if="changesTooltip.event"
           class="chart-tooltip events"
-          :style="`transform: translate(${eventsTooltipX}px, ${eventsTooltipY}px) translateX(-50%) translateY(-100%)`"
+          :style="`transform: translate(${changesTooltip.x}px, ${changesTooltip.y}px) translateX(-50%) translateY(-100%)`"
         >
-          <b>{{ timeFormat(event.date) }}</b>
+          <b>{{ timeFormat(changesTooltip.event.date) }}</b>
           <br />
-          <template v-if="event.kind == 'global' || event.kind == 'rds'">
+          <template
+            v-if="
+              changesTooltip.event.kind == 'global' ||
+              changesTooltip.event.kind == 'rds'
+            "
+          >
             <v-icon small>{{ mdiInformation }}</v-icon>
             <b
-              ><u>{{ event.data.name }}</u></b
+              ><u>{{ changesTooltip.event.data.name }}</u></b
             >
             changed:<br />
             <b>
-              <v-icon v-if="event.data.prev_is_dropped" small>{{
+              <v-icon v-if="changesTooltip.event.data.prev_is_dropped" small>{{
                 mdiCancel
               }}</v-icon>
-              <span v-else>{{ event.data.prev_val }}</span>
+              <span v-else>{{ changesTooltip.event.data.prev_val }}</span>
             </b>
             ➡
             <b>
-              <v-icon v-if="event.data.is_dropped" small>{{
+              <v-icon v-if="changesTooltip.event.data.is_dropped" small>{{
                 mdiCancel
               }}</v-icon>
-              <span v-else>{{ event.data.new_val }}</span>
+              <span v-else>{{ changesTooltip.event.data.new_val }}</span>
             </b>
-            <template v-if="event.data.datname">
-              <br />on database <b>{{ event.data.datname }}</b>
+            <template v-if="changesTooltip.event.data.datname">
+              <br />on database <b>{{ changesTooltip.event.data.datname }}</b>
             </template>
-            <template v-if="event.data.setrole && event.data.setrole != 0">
-              <br />for role <b>{{ event.data.setrole }}</b>
+            <template
+              v-if="
+                changesTooltip.event.data.setrole &&
+                changesTooltip.event.data.setrole != 0
+              "
+            >
+              <br />for role <b>{{ changesTooltip.event.data.setrole }}</b>
             </template>
           </template>
           <template v-else-if="kind == 'reboot'">
@@ -108,7 +118,7 @@
             <v-icon small>{{ mdiAlert }}</v-icon>
             Unknown configChanges
             {{ kind }}:<br />
-            {{ event.data }}
+            {{ changesTooltip.event.data }}
           </template>
         </div>
       </div>
@@ -119,9 +129,9 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import _ from "lodash";
-import * as d3 from "d3";
 import { mdiAlert, mdiCancel, mdiInformation, mdiLinkVariant } from "@mdi/js";
 import store from "../store";
+import * as d3 from "d3";
 import { dateMath } from "@grafana/data";
 import size from "../utils/size";
 import { formatDuration } from "../utils/duration";
@@ -138,41 +148,65 @@ const props = defineProps({
 
 const loading = ref(false);
 
-const container = ref(null);
+const container = ref(null); // Container DOM Element
 
+// List of metrics to show in the chart
+// For example: 'avg_runtime', 'load', 'calls', 'planload'
 const metrics = ref();
 
+// SVG Element
 let svg;
 
 const margin = { top: 20, right: 60, bottom: 20, left: 60 };
-
 let width;
 let height;
+
+// The scaleTime for the X axis
 let xScale;
-// y scales
+
+// y axes by type
+// Each item of this object has a scale and metrics property
 let yAxisByType = {};
+
 // line series
 let series = [];
 
+// The SVG <g> in which we display the dots appearing on hover
 let markers;
+// The SVG <g> containing the config changes markers
 let changes;
 
+// The D3 brushX used for drag zoom
 let brush;
+// The SVG <g> used to show the brush
 let gb;
 
+// The metrics data
 let data = {};
-let eventsData = {};
+// The config changes data
+let changesData = {};
+// The source config for the given chart
 let sourceConfig;
+// Whether or not to use stack
+let stacked = false;
+// The stack generator if required
+let stack;
 
-const colors = ref(d3.schemeSet2);
+const colors = ref(props.config.color_scheme || d3.schemeSet2);
 
-const tooltipX = ref(0);
-const tooltipY = ref(0);
-const tooltipContent = ref("");
+// The tooltip
+const tooltip = ref({
+  x: 0,
+  y: 0,
+  content: "",
+});
 
-const eventsTooltipX = ref(0);
-const eventsTooltipY = ref(0);
-const event = ref(null);
+// The tooltip for the config changes
+const changesTooltip = ref({
+  x: 0,
+  y: 0,
+  event: null,
+});
 
 const transitionDuration = 400;
 
@@ -205,6 +239,7 @@ function multiFormat(date) {
   )(date);
 }
 
+// Unit to show on the Y axes
 const unit = {
   size: "Bytes",
   sizerate: "Bytes per sec",
@@ -212,6 +247,7 @@ const unit = {
   percent: "%",
 };
 
+// Value formatters
 const valueFormats = {
   size: new size.SizeFormatter().fromRaw,
   sizerate: new size.SizeFormatter({ suffix: "ps" }).fromRaw,
@@ -221,6 +257,7 @@ const valueFormats = {
   integer: d3.format(".2s"),
 };
 
+// Time formatter
 const timeFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
 
 onMounted(() => {
@@ -253,6 +290,9 @@ function initChart() {
   });
   sourceConfig = store.dataSources[metricGroup];
 
+  stacked = props.config.stack;
+
+  // Create the group for the changes
   changes = svg
     .append("g")
     .attr("class", "changes")
@@ -260,12 +300,24 @@ function initChart() {
     .on("pointerenter pointermove", eventspointermoved)
     .on("pointerleave", eventspointerleft);
 
+  // Create the group to display the series
   const lines = svg
     .append("g")
     .attr("class", "lines")
     .on("pointerenter pointermove", pointermoved)
     .on("pointerleave", pointerleft);
+
+  // Stack generator to be used when
+  stack = d3
+    .stack()
+    .keys(metrics.value)
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
+
+  // Create the group in which to show the circles on hover
   markers = svg.append("g").style("pointer-events", "none");
+
+  // For each metric prepare the container for the line path
   let index = 0;
   _.each(metrics.value, (metric) => {
     const type = sourceConfig.metrics[metric].type || "number";
@@ -276,14 +328,28 @@ function initChart() {
       };
     }
     yAxisByType[type].metrics.push(metric);
+    if (_.keys(yAxisByType).length > 2) {
+      throw "More than two yAxis is not supported";
+    }
 
-    series.push(
-      d3
-        .line()
-        .x((d) => xScale(d.date))
-        .y((d) => yAxisByType[type].scale(d[metric]))
-    );
-    lines.append("path").attr("class", "line line" + index);
+    if (!stacked) {
+      series.push(
+        d3
+          .line()
+          .x((d) => xScale(d.date))
+          .y((d) => yAxisByType[type].scale(d[metric]))
+      );
+      lines.append("path").attr("class", "line line" + index);
+    } else {
+      series.push(
+        d3
+          .area()
+          .x((d) => xScale(d.data.date))
+          .y0(([y1]) => yAxisByType[type].scale(y1))
+          .y1(([, y2]) => yAxisByType[type].scale(y2))
+      );
+      lines.append("path").attr("class", "area area" + index);
+    }
     markers
       .append("circle")
       .attr("display", "none")
@@ -293,6 +359,8 @@ function initChart() {
       .attr("r", 3);
     index++;
   });
+
+  // Create the brush for the drag zoom
   brush = d3
     .brushX()
     .extent([
@@ -309,23 +377,19 @@ function initChart() {
     .attr("transform", "translate(0," + height + ")");
   xScale = d3.scaleTime().range([0, width]);
 
+  // Prepare the 2 y axes
   svg.append("g").attr("class", "y axis0");
   svg
     .append("g")
     .attr("class", "y axis1")
     .attr("transform", `translate(${width}, 0)`);
 
+  // Finally load the data
   loadData();
 }
 
 function loadData() {
   loading.value = true;
-  const metricGroup = _.uniq(
-    _.map(props.config.metrics, (metric) => {
-      return metric.split(".")[0];
-    })
-  );
-  const sourceConfig = store.dataSources[metricGroup];
 
   const from = dateMath.parse(store.from);
   const to = dateMath.parse(store.to, true);
@@ -349,12 +413,12 @@ function loadData() {
 
 function dataLoaded(response) {
   data = response.data;
-  // parse time
+  // Parse time and convert it to JS Date
   data.forEach(function (d) {
     d.date = new Date(d.ts * 1000);
   });
 
-  // Adding X Axis
+  // Draw X Axis
   d3.select(container.value)
     .select(".x.axis")
     .transition(transitionDuration)
@@ -363,22 +427,27 @@ function dataLoaded(response) {
   // Compute the extent for the y axis
   _.each(yAxisByType, (axis) => {
     let max = 0;
-    _.each(axis.metrics, (metric) => {
-      max = Math.max(
-        max,
-        d3.max(data, (d) => d[metric])
-      );
-    });
+    if (!stacked) {
+      _.each(axis.metrics, (metric) => {
+        max = Math.max(
+          max,
+          d3.max(data, (d) => d[metric])
+        );
+      });
+    } else {
+      const stackedData = stack(data);
+      const extent = d3.extent(stackedData.flat(2));
+      // We use toPrecision here to prevent max being 100.0000000001 in some cases
+      max = extent[1].toPrecision(5);
+    }
     max = max || 1; // Prevent empty domain
     axis.scale.domain([0, max]).nice();
   });
-  // Then add the Y axis
+
+  // Then draw the Y axes
   let axisIndex = 0;
   _.each(yAxisByType, (axis, type) => {
     let axisGenerator = axisIndex == 0 ? d3.axisLeft : d3.axisRight;
-    if (axisIndex > 1) {
-      throw "More than two yAxis is not supported";
-    }
     d3.select(container.value)
       .select(`.y.axis${axisIndex}`)
       .transition(transitionDuration)
@@ -408,35 +477,33 @@ function dataLoaded(response) {
     axisIndex++;
   });
 
+  // Then draw the lines or areas
   let index = 0;
   _.each(series, (serie) => {
-    svg
-      .transition(transitionDuration)
-      .select(".line.line" + index)
-      .attr("stroke", colors.value[index])
-      .attr("class", "line line" + index)
-      .attr("d", serie(data));
+    if (!stacked) {
+      svg
+        .transition(transitionDuration)
+        .select(".line.line" + index)
+        .attr("stroke", colors.value[index])
+        .attr("class", "line line" + index)
+        .attr("d", serie(data));
+    } else {
+      const stackedData = stack(data);
+      svg
+        .transition(transitionDuration)
+        .select(".area.area" + index)
+        .attr("fill", colors.value[index])
+        .attr("d", serie(stackedData[index]));
+    }
     index++;
   });
 }
 
 function getLabel(metric) {
-  const metricGroup = _.uniq(
-    _.map(props.config.metrics, (metric) => {
-      return metric.split(".")[0];
-    })
-  );
-  const sourceConfig = store.dataSources[metricGroup];
   return sourceConfig.metrics[metric].label;
 }
 
 function getDesc(metric) {
-  const metricGroup = _.uniq(
-    _.map(props.config.metrics, (metric) => {
-      return metric.split(".")[0];
-    })
-  );
-  const sourceConfig = store.dataSources[metricGroup];
   return sourceConfig.metrics[metric].desc;
 }
 
@@ -445,43 +512,48 @@ function pointermoved(event) {
   const [pointerX, pointerY] = d3.pointer(event);
 
   const i = d3.bisectCenter(X, xScale.invert(pointerX));
-  tooltipX.value = pointerX + margin.left;
-  tooltipY.value = pointerY + margin.top;
 
   const content = {
     time: timeFormat(X[i]),
   };
   const markersData = [];
-  _.each(metrics.value, (metric) => {
-    const Y = d3.map(data, (d) => d[metric]);
+  _.each(metrics.value, (metric, index) => {
+    const Y = d3.map(data, (d) => {
+      return d[metric];
+    });
+    const Y2 = stack(data)[index];
     const type = sourceConfig.metrics[metric].type || "number";
     content[metric] = valueFormats[type](Y[i]);
-    markersData.push(yAxisByType[type].scale(Y[i]));
+    markersData.push(yAxisByType[type].scale(stacked ? Y2[i][1] : Y[i]));
   });
   markers
     .selectAll("circle")
     .data(markersData)
     .attr("display", null)
     .attr("transform", (d) => `translate(${xScale(X[i])}, ${d})`);
-  tooltipContent.value = content;
+  tooltip.value = {
+    x: pointerX + margin.left,
+    y: pointerY + margin.top,
+    content: content,
+  };
 }
 
 function pointerleft() {
-  tooltipContent.value = null;
+  tooltip.value.content = null;
   markers.selectAll("circle").attr("display", "none");
 }
 
 function eventspointermoved(evt) {
-  const X = d3.map(eventsData, (d) => d.date);
+  const X = d3.map(changesData, (d) => d.date);
   const [pointerX] = d3.pointer(evt);
   const i = d3.bisectCenter(X, xScale.invert(pointerX));
-  eventsTooltipX.value = xScale(X[i]) + margin.left;
-  eventsTooltipY.value = height + margin.bottom;
-  event.value = eventsData[i];
+  changesTooltip.value.x = xScale(X[i]) + margin.left;
+  changesTooltip.value.y = height + margin.bottom;
+  changesTooltip.value.event = changesData[i];
 }
 
 function eventspointerleft() {
-  event.value = null;
+  changesTooltip.value.event = null;
 }
 
 function brushended({ selection }) {
@@ -495,12 +567,12 @@ function brushended({ selection }) {
 }
 
 function changesLoaded(response) {
-  eventsData = response.data;
-  eventsData.forEach(function (d) {
+  changesData = response.data;
+  changesData.forEach(function (d) {
     d.date = new Date(d.ts * 1000);
   });
 
-  const events = changes.selectAll(".event").data(eventsData);
+  const events = changes.selectAll(".event").data(changesData);
 
   events
     .enter()
@@ -517,7 +589,7 @@ function changesLoaded(response) {
 }
 
 const tooltipTranslateX = computed(() =>
-  tooltipX.value > width / 2 + margin.left ? "-120%" : "20%"
+  tooltip.value.x > width / 2 + margin.left ? "-120%" : "20%"
 );
 
 watch(
