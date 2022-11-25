@@ -52,16 +52,27 @@
       >
         <!-- This template looks for headers with formatters and executes them -->
         <template
-          v-for="header in headers.filter((header) =>
+          v-for="(header, index) in headers.filter((header) =>
             header.hasOwnProperty('formatter')
           )"
           #[`item.${header.value}`]="{ value }"
         >
-          <pre
+          <v-tooltip
             v-if="header.type == 'query'"
-            :key="header.value"
-            v-html="header.formatter(value)"
-          />
+            :key="index"
+            content-class="sql elevation-2"
+            bottom
+          >
+            <template #activator="{ on, attrs }">
+              <pre
+                :key="header.value"
+                v-bind="attrs"
+                v-on="on"
+                v-html="header.formatter(value)"
+              />
+            </template>
+            <pre v-html="header.formatter(value)"></pre>
+          </v-tooltip>
           <template v-else-if="header.type == 'bool'">
             <span :key="header.value" v-html="header.formatter(value)"></span>
           </template>
