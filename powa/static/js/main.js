@@ -9,12 +9,20 @@ import Grid from "./components/Grid.vue";
 import Tabcontainer from "./components/Tabcontainer.vue";
 import Wizard from "./components/Wizard.vue";
 import Content from "./components/Content.vue";
+import BreadCrumbs from "./components/BreadCrumbs.vue";
 import { addMessage } from "./utils/message.js";
 import * as d3 from "d3";
 
 //import "vuetify/src/styles/styles";
 //import "bootstrap/dist/css/bootstrap.css";
 //import "vuetify/dist/vuetify.min.css";
+
+let breadCrumbItems;
+document
+  .querySelectorAll('script[type="text/breadcrumb"]')
+  .forEach(function (el) {
+    breadCrumbItems = JSON.parse(el.innerText);
+  });
 
 const app = new Vue({
   el: "#app",
@@ -23,11 +31,12 @@ const app = new Vue({
     {
       Dashboard,
       DateRangePicker,
+      BreadCrumbs,
     },
     components
   ),
   data: () => ({
-    breadCrumbItems: [],
+    breadCrumbItems: breadCrumbItems,
     config: {},
     icons,
   }),
@@ -40,6 +49,7 @@ Vue.component("Grid", Grid);
 Vue.component("Tabcontainer", Tabcontainer);
 Vue.component("Wizard", Wizard);
 Vue.component("ContentCmp", Content);
+Vue.component("BreadCrumbs", BreadCrumbs);
 
 document
   .querySelectorAll('script[type="text/datasources"]')
@@ -65,25 +75,6 @@ document
   .querySelectorAll('script[type="text/dashboard"]')
   .forEach(function (el) {
     app.config = JSON.parse(el.innerText);
-    //const widgetsEl = $('.widgets');
-
-    //_.each(config.widgets, (w) => {
-    //const widget = w[0];
-    //console.log (widget.type);
-    //app.widgets.push(widget);
-    //});
-    //var dashboard = Widget.fromJSON(JSON.parse(this.text));
-    //var dashboardview = dashboard.makeView({el: $(self).find('.widgets')});
-    //dashboards.push(dashboard);
-    //dashboardview.listenTo(picker, "pickerChanged", dashboardview.refreshSources, dashboardview);
-    //dashboardview.refreshSources(picker.start_date, picker.end_date);
-    //picker.listenTo(dashboardview, "dashboard:updatePeriod", picker.updateUrls, picker);
-  });
-
-document
-  .querySelectorAll('script[type="text/breadcrumb"]')
-  .forEach(function (el) {
-    app.breadCrumbItems = JSON.parse(el.innerText);
   });
 
 document.getElementById("reload_collector").addEventListener("click", () => {
