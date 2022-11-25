@@ -134,6 +134,7 @@ import store from "../store";
 import * as d3 from "d3";
 import { dateMath } from "@grafana/data";
 import size from "../utils/size";
+import { toISO } from "../utils/dates";
 import { formatDuration } from "../utils/duration";
 import { encodeQueryData } from "../utils/query";
 
@@ -558,8 +559,8 @@ function eventspointerleft() {
 
 function brushended({ selection }) {
   if (selection) {
-    const from = timeFormat(xScale.invert(selection[0]));
-    const to = timeFormat(xScale.invert(selection[1]));
+    const from = toISO(xScale.invert(selection[0]));
+    const to = toISO(xScale.invert(selection[1]));
     store.setFromTo(from, to);
     gb.call(brush);
     gb.call(brush.move, null);

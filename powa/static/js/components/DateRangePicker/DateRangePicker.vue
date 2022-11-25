@@ -131,8 +131,8 @@ import { quickOptions } from "./options.ts";
 import { dateMath, rangeUtil } from "@grafana/data";
 import { DateTime } from "luxon";
 import { icons } from "../../plugins/vuetify";
-import * as d3 from "d3";
 import store from "../../store";
+import { toISO } from "../../utils/dates";
 
 // The raw values (examples: 'now-24h', 'Tue Sep 01 2020 10:16:00 GMT+0200')
 // Interaction with parent component is done with from/to props which
@@ -219,14 +219,12 @@ function cancelPicker() {
 }
 
 function applyDatesFromPicker() {
-  inputFrom.value = DateTime.fromFormat(
-    pickerDates.value[0],
-    "yyyy-LL-dd"
-  ).toFormat("yyyy-LL-dd 00:00:00");
-  inputTo.value = DateTime.fromFormat(
-    pickerDates.value[1],
-    "yyyy-LL-dd"
-  ).toFormat("yyyy-LL-dd 23:59:00");
+  inputFrom.value = toISO(
+    DateTime.fromFormat(pickerDates.value[0], "yyyy-LL-dd")
+  );
+  inputTo.value = toISO(
+    DateTime.fromFormat(pickerDates.value[1], "yyyy-LL-dd")
+  );
   // Close the dialog after update cycle to let the click outside happen first
   setTimeout(() => {
     dialog.value = false;
@@ -248,14 +246,12 @@ function clickOutside() {
 }
 
 function zoomOut() {
-  const timeFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
   const from = dateMath.parse(store.from).toDate();
   const to = dateMath.parse(store.to, true).toDate();
   const diff = to - from;
-  store.setFromTo(
-    timeFormat(new Date(from.getTime() - diff / 2)),
-    timeFormat(new Date(to.getTime() + diff / 2))
-  );
+  const newFrom = toISO(new Date(from.getTime() - diff / 2));
+  const newTo = toISO(new Date(to.getTime() + diff / 2));
+  store.setFromTo(newFrom, newTo);
 }
 
 watch(
