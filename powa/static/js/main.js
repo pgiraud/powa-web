@@ -56,18 +56,16 @@ document
   .forEach(function (el) {
     const dataSources = JSON.parse(el.innerText);
     _.each(dataSources, function (dataSource) {
-      store.dataSources[dataSource.name] = dataSource;
       try {
         if (dataSource.type == "metric_group") {
           dataSource.metrics = _.keyBy(dataSource.metrics, "name");
-        } else if (dataSource.type == "content") {
-          // nothing to do
         }
       } catch (e) {
         console.error(
           "Could not instantiate metric group. Check the metric group definition"
         );
       }
+      store.dataSources[dataSource.name] = dataSource;
     });
   });
 
@@ -95,5 +93,6 @@ document.getElementById("reload_collector").addEventListener("click", () => {
 document
   .querySelectorAll('script[type="text/datasource_timeline"]')
   .forEach(function (el) {
-    store.changes = JSON.parse(el.innerText);
+    store.changesUrl = JSON.parse(el.innerText);
   });
+store.loadData();

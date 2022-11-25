@@ -1,9 +1,14 @@
 import { reactive } from "vue";
+import _ from "lodash";
+import * as d3 from "d3";
+import { encodeQueryData } from "./utils/query";
+import { dateMath } from "@grafana/data";
 
 const initialQuery = parseQuery(window.location.search);
 
 const store = reactive({
   dataSources: {},
+  changesUrl: "",
   changes: [],
   from: initialQuery.from || "now-1h",
   to: initialQuery.to || "now",
@@ -13,6 +18,22 @@ const store = reactive({
     this.to = to;
     if (!silent) {
       history.pushState({}, "", window.location.pathname + "?" + serialize());
+    }
+    this.loadData();
+  },
+  loadData() {
+    const params = {
+      from: dateMath.parse(store.from).format("YYYY-MM-DD HH:mm:ssZZ"),
+      to: dateMath.parse(store.to, true).format("YYYY-MM-DD HH:mm:ssZZ"),
+    };
+
+    const copy = Object.assign({}, this.dataSources);
+    _.forEach(copy, (source) => {
+      source.promise = d3.text(source.data_url + "?" + encodeQueryData(params));
+    });
+    this.dataSources = copy;
+    if (this.changesUrl) {
+      this.changes = d3.json(this.changesUrl + "?" + encodeQueryData(params));
     }
   },
 });

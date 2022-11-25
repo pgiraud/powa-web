@@ -22,10 +22,7 @@ import { components, createVuetify, icons } from "../plugins/vuetify.js";
 import store from "../store";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
-import { dateMath } from "@grafana/data";
 import { formatDuration } from "../utils/duration";
-import { encodeQueryData } from "../utils/query";
-import * as d3 from "d3";
 
 const props = defineProps({
   config: {
@@ -41,34 +38,32 @@ const content = ref("");
 const contentEl = ref(null);
 
 onMounted(() => {
-  loadData();
+  watch(
+    () => store.dataSources,
+    () => {
+      loadData();
+    },
+    { immediate: true }
+  );
 });
 
 function loadData() {
   loading.value = true;
   const sourceConfig = store.dataSources[props.config.name];
-  const from = dateMath.parse(store.from);
-  const to = dateMath.parse(store.to, true);
-  const params = {
-    from: from.format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: to.format("YYYY-MM-DD HH:mm:ssZZ"),
-  };
-  d3.text(sourceConfig.data_url + "?" + encodeQueryData(params)).then(
-    (response) => {
-      const el = new Vue({
-        components,
-        data: () => ({
-          icons,
-        }),
-        template: response,
-        vuetify: createVuetify(),
-      });
-      const html = el.$mount().$el.outerHTML;
-      content.value = html;
-      window.setTimeout(loaded, 1);
-      loading.value = false;
-    }
-  );
+  sourceConfig.promise.then((response) => {
+    const el = new Vue({
+      components,
+      data: () => ({
+        icons,
+      }),
+      template: response,
+      vuetify: createVuetify(),
+    });
+    const html = el.$mount().$el.outerHTML;
+    content.value = html;
+    window.setTimeout(loaded, 1);
+    loading.value = false;
+  });
 }
 
 function loaded() {

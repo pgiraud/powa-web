@@ -185,6 +185,7 @@ function loadRangeShortcut(shortcut) {
   rawFrom.value = shortcut.from;
   rawTo.value = shortcut.to;
   isShown.value = false;
+  store.setFromTo(rawFrom.value, rawTo.value);
 }
 
 watch(
@@ -193,7 +194,6 @@ watch(
     inputFrom.value = rawFrom.value;
     inputTo.value = rawTo.value;
     synchronizePicker();
-    store.setFromTo(rawFrom.value, rawTo.value);
   }
 );
 
@@ -208,6 +208,7 @@ function applyTimeRange() {
   isShown.value = false;
   rawFrom.value = inputFrom.value;
   rawTo.value = inputTo.value;
+  store.setFromTo(rawFrom.value, rawTo.value);
 }
 
 function cancelPicker() {

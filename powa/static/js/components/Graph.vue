@@ -141,7 +141,6 @@ import { dateMath } from "@grafana/data";
 import size from "../utils/size";
 import { toISO } from "../utils/dates";
 import { formatDuration } from "../utils/duration";
-import { encodeQueryData } from "../utils/query";
 
 const props = defineProps({
   config: {
@@ -268,6 +267,14 @@ const timeFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
 
 onMounted(() => {
   initChart();
+
+  watch(
+    () => store.dataSources,
+    () => {
+      loadData();
+    },
+    { immediate: true }
+  );
 });
 
 function initChart() {
@@ -389,9 +396,6 @@ function initChart() {
     .append("g")
     .attr("class", "y axis1")
     .attr("transform", `translate(${width}, 0)`);
-
-  // Finally load the data
-  loadData();
 }
 
 function loadData() {
@@ -399,17 +403,10 @@ function loadData() {
 
   const from = dateMath.parse(store.from);
   const to = dateMath.parse(store.to, true);
-  const params = {
-    from: from.format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: to.format("YYYY-MM-DD HH:mm:ssZZ"),
-  };
 
   xScale.domain([from, to]);
 
-  const promises = [
-    d3.json(sourceConfig.data_url + "?" + encodeQueryData(params)),
-    d3.json(store.changes + "?" + encodeQueryData(params)),
-  ];
+  const promises = [sourceConfig.promise, store.changes];
   Promise.all(promises).then((data) => {
     dataLoaded(data[0]);
     changesLoaded(data[1]);
@@ -418,7 +415,7 @@ function loadData() {
 }
 
 function dataLoaded(response) {
-  data = response.data;
+  data = JSON.parse(response).data;
   // Parse time and convert it to JS Date
   data.forEach(function (d) {
     d.date = new Date(d.ts * 1000);
@@ -596,13 +593,6 @@ function changesLoaded(response) {
 
 const tooltipTranslateX = computed(() =>
   tooltip.value.x > width / 2 + margin.left ? "-120%" : "20%"
-);
-
-watch(
-  () => store.from + store.to,
-  () => {
-    loadData();
-  }
 );
 </script>
 <style lang="scss">

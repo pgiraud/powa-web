@@ -74,7 +74,6 @@
 import { computed, onMounted, ref, watch } from "vue";
 import store from "../store";
 import { serialize } from "../store";
-import { dateMath } from "@grafana/data";
 import _ from "lodash";
 import size from "../utils/size";
 import hljs from "highlight.js";
@@ -82,8 +81,6 @@ import "highlight.js/styles/default.css";
 import pgsql from "highlight.js/lib/languages/pgsql";
 import { mdiMagnify, mdiLinkVariant } from "@mdi/js";
 import { formatDuration } from "../utils/duration";
-import { encodeQueryData } from "../utils/query";
-import * as d3 from "d3";
 
 hljs.registerLanguage("pgsql", pgsql);
 
@@ -101,7 +98,13 @@ const search = ref("");
 const items = ref([]);
 
 onMounted(() => {
-  loadData();
+  watch(
+    () => store.dataSources,
+    () => {
+      loadData();
+    },
+    { immediate: true }
+  );
 });
 
 const fields = computed(() => {
@@ -153,16 +156,10 @@ function loadData() {
     })
   );
   const sourceConfig = store.dataSources[metricGroup];
-  const params = {
-    from: dateMath.parse(store.from).format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: dateMath.parse(store.to, true).format("YYYY-MM-DD HH:mm:ssZZ"),
-  };
-  d3.json(sourceConfig.data_url + "?" + encodeQueryData(params)).then(
-    (response) => {
-      dataLoaded(response.data);
-      loading.value = false;
-    }
-  );
+  sourceConfig.promise.then((response) => {
+    dataLoaded(JSON.parse(response).data);
+    loading.value = false;
+  });
 }
 
 function dataLoaded(data) {
@@ -215,13 +212,6 @@ function onRowClicked(row) {
     window.location.href = [row.url, serialize(store.from, store.to)].join("?");
   }
 }
-
-watch(
-  () => store.from + store.to,
-  () => {
-    loadData();
-  }
-);
 </script>
 
 <style lang="scss"></style>
