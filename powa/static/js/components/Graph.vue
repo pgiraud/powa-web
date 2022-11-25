@@ -27,7 +27,12 @@
             </dl>
           </div>
         </v-tooltip>
-        <a v-if="config.url" :href="config.url" target="_blank">
+        <a
+          v-if="config.url"
+          :href="config.url"
+          target="_blank"
+          title="See the documentation"
+        >
           <v-icon class="pl-2">
             {{ mdiLinkVariant }}
           </v-icon>
