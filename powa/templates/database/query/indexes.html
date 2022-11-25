@@ -44,7 +44,7 @@
       <v-row>
         <v-col cols="12">
           {% if hypoplan.indexes %}
-          The following indexes would be <v-chip class="my-4" color="#12cd21" label>used</v-chip>:
+          The following indexes would be <v-chip class="my-4" small color="#12cd21" label>used</v-chip>:
           <pre class="sql">
                         {% for ind in hypoplan.indexes %}
                         <code>{{ind.ddl}}</code>
