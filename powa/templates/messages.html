@@ -3,7 +3,7 @@
 current message category does not match v-alert type
 it must be in success, info, warning, error
 -->
-<v-alert type="{{cat}}" dismissible transition="fade-transition" role="alert">
+<v-alert type="{{cat}}" outlined transition="fade-transition" role="alert">
   <ul>
     {% for message in messages %}
     <li>{{message}}</li>
@@ -14,7 +14,7 @@ it must be in success, info, warning, error
 
 {% if current_user %}
 {% for cat, messages in sanitycheck_messages().items() %}
-<v-alert type="{{cat}}" dismissible transition="fade-transition" role="alert">
+<v-alert type="{{cat}}" outlined transition="fade-transition" role="alert">
   <ul>
     {% for message in messages %}
     <li>{{message}}</li>
