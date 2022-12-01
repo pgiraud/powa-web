@@ -31,6 +31,18 @@ export default defineConfig({
     outDir: resolve(__dirname, "powa/static/dist"),
     rollupOptions: {
       input: "/powa/static/js/main.js",
+      output: {
+        manualChunks: {
+          // Split external library from transpiled code.
+          d3: ["d3"],
+          grafana: ["@grafana/data"],
+          lodash: ["lodash"],
+          vue: ["vue"],
+          vuetify: ["vuetify"],
+          luxon: ["luxon"],
+          highlight: ["highlight.js"],
+        },
+      },
     },
   },
   css: {
