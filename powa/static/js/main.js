@@ -83,7 +83,7 @@ document
   });
 
 document.getElementById("reload_collector").addEventListener("click", () => {
-  d3.text("/reload_collector/").then(
+  d3.json("/reload_collector/").then(
     (response) => {
       if (response) {
         store.addAlertMessage("success", "Collector successfully reloaded!");
