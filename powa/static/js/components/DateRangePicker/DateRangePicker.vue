@@ -6,6 +6,11 @@
       </v-icon>
       <span>{{ rangeString }}</span>
     </v-btn>
+    <v-btn class="ml-4" @click="applyTimeRange">
+      <v-icon class="text--secondary">
+        {{ icons.mdiReload }}
+      </v-icon>
+    </v-btn>
     <v-btn class="ml-4" @click="zoomOut">
       <v-icon class="text--secondary">
         {{ icons.mdiMagnifyMinusOutline }}
