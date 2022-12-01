@@ -20,9 +20,12 @@
 import Vue, { onMounted, ref, watch } from "vue";
 import { components, createVuetify, icons } from "../plugins/vuetify.js";
 import store from "../store";
-import hljs from "highlight.js";
+import hljs from "highlight.js/lib/core";
+import pgsql from "highlight.js/lib/languages/pgsql";
 import "highlight.js/styles/default.css";
 import { formatDuration } from "../utils/duration";
+
+hljs.registerLanguage("sql", pgsql);
 
 const props = defineProps({
   config: {

@@ -135,7 +135,7 @@ import { dateMath } from "@grafana/data";
 import * as d3 from "d3";
 import { encodeQueryData } from "../utils/query";
 import _ from "lodash";
-import hljs from "highlight.js";
+import hljs from "highlight.js/lib/core";
 import pgsql from "highlight.js/lib/languages/pgsql";
 hljs.registerLanguage("pgsql", pgsql);
 // eslint-disable-next-line no-unused-vars

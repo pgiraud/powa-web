@@ -80,7 +80,7 @@ import store from "../store";
 import { serialize } from "../store";
 import _ from "lodash";
 import size from "../utils/size";
-import hljs from "highlight.js";
+import hljs from "highlight.js/lib/core";
 import "highlight.js/styles/default.css";
 import pgsql from "highlight.js/lib/languages/pgsql";
 import { mdiMagnify, mdiLinkVariant } from "@mdi/js";
