@@ -2,10 +2,9 @@
 {% block content %}
 
 <div class="indexes">
-  <h4>Example values</h4>
   <v-row>
     {% for plan in plans %}
-    <v-col cols="4">
+    <v-col cols="6">
       <h5>{{plan.title.title()}} values</h5>
       <dl>
         <dt>Executed:</dt>
