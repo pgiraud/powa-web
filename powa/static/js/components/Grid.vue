@@ -61,6 +61,8 @@
             v-if="header.type == 'query'"
             :key="index"
             content-class="sql elevation-2"
+            transition="fade"
+            open-delay="200"
             bottom
           >
             <template #activator="{ on, attrs }">
