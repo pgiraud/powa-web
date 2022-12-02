@@ -25,7 +25,7 @@
       </v-toolbar-title>
     </v-app-bar>
     <v-card-text class="pb-0">
-      <v-row>
+      <v-row class="mb-4">
         <v-col cols="12" sm="6" md="4" xl="2">
           <v-text-field
             v-model="search"
@@ -50,6 +50,22 @@
         :item-class="rowClass"
         @click:row="onRowClicked"
       >
+        <template v-if="props.config.toprow" #header>
+          <thead>
+            <tr>
+              <th></th>
+              <th
+                v-for="group in props.config.toprow"
+                :key="group.name"
+                :colspan="group.colspan"
+                class="text-center"
+                style="border-right: 1px solid #dfdfdf"
+              >
+                {{ group.name }}
+              </th>
+            </tr>
+          </thead>
+        </template>
         <!-- This template looks for headers with formatters and executes them -->
         <template
           v-for="(header, index) in headers.filter((header) =>
