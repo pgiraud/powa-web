@@ -225,7 +225,19 @@ let stacked = false;
 // The stack generator if required
 let stack;
 
-const colors = ref(props.config.color_scheme || d3.schemeCategory10);
+const defaultScheme = [
+  "rgb(203, 81, 58)",
+  "rgb(115, 192, 58)",
+  "rgb(101, 185, 172)",
+  "rgb(70, 130, 180)",
+  "rgb(150, 85, 126)",
+  "rgb(120, 95, 67)",
+  "rgb(133, 135, 114)",
+  "rgb(181, 182, 169)",
+  "rgb(199, 180, 57)",
+];
+
+const colors = ref(props.config.color_scheme || defaultScheme);
 
 // The tooltip
 const tooltip = ref({
