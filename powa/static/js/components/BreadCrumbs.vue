@@ -1,12 +1,12 @@
 <template>
   <v-breadcrumbs :items="items">
-    <template #:item="{ item }">
+    <template #item="{ item }">
       <v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
         <template v-if="item.text != 'Home'">
-          {{ !item.text }}
+          {{ item.text }}
         </template>
         <template v-else>
-          <v-icon color="primary" small>{{ !icons.mdiHome }}</v-icon>
+          <v-icon color="primary" small>{{ icons.mdiHome }}</v-icon>
         </template>
       </v-breadcrumbs-item>
     </template>
@@ -17,6 +17,7 @@
 import { toRef, watch } from "vue";
 import store from "../store";
 import _ from "lodash";
+import { icons } from "../plugins/vuetify";
 const props = defineProps({
   breadCrumbItems: {
     type: Array,
