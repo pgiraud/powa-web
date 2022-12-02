@@ -56,9 +56,14 @@
                 {{ tooltip.content["time"] }}
               </b>
             </div>
-            <div v-for="(metric, index) in metrics" :key="metric">
+            <div
+              v-for="(metric, index) in [...metrics].reverse()"
+              :key="metric"
+            >
               <span
-                :style="`display:inline-block;color:${colors[index]};`"
+                :style="`display:inline-block;color:${
+                  colors[metrics.length - 1 - index]
+                };`"
                 class="mr-2"
                 ><b>➖</b></span
               >
@@ -135,12 +140,14 @@
       </div>
       <div v-if="!noData">
         <div
-          v-for="(metric, index) in metrics"
+          v-for="(metric, index) in [...metrics].reverse()"
           :key="metric"
           class="d-inline-block"
         >
           <span
-            :style="`display:inline-block;color:${colors[index]};`"
+            :style="`display:inline-block;color:${
+              colors[metrics.length - 1 - index]
+            };`"
             class="mr-2"
             ><b>➖</b></span
           >
