@@ -10,7 +10,7 @@
     <v-app-bar flat height="40px;">
       <v-toolbar-title class="mx-auto">
         {{ config.title }}
-        <v-tooltip bottom>
+        <v-tooltip bottom transition="fade">
           <template #activator="{ on, attrs }">
             <v-icon class="pl-2 text--secondary" v-bind="attrs" v-on="on">
               {{ mdiInformation }}
