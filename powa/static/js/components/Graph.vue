@@ -192,7 +192,7 @@ const container = ref(null); // Container DOM Element
 
 // List of metrics to show in the chart
 // For example: 'avg_runtime', 'load', 'calls', 'planload'
-const metrics = ref();
+const metrics = ref([]);
 
 // SVG Element
 let svg;
