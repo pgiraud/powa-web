@@ -30,6 +30,12 @@ const store = reactive({
     const copy = Object.assign({}, this.dataSources);
     _.forEach(copy, (source) => {
       source.promise = d3.text(source.data_url + "?" + encodeQueryData(params));
+      source.promise.then((response) => {
+        const data = JSON.parse(response);
+        if (data) {
+          this.addAlertMessages(data.messages);
+        }
+      });
     });
     this.dataSources = copy;
     if (this.changesUrl) {
@@ -42,6 +48,13 @@ const store = reactive({
   },
   removeAlertMessage(index) {
     this.alertMessages.splice(index, 1);
+  },
+  addAlertMessages(messages) {
+    _.forEach(messages, function (value, key) {
+      for (let message of value) {
+        store.addAlertMessage(key, message);
+      }
+    });
   },
 });
 

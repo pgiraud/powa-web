@@ -74,12 +74,8 @@ document
 document
   .querySelectorAll('script[type="text/messages"]')
   .forEach(function (el) {
-    let categories = JSON.parse(el.innerText);
-    _.forEach(categories, function (value, key) {
-      for (let message of value) {
-        store.addAlertMessage(key, message);
-      }
-    });
+    const messages = JSON.parse(el.innerText);
+    store.addAlertMessages(messages);
   });
 
 document.getElementById("reload_collector").addEventListener("click", () => {
