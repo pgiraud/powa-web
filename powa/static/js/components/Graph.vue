@@ -142,22 +142,28 @@
           </template>
         </div>
       </div>
-      <div v-if="!noData" class="d-flex">
+      <div v-if="!noData" class="d-flex justify-space-between">
         <div
-          v-for="(metric, index) in [...metrics].reverse()"
-          :key="metric"
-          class="d-flex align-center"
+          v-for="(axis, type) in yAxisByType"
+          :key="type"
+          class="d-flex flex-wrap"
         >
           <div
-            style="width: 12px; height: 3px; border-radius: 1px"
-            :style="`background: ${colors[metrics.length - 1 - index]}`"
-            class="mr-2"
-          ></div>
-          <div
-            style="color: #666; font-weight: 400; margin-left: 2px"
-            class="mr-4"
+            v-for="(metric, index) in metricsByAxis(axis).reverse()"
+            :key="metric"
+            class="d-flex align-center"
           >
-            {{ getLabel(metric) }}
+            <div
+              style="width: 12px; height: 3px; border-radius: 1px"
+              :style="`background: ${colors[metrics.length - 1 - index]}`"
+              class="mr-2"
+            ></div>
+            <div
+              style="color: #666; font-weight: 400; margin-left: 2px"
+              class="mr-4"
+            >
+              {{ getLabel(metric) }}
+            </div>
           </div>
         </div>
       </div>
@@ -671,6 +677,13 @@ function changesLoaded() {
 const tooltipTranslateX = computed(() =>
   tooltip.value.x > width / 2 + margin.left ? "-120%" : "20%"
 );
+
+function metricsByAxis(axis) {
+  return _.filter(
+    metrics.value,
+    (metric) => axis.metrics.indexOf(metric) != -1
+  );
+}
 </script>
 <style lang="scss">
 svg.chart {
