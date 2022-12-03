@@ -59,27 +59,31 @@
             <div
               v-for="(metric, index) in [...metrics].reverse()"
               :key="metric"
+              class="d-flex justify-space-between"
             >
-              <span
-                :style="`display:inline-block;color:${
-                  colors[metrics.length - 1 - index]
-                };`"
-                class="mr-2"
-                ><b>➖</b></span
-              >
-              <span style="color: #666; font-weight: 400; margin-left: 2px">{{
-                getLabel(metric)
-              }}</span>
-              <span
+              <div class="d-flex align-center">
+                <div
+                  style="width: 12px; height: 3px; border-radius: 1px"
+                  :style="`background: ${colors[metrics.length - 1 - index]}`"
+                  class="mr-2"
+                ></div>
+                <div
+                  style="color: #666; font-weight: 400; margin-left: 2px"
+                  class="mr-4"
+                >
+                  {{ getLabel(metric) }}
+                </div>
+              </div>
+              <div
                 style="
                   float: right;
                   margin-left: 20px;
                   color: #666;
                   font-weight: 900;
                 "
-                >{{ tooltip.content[metric] }}</span
               >
-              <div style="clear: both"></div>
+                {{ tooltip.content[metric] }}
+              </div>
             </div>
           </div>
         </div>
@@ -138,24 +142,23 @@
           </template>
         </div>
       </div>
-      <div v-if="!noData">
+      <div v-if="!noData" class="d-flex">
         <div
           v-for="(metric, index) in [...metrics].reverse()"
           :key="metric"
-          class="d-inline-block"
+          class="d-flex align-center"
         >
-          <span
-            :style="`display:inline-block;color:${
-              colors[metrics.length - 1 - index]
-            };`"
+          <div
+            style="width: 12px; height: 3px; border-radius: 1px"
+            :style="`background: ${colors[metrics.length - 1 - index]}`"
             class="mr-2"
-            ><b>➖</b></span
-          >
-          <span
+          ></div>
+          <div
             style="color: #666; font-weight: 400; margin-left: 2px"
             class="mr-4"
-            >{{ getLabel(metric) }}</span
           >
+            {{ getLabel(metric) }}
+          </div>
         </div>
       </div>
       <div v-if="noData" class="text-center text--disabled">
