@@ -9,6 +9,7 @@ from powa.dashboards import (
     MetricGroupDef, MetricDef,
     DashboardPage, TabContainer)
 from powa.config import ConfigChangesGlobal
+from powa.overview import Overview
 
 from powa.sql.views_graph import (powa_getstatdata_sample,
                                   kcache_getstatdata_sample,
@@ -587,6 +588,7 @@ class ServerOverview(DashboardPage):
                    GlobalUserFctMetricGroup, ByDatabaseUserFuncMetricGroup,
                    ConfigChangesGlobal]
     params = ["server"]
+    parent = Overview
     title = "All databases"
     timeline = ConfigChangesGlobal
 
