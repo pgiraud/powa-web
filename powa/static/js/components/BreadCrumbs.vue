@@ -1,23 +1,30 @@
 <template>
-  <v-breadcrumbs :items="items">
-    <template #item="{ item }">
-      <v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
-        <template v-if="item.text != 'Home'">
+  <div>
+    <v-breadcrumbs :items="items" large>
+      <template #item="{ item }">
+        <v-breadcrumbs-item v-if="item.children">
+          <v-select
+            :items="item.children"
+            :label="item.text"
+            item-text="title"
+            item-value="url"
+            hide-details
+            hide-selected
+            @change="onSelect"
+          ></v-select>
+        </v-breadcrumbs-item>
+        <v-breadcrumbs-item v-else :href="item.href" :disabled="item.disabled">
           {{ item.text }}
-        </template>
-        <template v-else>
-          <v-icon color="primary" small>{{ icons.mdiHome }}</v-icon>
-        </template>
-      </v-breadcrumbs-item>
-    </template>
-  </v-breadcrumbs>
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
+  </div>
 </template>
 
 <script setup>
 import { toRef, watch } from "vue";
 import store from "../store";
 import _ from "lodash";
-import { icons } from "../plugins/vuetify";
 const props = defineProps({
   breadCrumbItems: {
     type: Array,
@@ -44,4 +51,8 @@ watch(
     });
   }
 );
+
+function onSelect(url) {
+  window.location.href = url;
+}
 </script>

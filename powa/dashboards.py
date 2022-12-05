@@ -666,6 +666,7 @@ class DashboardPage(object):
         else:
             title = cls.title % params
         entry = MenuEntry(title, cls.__name__, params)
+        entry.children_title = cls.title % params
         entry.children = cls.get_childmenu(handler, params)
         items = [entry]
 
