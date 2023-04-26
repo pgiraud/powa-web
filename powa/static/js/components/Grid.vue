@@ -231,9 +231,14 @@ function getAlign(type) {
   }
 }
 
-function onRowClicked(row) {
+function onRowClicked(row, data, event) {
   if (row.url) {
-    window.location.href = [row.url, serialize(store.from, store.to)].join("?");
+    const destination = [row.url, serialize(store.from, store.to)].join("?");
+    if (event.ctrlKey) {
+      window.open(destination, "_blank");
+    } else {
+      window.location.href = destination;
+    }
   }
 }
 
