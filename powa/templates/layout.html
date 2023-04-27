@@ -9,8 +9,39 @@
     <meta name="msapplication-TileColor" content="#2b5797">
     <meta name="msapplication-TileImage" content="{{ static_url('img/favicon/mstile-144x144.png') }}">
     {% block header %} {% end %}
+    <style>
+      #mask {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #EFEFEF;
+        font-family: "Roboto", sans-serif;
+        text-align: center;
+      }
+      #mask > * {
+        display: block;
+      }
+
+      [v-cloak] > * { display:none }
+    </style>
   </head>
   <body>
+    <div id="mask" v-cloak>
+      <div>
+        <div style="display: flex; align-items: center; justify-content: center; color: #859145;">
+          <img src="{{ static_url('img/favicon/favicon-32x32.png')}}"/>&nbsp;<b>PoWA</b>
+        </div>
+        <br />
+        loading…
+        <br />
+        <span id="waiter"></span>
+      </div>
+    </div>
     <div id="app" v-cloak>
       <v-app>
         <v-app-bar
@@ -121,7 +152,7 @@
 </script>
     {% end %}
     {% if handler.application.settings['debug'] %}
-      <!-- FIXME -->
+      <script type="text/javascript" src="{{ static_url('js/waiter.js') }}"></script>
       <script type="module" src="http://localhost:5173/powa/static/js/main.js"></script>
     {% else %}
       {% raw inject_assets("powa/static/js/main.js") %}
