@@ -48,7 +48,6 @@
         :dense="true"
         class="superdense"
         :item-class="rowClass"
-        @click:row="onRowClicked"
       >
         <template v-if="props.config.toprow" #header>
           <thead>
@@ -67,23 +66,33 @@
           </thead>
         </template>
         <!-- This template looks for headers with formatters and executes them -->
-        <template
-          v-for="header in headers.filter((header) =>
-            header.hasOwnProperty('formatter')
-          )"
-          #[`item.${header.value}`]="{ value }"
-        >
-          <query-tooltip
-            v-if="header.type == 'query'"
-            :key="header.value"
-            :value="value"
-          ></query-tooltip>
-          <template v-else-if="header.type == 'bool'">
-            <span :key="header.value" v-html="header.formatter(value)"></span>
-          </template>
-          <template v-else>
-            {{ header.formatter(value) }}
-          </template>
+        <template #item="{ item }">
+          <tr>
+            <td
+              v-for="header in headers.filter((header) =>
+                header.hasOwnProperty('formatter')
+              )"
+              :key="(header.value, item.id)"
+              class="no_decoration"
+            >
+              <a :href="[item.url, serialize(store.from, store.to)].join('?')">
+                <query-tooltip
+                  v-if="header.type == 'query'"
+                  :key="header.value"
+                  :value="item[header.value]"
+                ></query-tooltip>
+                <template v-else-if="header.type == 'bool'">
+                  <span
+                    :key="header.value"
+                    v-html="header.formatter(item[header.value])"
+                  ></span>
+                </template>
+                <template v-else>
+                  {{ header.formatter(item[header.value]) }}
+                </template>
+              </a>
+            </td>
+          </tr>
         </template>
       </v-data-table>
     </v-card-text>
@@ -231,15 +240,14 @@ function getAlign(type) {
   }
 }
 
-function onRowClicked(row) {
-  if (row.url) {
-    window.location.href = [row.url, serialize(store.from, store.to)].join("?");
-  }
-}
-
 function rowClass(row) {
   return row.url ? "clickable" : "";
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+td.no_decoration > a {
+  text-decoration: none;
+  color: inherit;
+}
+</style>
