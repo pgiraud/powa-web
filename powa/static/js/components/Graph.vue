@@ -397,6 +397,13 @@ function initChart() {
     .on("pointerenter pointermove", eventspointermoved)
     .on("pointerleave", eventspointerleft);
 
+  // prepare the grids
+  const grids = svg.append("g").attr("class", "grids");
+  grids
+    .append("g")
+    .attr("class", "x axis-grid")
+    .attr("transform", `translate(0, ${height})`);
+
   // Create the group to display the series
   const lines = svg
     .append("g")
@@ -460,11 +467,11 @@ function initChart() {
     .on("end", brushended);
   gb = lines.append("g").call(brush);
 
-  // prepare axis
+  // prepare the x axis
   svg
     .append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")");
+    .attr("transform", `translate(0,${height})`);
 
   // Prepare the 2 y axes
   svg.append("g").attr("class", "y axis0");
@@ -507,10 +514,26 @@ function drawOrUpdateChart() {
   const to = dateMath.parse(store.to, true);
   xScale = d3.scaleTime().range([0, width]).domain([from, to]);
 
+  const xTicksCount = 5;
+  const xAxis = d3
+    .axisBottom(xScale)
+    .ticks(xTicksCount)
+    .tickSizeOuter(0)
+    .tickFormat(multiFormat);
+
   d3.select(container.value)
     .select(".x.axis")
     .transition(transitionDuration)
-    .call(d3.axisBottom(xScale).ticks(5).tickFormat(multiFormat));
+    .call(xAxis);
+
+  // Draw X Axis grid lines
+  const xAxisGrid = d3
+    .axisBottom(xScale)
+    .tickSizeOuter(0)
+    .tickSizeInner(-height)
+    .ticks(xTicksCount)
+    .tickFormat("");
+  d3.select(container.value).select(".x.axis-grid").call(xAxisGrid);
 
   // Stack generator to be used when
   stack = d3
@@ -768,7 +791,7 @@ svg.chart {
   cursor: pointer;
 }
 
-.horizontalGrid {
+.axis-grid line {
   fill: none;
   shape-rendering: crispEdges;
   stroke: lightgrey;
