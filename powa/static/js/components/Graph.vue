@@ -48,7 +48,9 @@
         <div
           v-if="tooltip.content"
           class="chart-tooltip"
-          :style="`transform: translate(${tooltip.x}px, ${tooltip.y}px) translateX(${tooltipTranslateX}) translateY(-50%)`"
+          :style="`transform: translate(${tooltip.x}px, ${
+            tooltip.y
+          }px) translateX(${tooltipTranslateX(tooltip)}) translateY(-50%)`"
         >
           <div>
             <div>
@@ -90,7 +92,11 @@
         <div
           v-if="changesTooltip.event"
           class="chart-tooltip events"
-          :style="`transform: translate(${changesTooltip.x}px, ${changesTooltip.y}px) translateX(-50%) translateY(-100%)`"
+          :style="`transform: translate(${changesTooltip.x}px, ${
+            changesTooltip.y
+          }px) translateX(${tooltipTranslateX(
+            changesTooltip
+          )}) translateY(-50%)`"
         >
           <b>{{ timeFormat(changesTooltip.event.date) }}</b>
           <br />
@@ -175,7 +181,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import _ from "lodash";
 import { mdiAlert, mdiCancel, mdiInformation, mdiLinkVariant } from "@mdi/js";
 import store from "../store";
@@ -635,7 +641,7 @@ function eventspointermoved(evt) {
   const [pointerX] = d3.pointer(evt);
   const i = d3.bisectCenter(X, xScale.invert(pointerX));
   changesTooltip.value.x = xScale(X[i]) + margin.left;
-  changesTooltip.value.y = height + margin.bottom;
+  changesTooltip.value.y = 40;
   changesTooltip.value.event = changesData[i];
 }
 
@@ -660,23 +666,44 @@ function changesLoaded() {
 
   const events = changes.selectAll(".event").data(changesData);
 
-  events
+  // Create markers for new changes
+  const g = events
     .enter()
-    .append("polygon")
-    .merge(events)
+    .append("g")
     .attr("class", "event")
-    .attr("points", "5,0 0,10 10,10")
-    .attr("fill", "red")
+    .attr("transform", (d) => `translate(${xScale(d.date)}, ${-height - 10})`);
+
+  g.append("line")
+    .attr("class", "event-line")
     .attr("stroke", "#555")
-    .attr("stroke-width", "0.5px")
-    .attr("r", 3)
-    .attr("transform", (d) => `translate(${xScale(d.date)}, 0) scale(0.7)`);
+    .attr("x1", 0)
+    .attr("y1", 10)
+    .attr("x2", 0)
+    .attr("y2", height + 10);
+
+  g.append("polygon")
+    .attr("class", "marker")
+    .attr("fill", "#999")
+    .attr("points", "0,5 -4,0 0,-5 4,0")
+    .attr("transform", () => "scale(0.7)");
+
+  g.append("circle")
+    .attr("fill", "transparent")
+    .attr("class", "pointer")
+    .attr("r", 5);
+
+  // Move already existing elements
+  events
+    .merge(events)
+    .attr("transform", (d) => `translate(${xScale(d.date)}, ${-height - 10})`);
+
+  // Remove changes that don't exist anymore
   events.exit().remove();
 }
 
-const tooltipTranslateX = computed(() =>
-  tooltip.value.x > width / 2 + margin.left ? "-120%" : "20%"
-);
+function tooltipTranslateX(tooltip) {
+  return tooltip.x > width / 2 + margin.left ? "-120%" : "20%";
+}
 
 function metricsByAxis(axis) {
   return _.filter(
@@ -699,6 +726,10 @@ svg.chart {
   stroke-width: 1.5px;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .horizontalGrid {
   fill: none;
   shape-rendering: crispEdges;
@@ -715,8 +746,20 @@ svg.chart {
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
   pointer-events: none;
   z-index: 100;
-  &.events {
-    box-shadow: rgba(255, 0, 0, 1) 0px 0px 3px 0px;
+}
+
+.event {
+  line {
+    display: none;
+  }
+
+  &:hover {
+    .marker {
+      fill: black;
+    }
+    line {
+      display: block;
+    }
   }
 }
 </style>
