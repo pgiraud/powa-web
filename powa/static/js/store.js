@@ -31,9 +31,14 @@ const store = reactive({
     _.forEach(copy, (source) => {
       source.promise = d3.text(source.data_url + "?" + encodeQueryData(params));
       source.promise.then((response) => {
-        const data = JSON.parse(response);
-        if (data) {
-          this.addAlertMessages(data.messages);
+        try {
+          const data = JSON.parse(response);
+          if (data) {
+            this.addAlertMessages(data.messages);
+          }
+        } catch (error) {
+          // pass
+          // this may correspond to content widgets for example
         }
       });
     });
