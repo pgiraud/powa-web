@@ -47,8 +47,6 @@
         :search="search"
         :dense="true"
         class="superdense"
-        :item-class="rowClass"
-        @click:row="onRowClicked"
       >
         <template v-if="props.config.toprow" #header>
           <thead>
@@ -71,19 +69,17 @@
           v-for="header in headers.filter((header) =>
             header.hasOwnProperty('formatter')
           )"
-          #[`item.${header.value}`]="{ value }"
+          #[`item.${header.value}`]="{ value, item }"
         >
-          <query-tooltip
-            v-if="header.type == 'query'"
+          <a
+            v-if="header.urlAttr"
             :key="header.value"
-            :value="value"
-          ></query-tooltip>
-          <template v-else-if="header.type == 'bool'">
-            <span :key="header.value" v-html="header.formatter(value)"></span>
-          </template>
-          <template v-else>
-            {{ header.formatter(value) }}
-          </template>
+            :href="item[header.urlAttr]"
+          >
+            <grid-cell :value="value" :header="header"> </grid-cell>
+          </a>
+          <grid-cell v-else :key="header.value" :value="value" :header="header">
+          </grid-cell>
         </template>
       </v-data-table>
     </v-card-text>
@@ -93,7 +89,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import store from "../store";
-import { serialize } from "../store";
 import _ from "lodash";
 import size from "../utils/size";
 import hljs from "highlight.js/lib/core";
@@ -162,6 +157,7 @@ const headers = computed(() => {
         formatter: getFormatter(n.type),
         type: n.type,
         align: getAlign(n.type),
+        urlAttr: n.url_attr,
       };
     }),
     "value"
@@ -196,10 +192,6 @@ function formatSize(value) {
   return new size.SizeFormatter().fromRaw(value);
 }
 
-function formatQuery(value) {
-  return hljs.highlightAuto(value, ["pgsql"]).value;
-}
-
 function getFormatter(type) {
   switch (type) {
     case "bool":
@@ -208,14 +200,12 @@ function getFormatter(type) {
       return (value) => formatDuration(value, true);
     case "percent":
       return (value) => value + "%";
-    case "query":
-      return formatQuery;
     case "size":
       return formatSize;
     case "integer":
       return (value) => value.toLocaleString();
     default:
-      return (value) => value;
+      return (value) => _.escape(value);
   }
 }
 
@@ -230,16 +220,13 @@ function getAlign(type) {
       return "right";
   }
 }
-
-function onRowClicked(row) {
-  if (row.url) {
-    window.location.href = [row.url, serialize(store.from, store.to)].join("?");
-  }
-}
-
-function rowClass(row) {
-  return row.url ? "clickable" : "";
-}
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+td a {
+  text-decoration: none;
+}
+td.query a {
+  color: inherit;
+}
+</style>
