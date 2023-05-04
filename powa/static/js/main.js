@@ -11,6 +11,7 @@ import Wizard from "./components/Wizard.vue";
 import Content from "./components/Content.vue";
 import BreadCrumbs from "./components/BreadCrumbs.vue";
 import QueryTooltip from "./components/QueryTooltip.vue";
+import GridCell from "./components/GridCell.vue";
 import * as d3 from "d3";
 
 let breadCrumbItems;
@@ -67,6 +68,7 @@ Vue.component("Wizard", Wizard);
 Vue.component("ContentCmp", Content);
 Vue.component("BreadCrumbs", BreadCrumbs);
 Vue.component("QueryTooltip", QueryTooltip);
+Vue.component("GridCell", GridCell);
 
 document
   .querySelectorAll('script[type="text/datasources"]')
