@@ -404,6 +404,8 @@ function initChart() {
     .attr("class", "x axis-grid")
     .attr("transform", `translate(0, ${height})`);
 
+  grids.append("g").attr("class", "y axis-grid");
+
   // Create the group to display the series
   const lines = svg
     .append("g")
@@ -514,10 +516,10 @@ function drawOrUpdateChart() {
   const to = dateMath.parse(store.to, true);
   xScale = d3.scaleTime().range([0, width]).domain([from, to]);
 
-  const xTicksCount = 5;
+  const ticksCount = 5;
   const xAxis = d3
     .axisBottom(xScale)
-    .ticks(xTicksCount)
+    .ticks(ticksCount)
     .tickSizeOuter(0)
     .tickFormat(multiFormat);
 
@@ -531,7 +533,7 @@ function drawOrUpdateChart() {
     .axisBottom(xScale)
     .tickSizeOuter(0)
     .tickSizeInner(-height)
-    .ticks(xTicksCount)
+    .ticks(ticksCount)
     .tickFormat("");
   d3.select(container.value).select(".x.axis-grid").call(xAxisGrid);
 
@@ -566,6 +568,7 @@ function drawOrUpdateChart() {
 
   // Then draw the Y axes
   let axisIndex = 0;
+  let yAxisGrid;
   _.each(yAxisByType, (axis, type) => {
     const show = _.some(axis.metrics, (metric) =>
       chosenMetrics.value.includes(metric)
@@ -575,7 +578,21 @@ function drawOrUpdateChart() {
       .select(`.y.axis${axisIndex}`)
       .attr("display", show ? null : "none")
       .transition(transitionDuration)
-      .call(axisGenerator(axis.scale).ticks(5, "s"));
+      .call(axisGenerator(axis.scale).ticks(ticksCount, "s"));
+
+    // Draw axis grid lines but only for one axis
+    if (!yAxisGrid && show) {
+      yAxisGrid = d3
+        .axisLeft(axis.scale)
+        .tickSizeOuter(0)
+        .tickSizeInner(-width)
+        .ticks(ticksCount)
+        .tickFormat("");
+      d3.select(container.value)
+        .select(".y.axis-grid")
+        .transition(transitionDuration)
+        .call(yAxisGrid);
+    }
 
     d3.select(container.value)
       .select(`.y.axis${axisIndex}`)
@@ -791,6 +808,9 @@ svg.chart {
   cursor: pointer;
 }
 
+.axis-grid .domain {
+  display: none;
+}
 .axis-grid line {
   fill: none;
   shape-rendering: crispEdges;
