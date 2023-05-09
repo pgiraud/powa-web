@@ -74,7 +74,9 @@
           <a
             v-if="header.urlAttr"
             :key="header.value"
-            :href="item[header.urlAttr]"
+            :href="
+              [item[header.urlAttr], serialize(store.from, store.to)].join('?')
+            "
           >
             <grid-cell :value="value" :header="header"> </grid-cell>
           </a>
@@ -91,6 +93,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import store from "../store";
 import _ from "lodash";
 import size from "../utils/size";
+import { serialize } from "../store";
 import hljs from "highlight.js/lib/core";
 import "highlight.js/styles/default.css";
 import pgsql from "highlight.js/lib/languages/pgsql";
