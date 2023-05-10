@@ -18,7 +18,7 @@
           </template>
           <div>
             <dl>
-              <div v-for="metric in metrics" :key="metric">
+              <div v-for="metric in chosenMetrics" :key="metric">
                 <dt>
                   <b>{{ getLabel(metric) }}</b>
                 </dt>
@@ -59,7 +59,7 @@
               </b>
             </div>
             <div
-              v-for="metric in [...metrics].reverse()"
+              v-for="metric in [...chosenMetrics].reverse()"
               :key="metric"
               class="d-flex justify-space-between"
             >
@@ -157,17 +157,18 @@
           <div
             v-for="metric in metricsByAxis(axis).reverse()"
             :key="metric"
-            class="d-flex align-center"
+            class="d-flex align-center pointer"
+            :class="{ 'text--disabled': !chosenMetrics.includes(metric) }"
+            @click="selectSerie(metric, $event)"
           >
             <div
               style="width: 12px; height: 3px; border-radius: 1px"
-              :style="`background: ${getColor(metric)}`"
+              :style="`background: ${getColor(metric)}; ${
+                !chosenMetrics.includes(metric) ? 'opacity: 0.3' : ''
+              }`"
               class="mr-2"
             ></div>
-            <div
-              style="color: #666; font-weight: 400; margin-left: 2px"
-              class="mr-4"
-            >
+            <div style="font-weight: 400; margin-left: 2px" class="mr-4">
               {{ getLabel(metric) }}
             </div>
           </div>
@@ -208,6 +209,8 @@ const container = ref(null); // Container DOM Element
 // List of metrics to show in the chart
 // For example: 'avg_runtime', 'load', 'calls', 'planload'
 const metrics = ref([]);
+
+const chosenMetrics = ref([]);
 
 // SVG Element
 let svg;
@@ -330,6 +333,12 @@ const timeFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
 onMounted(async () => {
   // Await for next tick in case we're in a tab item
   await nextTick();
+
+  metrics.value = _.map(props.config.metrics, (metric) => {
+    return metric.split(".")[1];
+  });
+  chosenMetrics.value = metrics.value;
+
   initChart();
 
   watch(
@@ -348,7 +357,7 @@ onUnmounted(() => {
 
 function resize() {
   initChart();
-  dataLoaded();
+  drawOrUpdateChart();
   changesLoaded();
 }
 
@@ -376,9 +385,6 @@ function initChart() {
       return metric.split(".")[0];
     })
   );
-  metrics.value = _.map(props.config.metrics, (metric) => {
-    return metric.split(".")[1];
-  });
   sourceConfig = store.dataSources[metricGroup];
 
   stacked = props.config.stack;
@@ -397,13 +403,6 @@ function initChart() {
     .attr("class", "lines")
     .on("pointerenter pointermove", pointermoved)
     .on("pointerleave", pointerleft);
-
-  // Stack generator to be used when
-  stack = d3
-    .stack()
-    .keys(metrics.value)
-    .order(d3.stackOrderNone)
-    .offset(d3.stackOffsetNone);
 
   // Create the group in which to show the circles on hover
   markers = svg.append("g").style("pointer-events", "none");
@@ -466,7 +465,6 @@ function initChart() {
     .append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")");
-  xScale = d3.scaleTime().range([0, width]);
 
   // Prepare the 2 y axes
   svg.append("g").attr("class", "y axis0");
@@ -483,6 +481,7 @@ function loadData() {
   Promise.all(promises).then((response) => {
     data = JSON.parse(response[0]).data;
     dataLoaded();
+    drawOrUpdateChart();
     changesData = response[1].data;
     changesLoaded();
     loading.value = false;
@@ -496,30 +495,41 @@ function dataLoaded() {
   } else {
     noData.value = false;
   }
-  const from = dateMath.parse(store.from);
-  const to = dateMath.parse(store.to, true);
-
-  xScale.domain([from, to]);
   // Parse time and convert it to JS Date
   data.forEach(function (d) {
     d.date = new Date(d.ts * 1000);
   });
+}
 
+function drawOrUpdateChart() {
   // Draw X Axis
+  const from = dateMath.parse(store.from);
+  const to = dateMath.parse(store.to, true);
+  xScale = d3.scaleTime().range([0, width]).domain([from, to]);
+
   d3.select(container.value)
     .select(".x.axis")
     .transition(transitionDuration)
     .call(d3.axisBottom(xScale).ticks(5).tickFormat(multiFormat));
+
+  // Stack generator to be used when
+  stack = d3
+    .stack()
+    .keys(chosenMetrics.value)
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
 
   // Compute the extent for the y axis
   _.each(yAxisByType, (axis) => {
     let max = 0;
     if (!stacked) {
       _.each(axis.metrics, (metric) => {
-        max = Math.max(
-          max,
-          d3.max(data, (d) => d[metric])
-        );
+        if (chosenMetrics.value.includes(metric)) {
+          max = Math.max(
+            max,
+            d3.max(data, (d) => d[metric])
+          );
+        }
       });
     } else {
       const stackedData = stack(data);
@@ -534,9 +544,13 @@ function dataLoaded() {
   // Then draw the Y axes
   let axisIndex = 0;
   _.each(yAxisByType, (axis, type) => {
+    const show = _.some(axis.metrics, (metric) =>
+      chosenMetrics.value.includes(metric)
+    );
     let axisGenerator = axisIndex == 0 ? d3.axisLeft : d3.axisRight;
     d3.select(container.value)
       .select(`.y.axis${axisIndex}`)
+      .attr("display", show ? null : "none")
       .transition(transitionDuration)
       .call(axisGenerator(axis.scale).ticks(5, "s"));
 
@@ -567,20 +581,22 @@ function dataLoaded() {
   // Then draw the lines or areas
   let index = 0;
   _.each(series, (serie) => {
+    const chosenIndex = chosenMetrics.value.indexOf(metrics.value[index]);
+    const isChosen = chosenIndex != -1;
     if (!stacked) {
       svg
         .transition(transitionDuration)
         .select(".line.line" + index)
         .attr("stroke", colors[index])
         .attr("class", "line line" + index)
-        .attr("d", serie(data));
+        .attr("d", serie(isChosen ? data : []));
     } else {
-      const stackedData = stack(data);
+      const stackedData = isChosen ? stack(data)[chosenIndex] : [];
       svg
         .transition(transitionDuration)
         .select(".area.area" + index)
         .attr("fill", colors[index])
-        .attr("d", serie(stackedData[index]));
+        .attr("d", serie(stackedData));
     }
     index++;
   });
@@ -607,20 +623,24 @@ function pointermoved(event) {
     time: timeFormat(X[i]),
   };
   const markersData = [];
-  _.each(metrics.value, (metric, index) => {
+  _.each(chosenMetrics.value, (metric, index) => {
     const Y = d3.map(data, (d) => {
       return d[metric];
     });
     const Y2 = stack(data)[index];
     const type = sourceConfig.metrics[metric].type || "number";
     content[metric] = valueFormats[type](Y[i]);
-    markersData.push(yAxisByType[type].scale(stacked ? Y2[i][1] : Y[i]));
+    markersData.push([
+      metric,
+      yAxisByType[type].scale(stacked ? Y2[i][1] : Y[i]),
+    ]);
   });
   markers
     .selectAll("circle")
     .data(markersData)
+    .attr("fill", (d) => getColor(d[0]))
     .attr("display", null)
-    .attr("transform", (d) => `translate(${xScale(X[i])}, ${d})`);
+    .attr("transform", (d) => `translate(${xScale(X[i])}, ${d[1]})`);
   tooltip.value = {
     x: pointerX + margin.left,
     y: pointerY + margin.top,
@@ -714,6 +734,24 @@ function metricsByAxis(axis) {
 
 function getColor(metric) {
   return colors[metrics.value.indexOf(metric)];
+}
+
+function selectSerie(metric, event) {
+  if (event.ctrlKey) {
+    if (chosenMetrics.value.includes(metric)) {
+      chosenMetrics.value = _.difference(chosenMetrics.value, [metric]);
+    } else {
+      chosenMetrics.value = _.uniq(chosenMetrics.value.concat([metric]));
+    }
+  } else {
+    if (_.isEqual(chosenMetrics.value, [metric])) {
+      chosenMetrics.value = metrics.value;
+    } else {
+      chosenMetrics.value = [metric];
+    }
+  }
+
+  drawOrUpdateChart();
 }
 </script>
 <style lang="scss">
