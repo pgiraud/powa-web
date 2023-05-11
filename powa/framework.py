@@ -423,8 +423,7 @@ class BaseHandler(RequestHandler):
                 SELECT COUNT(*) != 0 AS res
                 FROM {powa}.powa_functions
                 WHERE srvid = %(srvid)s
-                AND module = %(extname)s
-                AND operation = 'snapshot'
+                AND name = %(extname)s
                 AND enabled
                 """, params={"srvid": srvid, "extname": extname})[0]['res']
             except Exception:
