@@ -74,7 +74,7 @@
           <a
             v-if="header.urlAttr"
             :key="header.value"
-            :href="[item[header.urlAttr], serialize()].join('?')"
+            :href="[item[header.urlAttr], store.serialize()].join('?')"
           >
             <grid-cell :value="value" :header="header"> </grid-cell>
           </a>
@@ -91,7 +91,6 @@ import { computed, onMounted, ref, watch } from "vue";
 import store from "../store";
 import _ from "lodash";
 import size from "../utils/size";
-import { serialize } from "../store";
 import "highlight.js/styles/default.css";
 import { mdiMagnify, mdiLinkVariant } from "@mdi/js";
 import { formatDuration } from "../utils/duration";

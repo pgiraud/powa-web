@@ -19,7 +19,11 @@ const store = reactive({
     this.rawFrom = from;
     this.rawTo = to;
     if (!silent) {
-      history.pushState({}, "", window.location.pathname + "?" + serialize());
+      history.pushState(
+        {},
+        "",
+        window.location.pathname + "?" + this.serialize()
+      );
     }
     this.loadData();
   },
@@ -73,6 +77,12 @@ const store = reactive({
       }
     });
   },
+  serialize() {
+    return [
+      "from=" + encodeURIComponent(store.rawFrom),
+      "to=" + encodeURIComponent(store.rawTo),
+    ].join("&");
+  },
 });
 
 addEventListener("popstate", () => {
@@ -81,14 +91,6 @@ addEventListener("popstate", () => {
     store.setFromTo(query.from, query.to, true);
   }
 });
-
-export function serialize() {
-  var str = [
-    "from=" + encodeURIComponent(store.rawFrom),
-    "to=" + encodeURIComponent(store.rawTo),
-  ];
-  return str.join("&");
-}
 
 function parseQuery(queryString) {
   var query = {};
