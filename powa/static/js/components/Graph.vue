@@ -782,9 +782,9 @@ function getColor(metric) {
 function selectSerie(metric, event) {
   if (event.ctrlKey) {
     if (chosenMetrics.value.includes(metric)) {
-      chosenMetrics.value = _.difference(chosenMetrics.value, [metric]);
+      chosenMetrics.value = _.remove(chosenMetrics.value, [metric]);
     } else {
-      chosenMetrics.value = _.uniq(chosenMetrics.value.concat([metric]));
+      chosenMetrics.value = chosenMetrics.value.concat([metric]);
     }
   } else {
     if (_.isEqual(chosenMetrics.value, [metric])) {
@@ -793,6 +793,8 @@ function selectSerie(metric, event) {
       chosenMetrics.value = [metric];
     }
   }
+  // Ensure that order from original metrics list is kept and metrics are unique
+  chosenMetrics.value = _.intersection(metrics.value, chosenMetrics.value);
 
   drawOrUpdateChart();
 }
