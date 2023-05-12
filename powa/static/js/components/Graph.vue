@@ -560,7 +560,10 @@ function drawOrUpdateChart() {
       const stackedData = stack(data);
       const extent = d3.extent(stackedData.flat(2));
       // We use toPrecision here to prevent max being 100.0000000001 in some cases
-      max = extent[1].toPrecision(5);
+      max = extent[1];
+      if (max) {
+        max = max.toPrecision(5);
+      }
     }
     max = max || 1; // Prevent empty domain
     axis.scale.domain([0, max]).nice();
