@@ -74,12 +74,7 @@
           <a
             v-if="header.urlAttr"
             :key="header.value"
-            :href="
-              [
-                item[header.urlAttr],
-                serialize(store.rawFrom, store.rawTo),
-              ].join('?')
-            "
+            :href="[item[header.urlAttr], serialize()].join('?')"
           >
             <grid-cell :value="value" :header="header"> </grid-cell>
           </a>
