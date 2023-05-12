@@ -131,7 +131,6 @@
 <script setup>
 import { nextTick, ref } from "vue";
 import store from "../store";
-import { dateMath } from "@grafana/data";
 import * as d3 from "d3";
 import { encodeQueryData } from "../utils/query";
 import _ from "lodash";
@@ -219,8 +218,8 @@ async function optimize() {
   unoptimizableItems.value = [];
   await updateProgress("Fetching most executed quals…", 0);
   const params = {
-    from: dateMath.parse(store.from).format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: dateMath.parse(store.to, true).format("YYYY-MM-DD HH:mm:ssZZ"),
+    from: store.from.format("YYYY-MM-DD HH:mm:ssZZ"),
+    to: store.to.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
   d3.json(sourceConfig.data_url + "?" + encodeQueryData(params)).then(
     async (response) => {
@@ -636,8 +635,8 @@ async function checkSolution() {
     queryids = _.uniq(queryids.concat(index.queryids));
   });
   const params = {
-    from: dateMath.parse(store.from).format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: dateMath.parse(store.to, true).format("YYYY-MM-DD HH:mm:ssZZ"),
+    from: store.from.format("YYYY-MM-DD HH:mm:ssZZ"),
+    to: store.to.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
   d3.json(
     `/server/${props.config.server}/database/${props.config.database}/suggest/`,

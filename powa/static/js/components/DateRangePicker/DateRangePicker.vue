@@ -142,8 +142,8 @@ import { toISO } from "../../utils/dates";
 // The raw values (examples: 'now-24h', 'Tue Sep 01 2020 10:16:00 GMT+0200')
 // Interaction with parent component is done with from/to props which
 // are unix timestamps
-const rawFrom = ref(store.from);
-const rawTo = ref(store.to);
+const rawFrom = ref(store.rawFrom);
+const rawTo = ref(store.rawTo);
 // The values to display in the custom range from and to fields
 // we don't use raw values because we may want to pick/change from and
 // to in the form before applying changes
@@ -252,8 +252,8 @@ function clickOutside() {
 }
 
 function zoomOut() {
-  const from = dateMath.parse(store.from).toDate();
-  const to = dateMath.parse(store.to, true).toDate();
+  const from = store.from.toDate();
+  const to = store.to.toDate();
   const diff = to - from;
   const newFrom = toISO(new Date(from.getTime() - diff / 2));
   const newTo = toISO(new Date(to.getTime() + diff / 2));
@@ -261,10 +261,10 @@ function zoomOut() {
 }
 
 watch(
-  () => store.from + store.to,
+  () => store.rawFrom + store.rawTo,
   () => {
-    rawFrom.value = store.from;
-    rawTo.value = store.to;
+    rawFrom.value = store.rawFrom;
+    rawTo.value = store.rawTo;
   }
 );
 </script>

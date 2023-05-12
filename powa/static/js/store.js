@@ -10,21 +10,25 @@ const store = reactive({
   dataSources: {},
   changesUrl: "",
   changes: [],
-  from: initialQuery.from || "now-1h",
-  to: initialQuery.to || "now",
+  rawFrom: initialQuery.from || "now-1h",
+  rawTo: initialQuery.to || "now",
+  from: null,
+  to: null,
   setFromTo(from, to, silent) {
     silent = !!silent;
-    this.from = from;
-    this.to = to;
+    this.rawFrom = from;
+    this.rawTo = to;
     if (!silent) {
       history.pushState({}, "", window.location.pathname + "?" + serialize());
     }
     this.loadData();
   },
   loadData() {
+    this.from = dateMath.parse(this.rawFrom);
+    this.to = dateMath.parse(this.rawTo, true);
     const params = {
-      from: dateMath.parse(store.from).format("YYYY-MM-DD HH:mm:ssZZ"),
-      to: dateMath.parse(store.to, true).format("YYYY-MM-DD HH:mm:ssZZ"),
+      from: this.from.format("YYYY-MM-DD HH:mm:ssZZ"),
+      to: this.to.format("YYYY-MM-DD HH:mm:ssZZ"),
     };
 
     const copy = Object.assign({}, this.dataSources);
@@ -80,8 +84,8 @@ addEventListener("popstate", () => {
 
 export function serialize() {
   var str = [
-    "from=" + encodeURIComponent(store.from),
-    "to=" + encodeURIComponent(store.to),
+    "from=" + encodeURIComponent(store.rawFrom),
+    "to=" + encodeURIComponent(store.rawTo),
   ];
   return str.join("&");
 }

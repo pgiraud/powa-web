@@ -30,7 +30,7 @@ const props = defineProps({
 const items = toRef(props, "breadCrumbItems");
 
 watch(
-  () => store.from + store.to,
+  () => store.rawFrom + store.rawTo,
   () => {
     _.each(items.value, (item) => {
       if (item.text == "Home") {
@@ -38,8 +38,8 @@ watch(
       }
       const baseUrl = new URL(window.location.href);
       const url = new URL(item.href, baseUrl.origin);
-      url.searchParams.set("to", store.to);
-      url.searchParams.set("from", store.from);
+      url.searchParams.set("to", store.rawTo);
+      url.searchParams.set("from", store.rawFrom);
       item.href = url.pathname + url.search;
     });
   }

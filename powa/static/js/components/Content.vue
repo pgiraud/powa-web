@@ -80,7 +80,7 @@ function loaded() {
 }
 
 watch(
-  () => store.from + store.to,
+  () => store.rawFrom + store.rawTo,
   () => {
     loadData();
   }

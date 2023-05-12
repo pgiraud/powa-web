@@ -187,7 +187,6 @@ import _ from "lodash";
 import { mdiAlert, mdiCancel, mdiInformation, mdiLinkVariant } from "@mdi/js";
 import store from "../store";
 import * as d3 from "d3";
-import { dateMath } from "@grafana/data";
 import size from "../utils/size";
 import { toISO } from "../utils/dates";
 import { formatDuration } from "../utils/duration";
@@ -512,9 +511,7 @@ function dataLoaded() {
 
 function drawOrUpdateChart() {
   // Draw X Axis
-  const from = dateMath.parse(store.from);
-  const to = dateMath.parse(store.to, true);
-  xScale = d3.scaleTime().range([0, width]).domain([from, to]);
+  xScale = d3.scaleTime().range([0, width]).domain([store.from, store.to]);
 
   const ticksCount = 5;
   const xAxis = d3
