@@ -195,7 +195,7 @@ function getFormatter(type) {
     case "duration":
       return (value) => formatDuration(value, true);
     case "percent":
-      return (value) => value + "%";
+      return (value) => Math.round(value * 100) / 100 + "%";
     case "size":
       return formatSize;
     case "integer":
