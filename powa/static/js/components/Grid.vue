@@ -25,8 +25,8 @@
       </v-toolbar-title>
     </v-app-bar>
     <v-card-text class="pb-0">
-      <v-row class="mb-4">
-        <v-col cols="12" sm="6" md="4" xl="2">
+      <v-row class="mb-4" justify="space-between">
+        <v-col sm="6" md="4" xl="2">
           <v-text-field
             v-model="search"
             label="Search"
@@ -35,6 +35,9 @@
             hide-details
             class="pt-0 mt-0"
           ></v-text-field>
+        </v-col>
+        <v-col class="text-right">
+          <v-btn small @click="exportAsCsv">Export CSV</v-btn>
         </v-col>
       </v-row>
       <v-data-table
@@ -216,6 +219,36 @@ function getAlign(type) {
     case "integer":
       return "right";
   }
+}
+
+function exportAsCsv() {
+  const labels = _.map(fields.value, "label");
+  const keys = _.map(fields.value, "name");
+  let csv = labels.join(",") + "\n";
+  csv += _.map(items.value, (item) => {
+    return _.map(keys, (key) => {
+      let value = item[key];
+      if (_.includes(value, ",") || _.includes(value, "\n")) {
+        value = value.replace(/"/g, '""');
+        value = '"' + value + '"';
+      }
+      return value;
+    }).join(",");
+  }).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  downloadFile(blob, "export_powa.csv", "text/csv;charset=utf-8");
+}
+
+function downloadFile(content, fileName, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const downloadLink = document.createElement("a");
+  downloadLink.href = url;
+  downloadLink.download = fileName;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(url);
 }
 </script>
 
