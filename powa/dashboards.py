@@ -67,6 +67,11 @@ class DashboardHandler(AuthHandler):
         return params.get("database", None)
 
     @property
+    def server(self):
+        params = dict(zip(self.params, self.path_args))
+        return params.get("server", None)
+
+    @property
     def breadcrumb(self):
         params = OrderedDict(zip(self.params, self.path_args))
         breadcrumb = self.get_breadcrumb(self, params)
