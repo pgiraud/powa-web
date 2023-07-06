@@ -13,30 +13,27 @@
     <v-card-text>
       <v-row>
         <v-col>
-          <v-btn color="primary" class="mr-4" @click="optimize">
-            Optimize this database !
-          </v-btn>
-          <span>{{ progressLabel }}</span>
+          <div v-if="!config.has_remote_conn">
+            Impossible to suggest indexes: impossible to connect to the remote
+            database.
+            <br />
+            <b>{{ config.conn_error }}</b>
+          </div>
 
-          <template v-if="!config.has_remote_conn">
-            <span>
-              Impossible to suggest indexes: impossible to connect to the remote
-              database.
-              <br />
-              <b>{{ config.conn_error }}</b>
-            </span>
-          </template>
-
-          <template v-if="!config.has_qualstats">
-            <span>
-              Impossible to suggest indexes: please enable support for
-              pg_qualstats in powa or update pg_qualstats extension to a newer
-              version. See
-              <a href="http://powa.readthedocs.io">
-                the documentation for more information
-              </a>
-            </span>
-          </template>
+          <div v-else-if="!config.has_qualstats">
+            Impossible to suggest indexes: please enable support for
+            pg_qualstats in powa or update pg_qualstats extension to a newer
+            version. See
+            <a href="http://powa.readthedocs.io">
+              the documentation for more information
+            </a>
+          </div>
+          <div v-else>
+            <v-btn color="primary" class="mr-4" @click="optimize">
+              Optimize this database !
+            </v-btn>
+            <span>{{ progressLabel }}</span>
+          </div>
         </v-col>
       </v-row>
 
