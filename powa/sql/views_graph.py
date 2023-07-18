@@ -459,6 +459,82 @@ BASE_QUERY_WAIT_SAMPLE = """(
 """
 
 
+# Note about xid calculations: we store 32b xids and those wraparounds, so we
+# have to account for that.  At the same time, cur_txid is retrieved before
+# executing the query fetching pg_stat_activity information.  On some busy
+# system, this could take quite some time and nothing prevents xid from being
+# assigned during that time, so to avoid returning negative number we
+# arbitrarily choose 100k transactions as a cutoff point to distinguish
+# wraparound vs really negative numbers.
+# For any number less than -100k, we assume this is because cur_txid
+# wraparound and the xid didn't, in which case we compute the actual value,
+# knowing that the first 3 xid are reserved and can never be assigned, and that
+# the highest transaction id is 2^32.
+def BASE_QUERY_PGSA_SAMPLE(per_db=False):
+    if (per_db):
+        extra = """JOIN {powa}.powa_catalog_databases d
+            ON d.oid = pgsa_history.datid
+        WHERE d.datname = %(database)s"""
+    else:
+        extra = ""
+
+    return """
+    (SELECT pgsa_history.srvid,
+      row_number() OVER (ORDER BY pgsa_history.ts) AS number,
+      count(*) OVER () AS total,
+      ts,
+      max(CASE
+        WHEN cur_txid::text::bigint - backend_xid::text::bigint < -100000
+          THEN (cur_txid::text::bigint - 3) +
+            ((4::bigint * 1024 * 1024 * 1024) - backend_xid::text::bigint)
+        WHEN cur_txid::text::bigint - backend_xid::text::bigint <= 0
+          THEN 0
+        ELSE
+          cur_txid::text::bigint - backend_xid::text::bigint
+      END) AS backend_xid_age,
+      max(CASE
+        WHEN cur_txid::text::bigint - backend_xmin::text::bigint < -100000
+          THEN (cur_txid::text::bigint - 3) +
+            ((4::bigint * 1024 * 1024 * 1024) - backend_xmin::text::bigint)
+        WHEN cur_txid::text::bigint - backend_xmin::text::bigint <= 0
+          THEN 0
+        ELSE
+          cur_txid::text::bigint - backend_xmin::text::bigint
+      END) AS backend_xmin_age,
+      max(ts - backend_start) AS oldest_backend,
+      max(ts - xact_start) AS oldest_xact,
+      max(ts - query_start) AS oldest_query,
+      count(*) FILTER (WHERE state = 'idle') AS nb_idle,
+      count(*) FILTER (WHERE state = 'active') AS nb_active,
+      count(*) FILTER (WHERE state = 'idle in transaction') AS nb_idle_xact,
+      count(*) FILTER (WHERE state = 'fastpath function call') AS nb_fastpath,
+      count(*) FILTER (WHERE state = 'idle in transaction (aborted)') AS nb_idle_xact_abort,
+      count(*) FILTER (WHERE state = 'disabled') AS nb_disabled,
+      count(*) FILTER (WHERE state IS NULL) AS nb_unknown,
+      count(DISTINCT leader_pid) AS nb_parallel_query,
+      count(*) FILTER (WHERE leader_pid IS NOT NULL) AS nb_parallel_worker
+      FROM (
+        SELECT *
+        FROM (
+          SELECT srvid, (unnest(records)).*
+          FROM {{powa}}.powa_stat_activity_history pgsah
+          WHERE coalesce_range && tstzrange(%(from)s, %(to)s, '[]')
+          AND pgsah.srvid = %(server)s
+        ) AS unnested
+        WHERE ts <@ tstzrange(%(from)s, %(to)s, '[]')
+        UNION ALL
+        SELECT srvid, (record).*
+        FROM {{powa}}.powa_stat_activity_history_current pgsac
+        WHERE (pgsac.record).ts <@ tstzrange(%(from)s, %(to)s, '[]')
+        AND pgsac.srvid = %(server)s
+      ) AS pgsa_history
+      {extra}
+      GROUP BY pgsa_history.srvid, pgsa_history.ts
+    ) AS pgsa
+    WHERE number %% ( int8larger((total)/(%(samples)s+1),1) ) = 0
+""".format(extra=extra)
+
+
 BASE_QUERY_BGWRITER_SAMPLE = """
     (SELECT srvid,
       row_number() OVER (ORDER BY bgw_history.ts) AS number,
@@ -689,6 +765,36 @@ def powa_getwaitdata_sample(mode, predicates=[]):
         base_columns=', '.join(base_columns),
         base_query=base_query,
         where=where
+    )
+
+
+def powa_get_pgsa_sample(per_db=False):
+    base_query = BASE_QUERY_PGSA_SAMPLE(per_db)
+    base_columns = ["srvid"]
+
+    all_cols = base_columns + [
+        "extract(epoch FROM ts) AS ts",
+        "backend_xid_age",
+        "backend_xmin_age",
+        "extract(epoch FROM oldest_backend) * 1000 AS oldest_backend",
+        "extract(epoch FROM oldest_xact) * 1000 AS oldest_xact",
+        "extract(epoch FROM oldest_query) * 1000 AS oldest_query",
+        "nb_idle",
+        "nb_active",
+        "nb_idle_xact",
+        "nb_fastpath",
+        "nb_idle_xact_abort",
+        "nb_disabled",
+        "nb_unknown",
+        "nb_parallel_query",
+        "nb_parallel_worker",
+    ]
+
+    return """SELECT {all_cols}
+    FROM {base_query}""".format(
+        all_cols=', '.join(all_cols),
+        base_columns=', '.join(base_columns),
+        base_query=base_query
     )
 
 
