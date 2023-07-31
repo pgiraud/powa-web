@@ -5,23 +5,25 @@
         {{ tab.title }}
       </v-tab>
     </v-tabs>
-    <v-tabs-items v-model="activeTab">
-      <v-tab-item
-        v-for="(tab, index) in config.tabs"
-        :key="'tab_content' + index"
-        :transition="false"
-      >
-        <v-card>
-          <v-card-text>
-            <component
-              :is="widgetComponent(tab)"
-              v-if="activeTab == index"
-              :config="tab"
-            />
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
+    <v-card-text>
+      <v-window v-model="activeTab">
+        <v-window-item
+          v-for="(tab, index) in config.tabs"
+          :key="'tab_content' + index"
+          :transition="false"
+        >
+          <v-card>
+            <v-card-text>
+              <component
+                :is="widgetComponent(tab)"
+                v-if="activeTab == index"
+                :config="tab"
+              />
+            </v-card-text>
+          </v-card>
+        </v-window-item>
+      </v-window>
+    </v-card-text>
   </v-card>
 </template>
 

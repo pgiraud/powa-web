@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <v-container>
     <v-row v-for="(row, rIndex) in config.widgets" :key="rIndex">
       <v-col
         v-for="(widget, wIndex) in row"
         :key="rIndex + wIndex"
-        :cols="12"
+        cols="12"
         :md="12 / Object.keys(row).length"
       >
         <component :is="widgetComponent(widget)" :config="widget" />
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script setup>

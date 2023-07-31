@@ -98,9 +98,7 @@
                   link
                   @click.prevent="loadRangeShortcut(range)"
                 >
-                  <v-list-item-content>
-                    {{ range.display }}
-                  </v-list-item-content>
+                  {{ range.display }}
                 </v-list-item>
               </v-list>
             </v-col>
@@ -138,6 +136,7 @@ import { DateTime } from "luxon";
 import { icons } from "@/plugins/vuetify";
 import store from "@/store";
 import { toISO } from "@/utils/dates";
+import { VDatePicker } from "vuetify/labs/VDatePicker";
 
 // The raw values (examples: 'now-24h', 'Tue Sep 01 2020 10:16:00 GMT+0200')
 // Interaction with parent component is done with from/to props which

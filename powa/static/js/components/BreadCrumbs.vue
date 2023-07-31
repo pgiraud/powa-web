@@ -1,21 +1,20 @@
 <template>
   <div>
     <v-breadcrumbs :items="items" large>
-      <template #item="{ item }">
-        <v-breadcrumbs-item v-if="item.children">
-          <v-select
-            :items="item.children"
-            :label="item.text"
-            item-text="title"
-            item-value="url"
-            hide-details
-            hide-selected
-            @change="onSelect"
-          ></v-select>
-        </v-breadcrumbs-item>
-        <v-breadcrumbs-item v-else :href="item.href" :disabled="item.disabled">
+      <template #title="{ item }">
+        <v-select
+          v-if="item.children"
+          :items="item.children"
+          :label="item.text"
+          item-text="title"
+          item-value="url"
+          hide-details
+          hide-selected
+          @change="onSelect"
+        ></v-select>
+        <span v-else>
           {{ item.text }}
-        </v-breadcrumbs-item>
+        </span>
       </template>
     </v-breadcrumbs>
   </div>

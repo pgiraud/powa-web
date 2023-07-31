@@ -1,29 +1,28 @@
 <template>
-  <v-card :loading="loading">
-    <template #progress>
+  <v-card :loading="loading" outlined>
+    <template #loader="{ isActive }">
       <v-progress-linear
         height="2"
+        :active="isActive"
         indeterminate
         style="position: absolute; z-index: 1"
       ></v-progress-linear>
     </template>
-    <v-app-bar flat height="40px;">
-      <v-toolbar-title>
-        <v-card-title class="pl-0">
-          {{ config.title }}
-          <a
-            v-if="config.url"
-            :href="config.url"
-            target="_blank"
-            title="See the documentation"
-          >
-            <v-icon class="pl-2">
-              {{ mdiLinkVariant }}
-            </v-icon>
-          </a>
-        </v-card-title>
-      </v-toolbar-title>
-    </v-app-bar>
+    <v-card-item>
+      <v-card-title>
+        {{ config.title }}
+        <a
+          v-if="config.url"
+          :href="config.url"
+          target="_blank"
+          title="See the documentation"
+        >
+          <v-icon class="pl-2">
+            {{ mdiLinkVariant }}
+          </v-icon>
+        </a>
+      </v-card-title>
+    </v-card-item>
     <v-card-text class="pb-0">
       <v-row class="mb-4" justify="space-between">
         <v-col sm="6" md="4" xl="2">
@@ -99,6 +98,7 @@ import { mdiMagnify, mdiLinkVariant } from "@mdi/js";
 import { formatDuration } from "@/utils/duration";
 import { formatPercentage } from "@/utils/percentage";
 import GridCell from "@/components/GridCell.vue";
+import { VDataTable } from "vuetify/labs/VDataTable";
 
 const props = defineProps({
   config: {

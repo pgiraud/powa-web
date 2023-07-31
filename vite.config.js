@@ -1,26 +1,12 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
-import vue2 from "@vitejs/plugin-vue2";
-import Components from "unplugin-vue-components/vite";
+import vue from "@vitejs/plugin-vue";
+import vuetify from "vite-plugin-vuetify";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue2(),
-    Components({
-      resolvers: [
-        {
-          type: "component",
-          resolve: (name) => {
-            if (name.match(/^V[A-Z]/) && name !== "VSnackbars") {
-              return { name, from: "vuetify/lib" };
-            }
-          },
-        },
-      ],
-    }),
-  ],
+  plugins: [vue(), vuetify({ autoImport: true })],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./powa/static/js", import.meta.url)),

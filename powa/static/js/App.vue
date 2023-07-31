@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app elevation="2" height="40px;">
+    <v-app-bar app elevation="2" height="40">
       <v-btn
         :href="handler.homeUrl"
         class="mr-2"
@@ -22,17 +22,13 @@
           :href="handler.configUrl"
           title="Configuration"
         >
-          <v-icon left>
-            {{ icons.mdiCog }}
-          </v-icon>
+          <v-icon left :icon="icons.mdiCog"></v-icon>
           Configuration
         </v-btn>
         <v-menu v-if="handler.notifyAllowed" offset-y>
-          <template #activator="{ on, attrs }">
-            <v-btn text color="primary" v-bind="attrs" v-on="on">
-              <v-icon left>
-                {{ icons.mdiReload }}
-              </v-icon>
+          <template #activator="{ props }">
+            <v-btn text color="primary" v-bind="props">
+              <v-icon left :icon="icons.mdiReload"></v-icon>
               Actions
             </v-btn>
           </template>
@@ -66,9 +62,7 @@
 
         <v-spacer></v-spacer>
         <v-btn text color="primary" :href="handler.logoutUrl">
-          <v-icon left>
-            {{ icons.mdiPower }}
-          </v-icon>
+          <v-icon left :icon="icons.midPower"></v-icon>
           Logout
         </v-btn>
       </template>
@@ -91,10 +85,10 @@
         </v-row>
       </v-container>
     </v-main>
-    <v-footer>
+    <v-footer app absolute elevation="2">
       <v-container fluid>
-        <v-row>
-          <v-flex>
+        <v-sheet class="d-flex">
+          <v-sheet>
             <ul style="margin-bottom: 0; padding-left: 0">
               <li style="display: inline-block">
                 Version {{ handler.version }}
@@ -111,28 +105,27 @@
                 >
               </li>
             </ul>
-          </v-flex>
-          <v-flex ml-auto class="text-right">
+          </v-sheet>
+          <v-sheet class="text-right ms-auto">
             <a href="https://github.com/powa-team/powa-web/issues"
               >Report a bug</a
             >
-          </v-flex>
-        </v-row>
+          </v-sheet>
+        </v-sheet>
       </v-container>
     </v-footer>
-    <v-snackbars :objects.sync="store.alertMessages">
+    <v-snackbars v-model:objects="store.alertMessages">
       <template #default="{ message }">
         <span v-html="message"></span>
       </template>
       <template #action="{ close }">
-        <v-icon text @click="close()">{{ icons.mdiClose }}</v-icon>
+        <v-icon text :icon="icons.mdiClose" @click="close()"></v-icon>
       </template>
     </v-snackbars>
   </v-app>
 </template>
 
 <script setup>
-import Vue from "vue";
 import { icons } from "@/plugins/vuetify.js";
 import store from "@/store";
 import * as d3 from "d3";
@@ -141,7 +134,6 @@ import DateRangePicker from "@/components/DateRangePicker/DateRangePicker.vue";
 import LoginView from "@/components/LoginView.vue";
 
 import VSnackbars from "v-snackbars";
-Vue.component("VSnackbars", VSnackbars);
 
 let handler;
 document.querySelectorAll('script[type="text/handler"]').forEach(function (el) {

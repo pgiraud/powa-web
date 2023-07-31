@@ -1,14 +1,15 @@
 <template>
   <v-card :loading="loading" outlined>
-    <template #progress>
+    <template #loader="{ isActive }">
       <v-progress-linear
         height="2"
+        :active="isActive"
         indeterminate
         style="position: absolute; z-index: 1"
       ></v-progress-linear>
     </template>
-    <v-app-bar flat height="40px;">
-      <v-toolbar-title class="mx-auto">
+    <v-card-item>
+      <v-card-title>
         {{ config.title }}
         <v-tooltip bottom transition="fade">
           <template #activator="{ on, attrs }">
@@ -37,8 +38,8 @@
             {{ mdiLinkVariant }}
           </v-icon>
         </a>
-      </v-toolbar-title>
-    </v-app-bar>
+      </v-card-title>
+    </v-card-item>
     <v-card-text>
       <div
         ref="container"

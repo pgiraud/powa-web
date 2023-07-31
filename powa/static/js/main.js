@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Vue from "vue";
+import { createApp } from "vue";
 import store from "@/store";
 import vuetify from "@/plugins/vuetify";
 import App from "@/App.vue";
@@ -37,9 +37,8 @@ document
   });
 store.loadData();
 
-dynamicComponents.install();
+const app = createApp(App);
+app.use(vuetify);
+app.use(dynamicComponents);
 
-new Vue({
-  render: (h) => h(App),
-  vuetify,
-}).$mount("#app");
+app.mount("#app");
