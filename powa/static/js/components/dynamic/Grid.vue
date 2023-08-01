@@ -71,16 +71,16 @@
           v-for="header in headers.filter((header) =>
             header.hasOwnProperty('formatter')
           )"
-          #[`item.${header.value}`]="{ value, item }"
+          #[`item.${header.key}`]="{ item }"
         >
           <a
             v-if="header.urlAttr"
-            :key="header.value"
-            :href="[item[header.urlAttr], store.serialize()].join('?')"
+            :key="header.key"
+            :href="[item.selectable[header.urlAttr], store.serialize()].join('?')"
           >
-            <grid-cell :value="value" :header="header"> </grid-cell>
+            <grid-cell :value="item.selectable[header.key]" :header="header"></grid-cell>
           </a>
-          <grid-cell v-else :key="header.value" :value="value" :header="header">
+          <grid-cell v-else :key="header.key" :value="item.selectable[header.key]" :header="header">
           </grid-cell>
         </template>
       </v-data-table>
@@ -151,8 +151,8 @@ const headers = computed(() => {
   return _.uniqBy(
     _.map(fields.value, function headerize(n) {
       return {
-        text: n.label,
-        value: n.key,
+        title: n.label,
+        key: n.key,
         class: n.type,
         cellClass: n.type || "",
         formatter: getFormatter(n.type),
@@ -161,7 +161,7 @@ const headers = computed(() => {
         urlAttr: n.url_attr,
       };
     }),
-    "value"
+    "key"
   );
 });
 
@@ -223,7 +223,7 @@ function getAlign(type) {
     case "percent":
     case "size":
     case "integer":
-      return "right";
+      return "end";
   }
 }
 

@@ -1,3 +1,7 @@
+.v-application a{
+  color: rgb(var(--v-theme-primary));
+}
+
 pre.sql {
   max-height: 400px;
   overflow: auto;

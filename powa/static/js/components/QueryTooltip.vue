@@ -3,10 +3,10 @@
     content-class="sql elevation-2"
     transition="fade"
     open-delay="200"
-    bottom
+    location="bottom"
   >
-    <template #activator="{ on, attrs }">
-      <pre v-bind="attrs" v-on="on" v-html="formatSql(props.value)" />
+    <template #activator="{ props: activatorprops }">
+      <pre v-bind="activatorprops" v-html="formatSql(props.value)" />
     </template>
     <pre v-html="formatSql(props.value)" />
   </v-tooltip>
