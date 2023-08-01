@@ -20,11 +20,6 @@ export default defineConfig({
       ],
     }),
   ],
-  resolve: {
-    alias: {
-      vue: "vue/dist/vue.esm.js",
-    },
-  },
   build: {
     manifest: true,
     outDir: resolve(__dirname, "powa/static/dist"),
