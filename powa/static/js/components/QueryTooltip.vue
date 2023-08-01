@@ -13,10 +13,7 @@
 </template>
 
 <script setup>
-import hljs from "highlight.js/lib/core";
-import pgsql from "highlight.js/lib/languages/pgsql";
-
-hljs.registerLanguage("sql", pgsql);
+import { sqlFormat } from "../utils/sql.js";
 
 const props = defineProps({
   value: {
@@ -26,8 +23,4 @@ const props = defineProps({
     },
   },
 });
-
-function sqlFormat(value) {
-  return hljs.highlightAuto(value, ["pgsql"]).value;
-}
 </script>

@@ -399,8 +399,7 @@ class ContentWidget(Widget, DataSource, AuthHandler):
         return {
             'data_url': cls.data_url,
             'name': cls.__name__,
-            'type': 'content',
-            'content': cls.__name__,
+            'type': cls.__name__,
             'title': cls.title
         }
 
