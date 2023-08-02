@@ -12,8 +12,8 @@
       <v-card-title>
         {{ config.title }}
         <v-tooltip bottom transition="fade">
-          <template #activator="{ on, attrs }">
-            <v-icon class="pl-2 text--secondary" v-bind="attrs" v-on="on">
+          <template #activator="{ props:activatorprops }">
+            <v-icon class="pl-2 text--secondary" v-bind="activatorprops">
               {{ mdiInformation }}
             </v-icon>
           </template>
