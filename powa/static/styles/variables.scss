@@ -1,10 +1,11 @@
-// Globals
-$font-size-root: 14px;
-$input-font-size: 14px;
+@use 'vuetify/settings' with (
+  // Globals
+$font-size-root: 14px,
+$input-font-size: 14px,
 
-$spacer: 2px !default;
+$spacer: 2px,
 
-$headings: (
+$typography: (
   // Apply to table headers, pagination
   'caption': (
     'size': 0.9rem,
@@ -13,11 +14,14 @@ $headings: (
   'subtitle-2': (
     'size': 0.9rem,
   )
+),
+
 );
 
 .v-btn, .v-tab {
-    text-transform:none !important;
+  text-transform:none !important;
 }
+
 
 $snackbar-font-size: 1rem;
 $snackbar-content-font-size: 1rem;

@@ -53,4 +53,4 @@ const opts = {
   },
 };
 
-export default new createVuetify(opts);
+export default createVuetify(opts);

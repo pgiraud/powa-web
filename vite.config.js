@@ -6,7 +6,13 @@ import vuetify from "vite-plugin-vuetify";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vuetify({ autoImport: true })],
+  plugins: [
+    vue(),
+    vuetify({
+      autoImport: true,
+      styles: { configFile: "powa/static/styles/variables.scss" },
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./powa/static/js", import.meta.url)),
@@ -28,17 +34,6 @@ export default defineConfig({
           luxon: ["luxon"],
           highlight: ["highlight.js"],
         },
-      },
-    },
-  },
-  css: {
-    preprocessorOptions: {
-      sass: {
-        additionalData: [
-          '@import "./powa/static/styles/variables"',
-          '@import "./powa/static/styles/main"',
-          "", // end with new line
-        ].join("\n"),
       },
     },
   },
