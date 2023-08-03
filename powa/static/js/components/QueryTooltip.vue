@@ -6,14 +6,14 @@
     bottom
   >
     <template #activator="{ on, attrs }">
-      <pre v-bind="attrs" v-on="on" v-html="sqlFormat(props.value)" />
+      <pre v-bind="attrs" v-on="on" v-html="formatSql(props.value)" />
     </template>
-    <pre v-html="sqlFormat(props.value)" />
+    <pre v-html="formatSql(props.value)" />
   </v-tooltip>
 </template>
 
 <script setup>
-import { sqlFormat } from "../utils/sql.js";
+import { formatSql } from "@/utils/sql.js";
 
 const props = defineProps({
   value: {

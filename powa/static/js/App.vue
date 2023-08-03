@@ -132,8 +132,8 @@
 </template>
 
 <script setup>
-import { icons } from "./plugins/vuetify.js";
-import store from "./store";
+import { icons } from "@/plugins/vuetify.js";
+import store from "@/store";
 import * as d3 from "d3";
 let handler;
 document.querySelectorAll('script[type="text/handler"]').forEach(function (el) {
