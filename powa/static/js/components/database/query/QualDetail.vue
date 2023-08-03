@@ -8,7 +8,9 @@
     <v-card-text v-if="qual !== undefined">
       <template v-if="qual">
         <h4>
-          <pre class="sql"><code>{{qual.where_clause}}</code></pre>
+          <pre
+            class="sql"
+          ><code v-html="formatSql(qual.where_clause)"></code></pre>
         </h4>
         <dl>
           <ul class="large-block-grid-3">
@@ -35,7 +37,7 @@
         <ul class="large-block-grid-3">
           <li v-for="(q, index) in qual.quals" :key="index">
             <h5>
-              <pre class="sql"><code>{{q.label}}</code></pre>
+              <pre class="sql"><code v-html="formatSql(q.label)"></code></pre>
             </h5>
 
             <dl>
@@ -65,7 +67,8 @@
 </template>
 
 <script setup>
-import { useFetch } from "../../../utils/fetch.js";
+import { useFetch } from "@/utils/fetch.js";
+import { formatSql } from "@/utils/sql.js";
 
 const props = defineProps({
   config: {
