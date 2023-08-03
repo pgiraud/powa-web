@@ -98,6 +98,7 @@ import "highlight.js/styles/default.css";
 import { mdiMagnify, mdiLinkVariant } from "@mdi/js";
 import { formatDuration } from "@/utils/duration";
 import { formatPercentage } from "@/utils/percentage";
+import GridCell from "@/components/GridCell.vue";
 
 const props = defineProps({
   config: {
