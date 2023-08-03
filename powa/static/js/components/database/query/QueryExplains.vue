@@ -17,7 +17,7 @@
               <dd>{{ Math.round(plan.filter_ratio * 100, 2) }}%</dd>
             </dl>
             <h6 class="subheader">Example plan:</h6>
-            <pre class="sql"><code v-html="sqlFormat(plan.query)"></code></pre>
+            <pre class="sql"><code v-html="formatSql(plan.query)"></code></pre>
             <pre class="sql"><code>{{plan.plan}}</code></pre>
           </v-col>
         </v-row>
@@ -28,8 +28,8 @@
 </template>
 
 <script setup>
-import { useFetch } from "../../../utils/fetch.js";
-import { sqlFormat } from "../../../utils/sql.js";
+import { useFetch } from "@/utils/fetch.js";
+import { formatSql } from "@/utils/sql.js";
 import _ from "lodash";
 
 const props = defineProps({

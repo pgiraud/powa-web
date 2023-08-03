@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import { fileURLToPath, URL } from "node:url";
 import vue2 from "@vitejs/plugin-vue2";
 import Components from "unplugin-vue-components/vite";
 
@@ -20,6 +21,11 @@ export default defineConfig({
       ],
     }),
   ],
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./powa/static/js", import.meta.url)),
+    },
+  },
   build: {
     manifest: true,
     outDir: resolve(__dirname, "powa/static/dist"),

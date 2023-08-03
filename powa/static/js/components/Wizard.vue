@@ -127,11 +127,11 @@
 
 <script setup>
 import { nextTick, ref } from "vue";
-import store from "../store";
+import store from "@/store";
 import * as d3 from "d3";
-import { encodeQueryData } from "../utils/query";
+import { encodeQueryData } from "@/utils/query";
 import _ from "lodash";
-import { sqlFormat } from "../utils/sql";
+import { formatSql } from "@/utils/sql";
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -546,7 +546,7 @@ function qualRepr(node) {
   if (hasquals) {
     base += _.uniq(node.quals.map((qual) => qual.label)).join(" AND ");
   }
-  base = sqlFormat(base);
+  base = formatSql(base);
   const unmanaged = node.trashedQuals
     .map(function (qual, idx) {
       let part = "<strike>";
@@ -557,7 +557,7 @@ function qualRepr(node) {
       if (idx < node.trashedQuals.length - 1) {
         value += " AND ";
       }
-      value = sqlFormat("WHERE " + value);
+      value = formatSql("WHERE " + value);
       value = value.substring(value.indexOf("</span> ") + 8);
       part += value + "</strike>";
       return part;

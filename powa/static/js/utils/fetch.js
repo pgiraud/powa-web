@@ -1,5 +1,5 @@
 import { onMounted, ref, watch } from "vue";
-import store from "../store";
+import store from "@/store";
 
 export function useFetch(name) {
   const loading = ref(false);
