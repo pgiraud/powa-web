@@ -10,7 +10,7 @@
         <h4>
           <pre
             class="sql"
-          ><code v-html="formatSql(qual.where_clause)"></code></pre>
+          ><code class="hljs" v-html="formatSql(qual.where_clause)"></code></pre>
         </h4>
         <dl>
           <ul class="large-block-grid-3">
@@ -37,7 +37,9 @@
         <ul class="large-block-grid-3">
           <li v-for="(q, index) in qual.quals" :key="index">
             <h5>
-              <pre class="sql"><code v-html="formatSql(q.label)"></code></pre>
+              <pre
+                class="sql"
+              ><code class="hljs" v-html="formatSql(q.label)"></code></pre>
             </h5>
 
             <dl>
