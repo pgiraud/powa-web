@@ -131,6 +131,7 @@ import store from "@/store";
 import * as d3 from "d3";
 import { encodeQueryData } from "@/utils/query";
 import _ from "lodash";
+import QueryTooltip from "@/components/QueryTooltip.vue";
 import { formatSql } from "@/utils/sql";
 
 // eslint-disable-next-line no-unused-vars
