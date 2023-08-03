@@ -9,7 +9,7 @@
       <template v-if="stats">
         <v-row>
           <v-col cols="12">
-            <pre><code v-html="sqlFormat(stats.query)"/></pre>
+            <pre><code v-html="formatSql(stats.query)"/></pre>
           </v-col>
         </v-row>
         <v-row>
@@ -40,8 +40,8 @@
 </template>
 
 <script setup>
-import { useFetch } from "../../../utils/fetch.js";
-import { sqlFormat } from "../../../utils/sql.js";
+import { useFetch } from "@/utils/fetch.js";
+import { formatSql } from "@/utils/sql.js";
 
 const props = defineProps({
   config: {

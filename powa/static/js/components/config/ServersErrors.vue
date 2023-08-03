@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { useFetch } from "../../utils/fetch.js";
+import { useFetch } from "@/utils/fetch.js";
 
 const props = defineProps({
   config: {

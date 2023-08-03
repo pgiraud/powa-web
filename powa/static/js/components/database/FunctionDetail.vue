@@ -11,7 +11,7 @@
           <v-col cols="12">
             <pre
               class="sql"
-            ><code v-html="sqlFormat(stats.func_name)"></code></pre>
+            ><code v-html="formatSql(stats.func_name)"></code></pre>
           </v-col>
         </v-row>
         <v-row>
@@ -32,7 +32,7 @@
           >):
           <v-row>
             <v-col cols="12">
-              <pre class="sql"><code v-html="sqlFormat(stats.prosrc)"/></pre>
+              <pre class="sql"><code v-html="formatSql(stats.prosrc)"/></pre>
             </v-col>
           </v-row>
         </template>
@@ -46,8 +46,8 @@
 </template>
 
 <script setup>
-import { useFetch } from "../../utils/fetch.js";
-import { sqlFormat } from "../../utils/sql.js";
+import { useFetch } from "@/utils/fetch.js";
+import { formatSql } from "@/utils/sql.js";
 
 const props = defineProps({
   config: {
