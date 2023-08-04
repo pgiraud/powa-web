@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-breadcrumbs :items="items" large>
+    <v-breadcrumbs :items="items">
       <template #item="{ item }">
         <v-breadcrumbs-item v-if="item.children">
           <v-select
