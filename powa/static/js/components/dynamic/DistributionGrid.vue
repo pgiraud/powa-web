@@ -10,7 +10,7 @@
     <v-card-item flat height="40px;">
       <v-card-title class="pl-0">{{ config.title }}</v-card-title>
     </v-card-item>
-    <v-simple-table :dense="true" class="superdense">
+    <v-table density="compact" class="superdense">
       <template #default>
         <thead>
           <tr>
@@ -38,7 +38,7 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </v-card>
 </template>
 
