@@ -1,11 +1,10 @@
 import { onMounted, ref, watch } from "vue";
-import store from "@/store";
 import { useStoreService } from "@/composables/useStoreService";
 
 export function useFetch(name) {
   const loading = ref(false);
   const data = ref(undefined);
-  const { dataSources } = useStoreService();
+  const { dataSources, from, to } = useStoreService();
 
   onMounted(() => {
     watch(
@@ -27,7 +26,7 @@ export function useFetch(name) {
   }
 
   watch(
-    () => store.rawFrom + store.rawTo,
+    () => from + to,
     () => {
       loadData();
     }
