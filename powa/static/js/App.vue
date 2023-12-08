@@ -88,7 +88,7 @@
         <login-view v-else-if="servers" :servers="servers"></login-view>
       </v-container>
     </v-main>
-    <v-footer app absolute elevation="2">
+    <v-footer app absolute elevation="2" style="z-index: initial">
       <v-container fluid>
         <v-sheet class="d-flex">
           <v-sheet>
@@ -123,7 +123,7 @@
     >
       <div class="d-flex flex-column flex-column-reverse align-center">
         <v-snackbar
-          v-for="message in store.alertMessages"
+          v-for="message in alertMessages"
           :key="message.id"
           v-model="message.shown"
           :color="message.color"
@@ -149,7 +149,6 @@
 import { onMounted, watch } from "vue";
 import { useTheme } from "vuetify";
 import { icons } from "@/plugins/vuetify.js";
-import store from "@/store.js";
 import { useStoreService } from "@/composables/useStoreService.js";
 import { useRoute } from "vue-router";
 import _ from "lodash";
@@ -159,6 +158,10 @@ import DateRangePicker from "@/components/DateRangePicker/DateRangePicker.vue";
 import LoginView from "@/components/LoginView.vue";
 import { dateMath } from "@grafana/data";
 import { encodeQueryData } from "@/utils/query";
+import { useMessageService } from "@/composables/MessageService.js";
+
+const { alertMessages, addAlertMessage, removeAlertMessage } =
+  useMessageService();
 
 const theme = useTheme();
 const {
@@ -188,16 +191,13 @@ function reloadCollector() {
   d3.json("/reload_collector/").then(
     (response) => {
       if (response) {
-        store.addAlertMessage("success", "Collector successfully reloaded!");
+        addAlertMessage("success", "Collector successfully reloaded!");
       } else {
-        store.addAlertMessage("error", "Could not reload collector");
+        addAlertMessage("error", "Could not reload collector");
       }
     },
     () => {
-      store.addAlertMessage(
-        "error",
-        "Error while trying to reload the collector."
-      );
+      addAlertMessage("error", "Error while trying to reload the collector.");
     }
   );
 }
@@ -212,7 +212,7 @@ function forceSnapshot(srvid) {
         error: "Could not force an immediate snapshot.",
       }),
     () => {
-      store.addAlertMessage(
+      addAlertMessage(
         "alert",
         "Error while trying to force an immediate snapshot."
       );
@@ -242,10 +242,7 @@ function refreshDbCat(srvid, event) {
         error: "Could not refresh the catalogs",
       }),
     () => {
-      store.addAlertMessage(
-        "alert",
-        "Error while trying to refresh the catalogs."
-      );
+      addAlertMessage("alert", "Error while trying to refresh the catalogs.");
     }
   );
 }
@@ -276,20 +273,20 @@ function handleResponse(response, messages) {
 
       msg += "<br/>" + v;
 
-      store.addAlertMessage(level, msg);
+      addAlertMessage(level, msg);
     });
   } else {
-    store.addAlertMessage("alert", messages.error);
+    addAlertMessage("alert", messages.error);
   }
 }
 
 function onSnackbarChanged(id, isShown) {
-  !isShown && store.removeAlertMessage(id);
+  !isShown && removeAlertMessage(id);
 }
 
 function closeSnackBar(message) {
   message.shown = false;
-  store.removeAlertMessage(message.id);
+  removeAlertMessage(message.id);
 }
 
 function toggleTheme() {
