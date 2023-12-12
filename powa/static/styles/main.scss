@@ -21,7 +21,7 @@ pre.sql {
   color: rgb(var(--v-theme-on-surface));
 }
 
-.v-data-table.superdense > .v-table__wrapper > table {
+.v-table.superdense > .v-table__wrapper > table {
   tbody,
   thead,
   tfoot {
@@ -33,7 +33,7 @@ pre.sql {
   }
 }
 
-.v-data-table {
+.v-table {
   td {
     white-space: nowrap;
   }
