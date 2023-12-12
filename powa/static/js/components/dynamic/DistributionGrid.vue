@@ -26,7 +26,7 @@
             <td>
               <div class="d-flex align-center">
                 <div
-                  class="d-inline-block primary border"
+                  class="d-inline-block bg-primary border"
                   style="height: 15px; min-width: 1px"
                   :style="{ width: (item.value / total) * 100 + '%' }"
                 ></div>
