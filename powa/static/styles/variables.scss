@@ -1,13 +1,8 @@
 @use 'vuetify/settings' with (
   $color-pack: false,
-  //$font-size-root: 14px,
   $button-text-transform: none,
   $button-text-letter-spacing: inherit,
-  //$spacer: 2px,
-  //$button-font-size: 1rem,
   $card-background: rgb(var(--v-theme-background)),
   $table-background: rgb(var(--v-theme-background)),
   $progress-linear-background: rgb(var(--v-theme-primary)),
-  //$card-text-padding: 6px,
-  //$card-text-font-size: 1rem,
 );
