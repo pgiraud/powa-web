@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { useFetch } from "@/utils/fetch.js";
+import { useDataLoader } from "@/composables/DataLoaderService.js";
 import { formatSql } from "@/utils/sql.js";
 
 const props = defineProps({
@@ -72,5 +72,5 @@ const props = defineProps({
   },
 });
 
-const { loading, data: qual } = useFetch(props.config.name);
+const { loading, data: qual } = useDataLoader(props.config.name);
 </script>
