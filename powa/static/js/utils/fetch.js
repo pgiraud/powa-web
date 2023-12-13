@@ -4,7 +4,7 @@ import { useStoreService } from "@/composables/useStoreService";
 export function useFetch(name) {
   const loading = ref(false);
   const data = ref(undefined);
-  const { dataSources, from, to } = useStoreService();
+  const { dataSources } = useStoreService();
 
   onMounted(() => {
     watch(
@@ -24,13 +24,6 @@ export function useFetch(name) {
       loading.value = false;
     });
   }
-
-  watch(
-    () => from + to,
-    () => {
-      loadData();
-    }
-  );
 
   return { loading, data };
 }
