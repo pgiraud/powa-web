@@ -151,16 +151,11 @@ import { useStoreService } from "@/composables/useStoreService.js";
 const menu = ref(false);
 const { from, to, setFromTo } = useStoreService();
 
-// The raw values (examples: 'now-24h', 'Tue Sep 01 2020 10:16:00 GMT+0200')
-// Interaction with parent component is done with from/to props which
-// are unix timestamps
-const rawFrom = ref(from.value);
-const rawTo = ref(to.value);
 // The values to display in the custom range from and to fields
 // we don't use raw values because we may want to pick/change from and
 // to in the form before applying changes
-const inputFrom = ref(rawFrom.value);
-const inputTo = ref(rawTo.value);
+const inputFrom = ref(from.value);
+const inputTo = ref(to.value);
 
 const pickerFrom = ref(null);
 const pickerTo = ref(null);
@@ -227,9 +222,7 @@ function refresh() {
 }
 
 function applyTimeRange() {
-  rawFrom.value = inputFrom.value;
-  rawTo.value = inputTo.value;
-  setFromTo(rawFrom.value, rawTo.value);
+  setFromTo(inputFrom.value, inputTo.value);
   menu.value = false;
 }
 
