@@ -135,7 +135,6 @@ import _ from "lodash";
 import QueryTooltip from "@/components/QueryTooltip.vue";
 import { formatSql } from "@/utils/sql";
 import { useStoreService } from "@/composables/useStoreService.js";
-import { dateMath } from "@grafana/data";
 
 const { dataSources, from, to } = useStoreService();
 
@@ -221,8 +220,8 @@ async function optimize() {
   unoptimizableItems.value = [];
   await updateProgress("Fetching most executed quals…", 0);
   const params = {
-    from: dateMath.parse(from.value).format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: dateMath.parse(to.value).format("YYYY-MM-DD HH:mm:ssZZ"),
+    from: from.value.format("YYYY-MM-DD HH:mm:ssZZ"),
+    to: to.value.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
   d3.json(sourceConfig.data_url + "?" + encodeQueryData(params)).then(
     async (response) => {
@@ -637,8 +636,8 @@ async function checkSolution() {
     queryids = _.uniq(queryids.concat(index.queryids));
   });
   const params = {
-    from: dateMath.parse(from.value).format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: dateMath.parse(to.value).format("YYYY-MM-DD HH:mm:ssZZ"),
+    from: from.value.format("YYYY-MM-DD HH:mm:ssZZ"),
+    to: to.value.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
   d3.json(
     `/server/${props.config.server}/database/${props.config.database}/suggest/`,
