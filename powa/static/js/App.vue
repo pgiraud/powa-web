@@ -156,7 +156,6 @@ import * as d3 from "d3";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import DateRangePicker from "@/components/DateRangePicker/DateRangePicker.vue";
 import LoginView from "@/components/LoginView.vue";
-import { dateMath } from "@grafana/data";
 import { encodeQueryData } from "@/utils/query";
 import { useMessageService } from "@/composables/MessageService.js";
 
@@ -173,8 +172,7 @@ const {
   handlerConfig,
   changesUrl,
   changes,
-  defaultFrom,
-  defaultTo,
+  setFromTo,
 } = useStoreService();
 const route = useRoute();
 
@@ -340,8 +338,8 @@ function configure(config) {
 
 function loadData() {
   const params = {
-    from: dateMath.parse(from.value).format("YYYY-MM-DD HH:mm:ssZZ"),
-    to: dateMath.parse(to.value, true).format("YYYY-MM-DD HH:mm:ssZZ"),
+    from: from.value.format("YYYY-MM-DD HH:mm:ssZZ"),
+    to: to.value.format("YYYY-MM-DD HH:mm:ssZZ"),
   };
 
   const copy = Object.assign({}, dataSources.value);
@@ -368,8 +366,7 @@ function loadData() {
 watch(
   () => route.params,
   function (newVal, oldVal) {
-    from.value = route.query.from || defaultFrom;
-    to.value = route.query.to || defaultTo;
+    setFromTo(route.query.from, route.query.to);
     if (newVal.pathMatch != oldVal.pathMatch) {
       initDashboard();
     } else {

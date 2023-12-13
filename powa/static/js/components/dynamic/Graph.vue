@@ -198,7 +198,6 @@ import size from "@/utils/size";
 import { toISO } from "@/utils/dates";
 import { formatDuration } from "@/utils/duration";
 import { formatPercentage } from "@/utils/percentage";
-import { dateMath } from "@grafana/data";
 
 const props = defineProps({
   config: {
@@ -550,10 +549,7 @@ function dataLoaded() {
 
 function drawOrUpdateChart() {
   // Draw X Axis
-  xScale = d3
-    .scaleTime()
-    .range([0, width])
-    .domain([dateMath.parse(from.value), dateMath.parse(to.value)]);
+  xScale = d3.scaleTime().range([0, width]).domain([from.value, to.value]);
 
   const ticksCount = 5;
   const xAxis = d3
