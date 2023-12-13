@@ -1,4 +1,4 @@
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watchEffect } from "vue";
 import { useStoreService } from "@/composables/useStoreService";
 
 export function useFetch(metric) {
@@ -7,13 +7,9 @@ export function useFetch(metric) {
   const { dataSources } = useStoreService();
 
   onMounted(() => {
-    watch(
-      () => dataSources.value,
-      () => {
-        loadData();
-      },
-      { immediate: true }
-    );
+    watchEffect(() => {
+      loadData();
+    });
   });
 
   function loadData() {
