@@ -8,18 +8,14 @@ export function useFetch(metric) {
 
   onMounted(() => {
     watchEffect(() => {
-      loadData();
+      loading.value = true;
+      const sourceConfig = dataSources.value[metric];
+      sourceConfig.promise.then((response) => {
+        data.value = JSON.parse(response);
+        loading.value = false;
+      });
     });
   });
-
-  function loadData() {
-    loading.value = true;
-    const sourceConfig = dataSources.value[metric];
-    sourceConfig.promise.then((response) => {
-      data.value = JSON.parse(response);
-      loading.value = false;
-    });
-  }
 
   return { loading, data };
 }
