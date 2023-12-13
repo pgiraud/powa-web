@@ -1,5 +1,6 @@
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
+import { dateMath } from "@grafana/data";
 
 const dataSources = ref({});
 const dashboardConfig = ref(null);
@@ -10,15 +11,18 @@ const changesUrl = ref("");
 const changes = ref([]);
 const breadcrumbs = ref([]);
 const defaultFrom = "now-1h";
-const from = ref(defaultFrom);
+const rawFrom = ref(defaultFrom);
 const defaultTo = "now";
-const to = ref(defaultTo);
+const rawTo = ref(defaultTo);
+
+const from = ref(dateMath.parse(defaultFrom));
+const to = ref(dateMath.parse(defaultTo), true);
 
 function getUrl(url) {
   const query = {};
-  if (from.value != defaultFrom || to.value != defaultTo) {
-    query.from = from.value;
-    query.to = to.value;
+  if (rawFrom.value != defaultFrom || rawTo.value != defaultTo) {
+    query.from = rawFrom.value;
+    query.to = rawTo.value;
   }
   return { path: url, query };
 }
@@ -27,22 +31,26 @@ export function useStoreService() {
   const route = useRoute();
   const router = useRouter();
 
-  function setFromTo(from, to) {
+  function setFromTo(newFrom = defaultFrom, newTo = defaultTo) {
+    rawFrom.value = newFrom;
+    rawTo.value = newTo;
+    from.value = dateMath.parse(newFrom);
+    to.value = dateMath.parse(newTo);
     router.push({
       path: route.path,
-      query: { from: from, to: to },
+      query: { from: newFrom, to: newTo },
     });
   }
 
   return {
-    defaultFrom,
-    defaultTo,
     dataSources,
     dashboardConfig,
     handlerConfig,
     changesUrl,
     changes,
     breadcrumbs,
+    rawFrom,
+    rawTo,
     from,
     to,
     setFromTo,
