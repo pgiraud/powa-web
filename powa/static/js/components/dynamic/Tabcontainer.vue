@@ -10,6 +10,7 @@
         v-for="(tab, index) in config.tabs"
         :key="'tab_content' + index"
         :transition="false"
+        :reverse-transition="false"
       >
         <v-card>
           <v-card-text>
