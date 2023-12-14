@@ -43,10 +43,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, inject, ref } from "vue";
 import _ from "lodash";
 import { formatPercentage } from "@/utils/percentage";
-import { useDateRangeService } from "@/composables/DateRangeService.js";
 import { useDataLoader } from "@/composables/DataLoaderService.js";
 
 const props = defineProps({
@@ -64,7 +63,7 @@ const metricGroup = _.uniq(
     return metric.split(".")[0];
   })
 );
-const { dataSources } = useDateRangeService();
+const dataSources = inject("dataSources");
 const sourceConfig = dataSources.value[metricGroup];
 metric.value = props.config.metrics[0].split(".")[1];
 const { loading, data } = useDataLoader(metricGroup);
