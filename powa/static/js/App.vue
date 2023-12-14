@@ -149,7 +149,7 @@
 import { onMounted, watch } from "vue";
 import { useTheme } from "vuetify";
 import { icons } from "@/plugins/vuetify.js";
-import { useStoreService } from "@/composables/useStoreService.js";
+import { useDateRangeService } from "@/composables/DateRangeService.js";
 import { useRoute } from "vue-router";
 import _ from "lodash";
 import * as d3 from "d3";
@@ -173,7 +173,7 @@ const {
   changesUrl,
   changes,
   setFromTo,
-} = useStoreService();
+} = useDateRangeService();
 const route = useRoute();
 
 let servers;

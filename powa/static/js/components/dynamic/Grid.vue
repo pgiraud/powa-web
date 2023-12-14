@@ -98,7 +98,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { useStoreService } from "@/composables/useStoreService.js";
+import { useDateRangeService } from "@/composables/DateRangeService.js";
 import _ from "lodash";
 import size from "@/utils/size";
 import "highlight.js/styles/default.css";
@@ -124,7 +124,7 @@ const metricGroup = _.uniq(
 );
 const { loading, data: data } = useDataLoader(metricGroup);
 const search = ref("");
-const { dataSources, getUrl } = useStoreService();
+const { dataSources, getUrl } = useDateRangeService();
 
 const fields = computed(() => {
   const metricGroup = _.uniq(
