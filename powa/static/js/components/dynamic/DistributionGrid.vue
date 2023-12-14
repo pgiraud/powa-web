@@ -46,7 +46,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import _ from "lodash";
 import { formatPercentage } from "@/utils/percentage";
-import { useStoreService } from "@/composables/useStoreService";
+import { useDateRangeService } from "@/composables/DateRangeService.js";
 
 const props = defineProps({
   config: {
@@ -61,7 +61,7 @@ const loading = ref(false);
 
 const items = ref([]);
 const metric = ref([]);
-const { dataSources } = useStoreService();
+const { dataSources } = useDateRangeService();
 onMounted(() => {
   watch(
     () => dataSources.value,
