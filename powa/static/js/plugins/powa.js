@@ -3,9 +3,9 @@ import _ from "lodash";
 
 export default {
   install(app) {
-    const componentFiles = import.meta.globEager(
-      "@/components/dynamic/**/*.vue"
-    );
+    const componentFiles = import.meta.glob("@/components/dynamic/**/*.vue", {
+      eager: true,
+    });
 
     Object.entries(componentFiles).forEach(([path, m]) => {
       const componentName = _.upperFirst(
