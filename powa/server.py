@@ -1763,7 +1763,7 @@ class ServerOverview(DashboardPage):
                    }, {
                        'name': 'Execution',
                        'merge': False,
-                       'colspan': 3
+                       'colspan': 4
                    }, {
                        'name': 'Blocks',
                        'merge': False,
