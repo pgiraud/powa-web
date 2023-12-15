@@ -52,42 +52,26 @@
         :cell-props="getCellProps"
         class="superdense"
       >
-        <template v-if="props.config.toprow" #header>
-          <thead>
-            <tr>
-              <th></th>
-              <th
-                v-for="group in props.config.toprow"
-                :key="group.name"
-                :colspan="group.colspan"
-                class="text-center"
-                style="border-right: 1px solid #dfdfdf"
-              >
-                {{ group.name }}
-              </th>
-            </tr>
-          </thead>
-        </template>
-        <!-- This template looks for headers with formatters and executes them -->
+        <!-- This template looks for columns with formatters and executes them -->
         <template
-          v-for="header in headers.filter((header) =>
-            header.hasOwnProperty('formatter')
+          v-for="column in columns.filter((column) =>
+            column.hasOwnProperty('formatter')
           )"
-          #[`item.${header.key}`]="{ item }"
+          #[`item.${column.key}`]="{ item }"
         >
           <router-link
-            v-if="header.urlAttr"
-            :key="header.key"
-            :to="getUrl(item[header.urlAttr])"
+            v-if="column.urlAttr"
+            :key="column.key"
+            :to="getUrl(item[column.urlAttr])"
             exact-match
           >
-            <grid-cell :value="item[header.key]" :header="header"></grid-cell>
+            <grid-cell :value="item[column.key]" :column="column"></grid-cell>
           </router-link>
           <grid-cell
             v-else
-            :key="header.key"
-            :value="item[header.key]"
-            :header="header"
+            :key="column.key"
+            :value="item[column.key]"
+            :column="column"
           >
           </grid-cell>
         </template>
@@ -151,7 +135,7 @@ const fields = computed(() => {
   return columns;
 });
 
-const headers = computed(() => {
+const columns = computed(() => {
   return _.uniqBy(
     _.map(fields.value, function headerize(n) {
       return {
@@ -167,6 +151,28 @@ const headers = computed(() => {
     }),
     "key"
   );
+});
+
+const headers = computed(() => {
+  if (!props.config.toprow) {
+    return columns.value;
+  }
+  const h = [];
+  let index = 0;
+  _.each(props.config.toprow, (group) => {
+    if (group.name) {
+      h.push({
+        title: group.name,
+        align: "center",
+        children: columns.value.slice(index, index + (group.colspan || 1)),
+      });
+      index += group.colspan || 1;
+    } else {
+      h.push(columns.value[index]);
+      index++;
+    }
+  });
+  return h;
 });
 
 function getCellProps(data) {
